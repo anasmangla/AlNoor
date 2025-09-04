@@ -32,3 +32,6 @@ Embed the logo in HTML:
 - `tests/`: unit tests (`test_main.py`, `test_app.py`).
 - `.github/workflows/`: CI/CD (`deploy.yml`).
 - `scripts/`: setup helpers.
+
+### Documentation
+- Project overview (non‑technical): [docs/overview.md](docs/overview.md)
