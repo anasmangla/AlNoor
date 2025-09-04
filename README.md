@@ -35,3 +35,10 @@ Embed the logo in HTML:
 
 ### Documentation
 - Project overview (non‑technical): [docs/overview.md](docs/overview.md)
+
+### Node.js/Express Scaffold
+- Install Node deps: `npm install`
+- Dev server: `npm run dev` → http://localhost:3000
+- Static site entry: `public/index.html` (served by Express)
+- API routes: `src/routes/{admin,pos,store}.js`
+- Server entry: `src/server.js`

@@ -24,3 +24,6 @@ jobs:
             git status
             git fetch --all
             git reset --hard origin/main
+            if command -v npm >/dev/null 2>&1; then
+              npm install --production || true
+            fi
