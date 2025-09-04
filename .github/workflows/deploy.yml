@@ -1,0 +1,25 @@
+name: Deploy to Bluehost
+
+on:
+  push:
+    branches: [ "$Branch" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: SSH into Bluehost and pull latest
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: \${{ secrets.SSH_HOST }}
+          username: \${{ secrets.SSH_USER }}
+          key: \${{ secrets.SSH_KEY }}
+          port: \${{ secrets.SSH_PORT || 22 }}
+          script: |
+            cd $ServerWebDir
+            git status
+            git fetch --all
+            git reset --hard origin/$Branch
