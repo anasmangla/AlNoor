@@ -14,10 +14,10 @@ jobs:
       - name: SSH into Bluehost and pull latest
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: \${{ secrets.SSH_HOST }}
-          username: \${{ secrets.SSH_USER }}
-          key: \${{ secrets.SSH_KEY }}
-          port: \${{ secrets.SSH_PORT || 22 }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
           script: |
             cd ~/public_html/alnoor
             git status

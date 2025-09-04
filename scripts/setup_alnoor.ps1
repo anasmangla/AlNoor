@@ -117,7 +117,7 @@ jobs:
             git reset --hard origin/$Branch
 '@
 # Normalize GitHub expressions and inject configured values
-$workflow = $workflow -replace '\\${{', '${{'
+$workflow = $workflow -replace '\${{', '${{'
 $workflow = $workflow -replace '"\$Branch"', ('"{0}"' -f $Branch)
 $workflow = $workflow -replace 'origin/\$Branch', ('origin/{0}' -f $Branch)
 $workflow = $workflow -replace '\$ServerWebDir', $ServerWebDir
