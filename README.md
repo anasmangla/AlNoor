@@ -1,5 +1,7 @@
 ## AlNoor
 
+![Al Noor Farm Logo](assets/alnoorlogo.png)
+
 A minimal Python/Flask starter with tests and CI/CD to deploy via GitHub Actions over SSH.
 
 ### Deploy Workflow (Secrets)
@@ -18,6 +20,12 @@ A minimal Python/Flask starter with tests and CI/CD to deploy via GitHub Actions
 - Install: `pip install -r requirements.txt`.
 - Run app: `python src/app.py` → http://127.0.0.1:5000/
 - Tests: `python -m unittest discover -s tests -p "test_*.py"`.
+
+Embed the logo in HTML:
+
+```html
+<img src="assets/alnoorlogo.png" alt="Al Noor Farm Logo" width="220" />
+```
 
 ### Project Layout
 - `src/`: application code (`main.py`, `app.py`).
