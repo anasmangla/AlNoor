@@ -44,3 +44,9 @@ Embed the logo in HTML:
 - Static site entry: `public/index.html` (served by Express)
 - API routes: `src/routes/{admin,pos,store}.js`
 - Server entry: `src/server.js`
+
+### Dev Convenience Script (Windows PowerShell)
+- Start frontend (Next.js) and backend (FastAPI) together:
+  - `powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1 -Install`
+  - Omitting `-Install` skips dependency installation after first run.
+  - Frontend: http://localhost:3000 · Backend: http://127.0.0.1:8000
