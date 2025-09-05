@@ -57,3 +57,10 @@ Embed the logo in HTML:
   - `./scripts/start-dev.sh --install` (first time)
   - `./scripts/start-dev.sh` (subsequent runs)
   - Frontend: http://localhost:3000 · Backend: http://127.0.0.1:8000
+
+### Frontend (Next.js) Pages
+- `/` home with logo
+- `/products` fetches from `${NEXT_PUBLIC_API_BASE_URL}/products`
+- `/admin/products` minimal CRUD scaffold (create/delete) calling the same API
+
+Set `NEXT_PUBLIC_API_BASE_URL` in `.env` (example already provided) to your FastAPI URL.
