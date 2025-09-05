@@ -49,4 +49,11 @@ Embed the logo in HTML:
 - Start frontend (Next.js) and backend (FastAPI) together:
   - `powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1 -Install`
   - Omitting `-Install` skips dependency installation after first run.
+- Frontend: http://localhost:3000 · Backend: http://127.0.0.1:8000
+
+### Dev Convenience Script (macOS/Linux)
+- Make executable and run both services:
+  - `chmod +x ./scripts/start-dev.sh`
+  - `./scripts/start-dev.sh --install` (first time)
+  - `./scripts/start-dev.sh` (subsequent runs)
   - Frontend: http://localhost:3000 · Backend: http://127.0.0.1:8000
