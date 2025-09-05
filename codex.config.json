@@ -1,0 +1,6 @@
+{
+  "approvalPolicy": "never",
+  "sandboxMode": "danger-full-access",
+  "networkAccess": "enabled"
+}
+

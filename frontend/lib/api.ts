@@ -29,3 +29,16 @@ export async function deleteProduct(id: number): Promise<void> {
   const res = await fetch(`${API_BASE}/products/${id}`, { method: "DELETE" });
   if (!res.ok) throw new Error(`Failed to delete product: ${res.status}`);
 }
+
+export async function updateProduct(
+  id: number,
+  input: Partial<Omit<Product, "id">>
+): Promise<Product> {
+  const res = await fetch(`${API_BASE}/products/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) throw new Error(`Failed to update product: ${res.status}`);
+  return res.json();
+}
