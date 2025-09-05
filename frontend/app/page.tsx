@@ -12,8 +12,8 @@ export default function Home() {
       </p>
       <div className="flex gap-4 justify-center">
         <a className="text-blue-600 hover:underline" href="/products">Store</a>
-        <a className="text-blue-600 hover:underline" href="#admin">Admin</a>
-        <a className="text-blue-600 hover:underline" href="#pos">POS</a>
+        <a className="text-blue-600 hover:underline" href="/admin/login">Admin</a>
+        <a className="text-blue-600 hover:underline" href="/admin/pos">POS</a>
       </div>
     </div>
   );

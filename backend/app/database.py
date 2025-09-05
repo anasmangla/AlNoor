@@ -1,0 +1,56 @@
+import os
+from typing import AsyncGenerator
+
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlmodel import SQLModel
+from sqlalchemy import select
+from app.models import Product
+
+
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./alnoor.db")
+
+engine = create_async_engine(DATABASE_URL, echo=False, future=True)
+SessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
+
+async def init_db() -> None:
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
+    # Try to ensure new columns exist across supported dialects
+    try:
+        # SQLite path: add column if missing
+        if engine.url.get_backend_name().startswith("sqlite"):
+            async with engine.begin() as conn:
+                res = await conn.exec_driver_sql("PRAGMA table_info(product)")
+                cols = {row[1] for row in res}
+                if "stock" not in cols:
+                    await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN stock REAL DEFAULT 0")
+        else:
+            # Postgres path: safe add if not exists
+            async with engine.begin() as conn:
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS stock DOUBLE PRECISION DEFAULT 0"
+                )
+    except Exception:
+        # Best-effort; ignore if cannot alter (e.g., permissions)
+        pass
+
+
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    async with SessionLocal() as session:
+        yield session
+
+
+async def seed_if_empty() -> None:
+    async with SessionLocal() as session:
+        result = await session.execute(select(Product))
+        has_any = result.scalars().first()
+        if not has_any:
+            session.add_all(
+                [
+                    Product(name="Chicken (whole)", price=12.99, stock=10),
+                    Product(name="Lamb (per lb)", price=9.99, stock=100),
+                    Product(name="Eggs (dozen)", price=4.50, stock=30),
+                ]
+            )
+            await session.commit()

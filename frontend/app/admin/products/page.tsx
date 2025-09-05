@@ -9,14 +9,17 @@ import {
 } from "@/lib/api";
 
 export default function AdminProductsPage() {
+  const [hasToken, setHasToken] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("0");
+  const [stock, setStock] = useState("0");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [editPrice, setEditPrice] = useState("0");
+  const [editStock, setEditStock] = useState("0");
 
   async function load() {
     setLoading(true);
@@ -32,6 +35,9 @@ export default function AdminProductsPage() {
   }
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setHasToken(!!localStorage.getItem("alnoor_token"));
+    }
     load();
   }, []);
 
@@ -41,10 +47,12 @@ export default function AdminProductsPage() {
     try {
       const n = name.trim();
       const p = parseFloat(price);
-      if (!n || isNaN(p)) return;
-      await createProduct({ name: n, price: p });
+      const s = parseFloat(stock);
+      if (!n || isNaN(p) || isNaN(s)) return;
+      await createProduct({ name: n, price: p, stock: s } as any);
       setName("");
       setPrice("0");
+      setStock("0");
       await load();
     } catch (e: any) {
       setError(e.message || "Failed to create");
@@ -65,13 +73,15 @@ export default function AdminProductsPage() {
     setEditingId(p.id);
     setEditName(p.name);
     setEditPrice(String(p.price));
+    setEditStock(String((p as any).stock ?? 0));
   }
 
   async function onSaveEdit() {
     if (editingId == null) return;
     try {
       const p = parseFloat(editPrice);
-      await updateProduct(editingId, { name: editName, price: p });
+      const s = parseFloat(editStock);
+      await updateProduct(editingId, { name: editName, price: p, stock: s } as any);
       setEditingId(null);
       await load();
     } catch (e: any) {
@@ -85,7 +95,12 @@ export default function AdminProductsPage() {
 
   return (
     <section>
-      <h1 className="text-2xl font-semibold mb-4">Admin · Products</h1>
+      <h1 className="text-2xl font-semibold mb-4">Admin – Products</h1>
+      {!hasToken && (
+        <div className="mb-3 text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded">
+          Not authenticated. Please <a href="/admin/login" className="underline">log in</a> to manage products.
+        </div>
+      )}
       {error && (
         <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
           {error}
@@ -112,6 +127,17 @@ export default function AdminProductsPage() {
             onChange={(e) => setPrice(e.target.value)}
           />
         </div>
+        <div>
+          <label className="block text-sm text-slate-600">Stock</label>
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            className="border rounded px-2 py-1"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+          />
+        </div>
         <button
           type="submit"
           className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700"
@@ -127,7 +153,10 @@ export default function AdminProductsPage() {
       ) : (
         <ul className="grid gap-2">
           {products.map((p) => (
-            <li key={p.id} className="border rounded p-3 flex items-center justify-between gap-4">
+            <li
+              key={p.id}
+              className="border rounded p-3 flex items-center justify-between gap-4"
+            >
               {editingId === p.id ? (
                 <div className="flex-1 flex items-end gap-2 flex-wrap">
                   <div>
@@ -149,29 +178,54 @@ export default function AdminProductsPage() {
                       onChange={(e) => setEditPrice(e.target.value)}
                     />
                   </div>
+                  <div>
+                    <label className="block text-xs text-slate-600">Stock</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="border rounded px-2 py-1"
+                      value={editStock}
+                      onChange={(e) => setEditStock(e.target.value)}
+                    />
+                  </div>
                 </div>
               ) : (
                 <div className="flex-1">
                   <div className="font-medium">{p.name}</div>
-                  <div className="text-slate-600 text-sm">${p.price.toFixed(2)}</div>
+                  <div className="text-slate-600 text-sm">
+                    ${p.price.toFixed(2)} • Stock: {(p as any).stock ?? 0}
+                  </div>
                 </div>
               )}
               <div className="flex items-center gap-3">
                 {editingId === p.id ? (
                   <>
-                    <button onClick={onSaveEdit} className="text-emerald-700 hover:underline">
+                    <button
+                      onClick={onSaveEdit}
+                      className="text-emerald-700 hover:underline"
+                    >
                       Save
                     </button>
-                    <button onClick={cancelEdit} className="text-slate-600 hover:underline">
+                    <button
+                      onClick={cancelEdit}
+                      className="text-slate-600 hover:underline"
+                    >
                       Cancel
                     </button>
                   </>
                 ) : (
                   <>
-                    <button onClick={() => startEdit(p)} className="text-blue-700 hover:underline">
+                    <button
+                      onClick={() => startEdit(p)}
+                      className="text-blue-700 hover:underline"
+                    >
                       Edit
                     </button>
-                    <button onClick={() => onDelete(p.id)} className="text-red-700 hover:underline">
+                    <button
+                      onClick={() => onDelete(p.id)}
+                      className="text-red-700 hover:underline"
+                    >
                       Delete
                     </button>
                   </>
@@ -184,3 +238,4 @@ export default function AdminProductsPage() {
     </section>
   );
 }
+

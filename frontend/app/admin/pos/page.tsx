@@ -1,0 +1,137 @@
+"use client";
+import { useEffect, useMemo, useState } from "react";
+import { Product, fetchProducts } from "@/lib/api";
+import { createOrder } from "@/lib/api";
+
+type SaleItem = { product: Product; quantity: number };
+
+export default function PosPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [sale, setSale] = useState<SaleItem[]>([]);
+  const [selectedId, setSelectedId] = useState<string>("");
+  const [qty, setQty] = useState<string>("1");
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchProducts().then(setProducts).catch(() => setProducts([]));
+  }, []);
+
+  const total = useMemo(
+    () => sale.reduce((acc, s) => acc + s.product.price * s.quantity, 0),
+    [sale]
+  );
+
+  function addItem() {
+    const id = parseInt(selectedId, 10);
+    const product = products.find((p) => p.id === id);
+    const q = parseFloat(qty);
+    if (!product || isNaN(q) || q <= 0) return;
+    setSale((prev) => {
+      const existing = prev.find((s) => s.product.id === product.id);
+      if (existing) {
+        return prev.map((s) =>
+          s.product.id === product.id ? { ...s, quantity: s.quantity + q } : s
+        );
+      }
+      return [...prev, { product, quantity: q }];
+    });
+  }
+
+  async function checkout() {
+    setError(null);
+    setMessage(null);
+    setLoading(true);
+    try {
+      const order = await createOrder({
+        items: sale.map((s) => ({ product_id: s.product.id, quantity: s.quantity })),
+        source: "pos",
+      });
+      setMessage(`Payment successful. Order #${order.id}`);
+      setSale([]);
+    } catch (e: any) {
+      setError(e.message || "Checkout failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <section>
+      <h1 className="text-2xl font-semibold mb-4">POS</h1>
+      {message && (
+        <div className="mb-3 text-emerald-700 bg-emerald-50 border border-emerald-200 p-2 rounded">
+          {message}
+        </div>
+      )}
+      {error && (
+        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
+          {error}
+        </div>
+      )}
+      <div className="flex gap-2 items-end mb-4 flex-wrap">
+        <div>
+          <label className="block text-sm text-slate-600">Product</label>
+          <select
+            className="border rounded px-2 py-1 min-w-[200px]"
+            value={selectedId}
+            onChange={(e) => setSelectedId(e.target.value)}
+          >
+            <option value="">Select…</option>
+            {products.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} (${p.price.toFixed(2)})
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm text-slate-600">Quantity</label>
+          <input
+            className="border rounded px-2 py-1 w-24"
+            value={qty}
+            onChange={(e) => setQty(e.target.value)}
+            type="number"
+            min="0"
+            step="0.01"
+          />
+        </div>
+        <button
+          onClick={addItem}
+          className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+        >
+          Add to Sale
+        </button>
+      </div>
+
+      <ul className="grid gap-2 mb-4">
+        {sale.map((s) => (
+          <li key={s.product.id} className="border rounded p-2 flex items-center justify-between">
+            <div>
+              <div className="font-medium">{s.product.name}</div>
+              <div className="text-sm text-slate-600">
+                {s.quantity} x ${s.product.price.toFixed(2)}
+              </div>
+            </div>
+            <div className="font-semibold">
+              ${(s.product.price * s.quantity).toFixed(2)}
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div className="flex items-center justify-between">
+        <div className="text-lg font-semibold">Total: ${total.toFixed(2)}</div>
+        <button
+          onClick={checkout}
+          disabled={loading || sale.length === 0}
+          className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 disabled:opacity-60"
+        >
+          {loading ? "Processing…" : "Checkout"}
+        </button>
+      </div>
+    </section>
+  );
+}
+

@@ -1,66 +1,54 @@
-## AlNoor
+## Al Noor Farm – Ecommerce & POS
 
 ![Al Noor Farm Logo](assets/alnoorlogo.png)
 
-A minimal Python/Flask starter with tests and CI/CD to deploy via GitHub Actions over SSH.
+Full‑stack scaffold for storefront, admin, and POS:
+- Frontend: Next.js (App Router, TypeScript, Tailwind CSS)
+- Backend: FastAPI (Python) with placeholder auth/orders and in‑memory data
+- Database: PostgreSQL planned; env configured. Current routes use in‑memory data.
+- Payments: Square integration placeholders (env stubs only)
 
-### Deploy Workflow (Secrets)
-- SSH_HOST: target server hostname or IP (e.g., example.com).
-- SSH_USER: SSH username (e.g., cPanel user).
-- SSH_KEY: private key contents (PEM) with access to the server.
-- SSH_PORT: optional SSH port (default 22).
-
-### How Deployment Works
-- Trigger: push to `main` or run the workflow manually (Actions → Deploy to Bluehost → Run workflow).
-- Steps: SSH to server, `cd ~/public_html/alnoor`, `git fetch`, `git reset --hard origin/main`.
-- Server path: ensure `~/public_html/alnoor` matches your document root.
+### Repository Structure
+- `frontend/`: Next.js app (App Router). Pages: `/`, `/products`, `/cart`, `/checkout`, `/confirmation`, `/admin/login`, `/admin/products`, `/admin/orders`, `/admin/pos`.
+- `backend/`: FastAPI app with routers: `products`, `orders`, `auth`, `pos`.
+- `assets/`, `docs/`, `scripts/`: static assets, docs, and helper scripts.
+- `.env.example`: all required env variables (no secrets committed).
 
 ### Local Development
-- Create venv: `python -m venv venv` then `./venv/Scripts/Activate.ps1`.
-- Install: `pip install -r requirements.txt`.
-- Run app: `python src/app.py` → http://127.0.0.1:5000/
-- Tests: `python -m unittest discover -s tests -p "test_*.py"`.
+- Prereqs: Node 18+, Python 3.10+, PostgreSQL (optional for now)
+- One‑shot dev (Windows): `powershell -ExecutionPolicy Bypass -File .\\scripts\\start-dev.ps1 -Install`
+- One‑shot dev (macOS/Linux): `chmod +x ./scripts/start-dev.sh && ./scripts/start-dev.sh --install`
+- Manual:
+  - Backend: `cd backend && pip install -r requirements.txt && uvicorn app.main:app --reload`
+  - Frontend: `cd frontend && npm install && npm run dev`
 
-Embed the logo in HTML:
+### Environment
+Copy `.env.example` to `.env` and adjust:
+- `DATABASE_URL`, `SECRET_KEY`, `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, `SQUARE_ENV`
+- `NEXT_PUBLIC_API_BASE_URL` (frontend)
+- Demo admin (placeholder): `ADMIN_USERNAME`, `ADMIN_PASSWORD`
 
-```html
-<img src="assets/alnoorlogo.png" alt="Al Noor Farm Logo" width="220" />
-```
+### Backend Endpoints (current)
+- `GET /` welcome; `GET /health` status
+- `GET /products`, `GET /products/{id}` – public
+- `POST /products`, `PUT /products/{id}`, `DELETE /products/{id}` – in‑memory
+- `POST /orders` – computes totals from products, returns order
+- `GET /orders`, `GET /orders/{id}` – list/detail orders (in‑memory)
+- `POST /auth/login` – returns placeholder bearer token
+- `POST /pos/checkout` – creates POS order (alias to `/orders`)
 
-### Project Layout
-- `src/`: application code (`main.py`, `app.py`).
-- `tests/`: unit tests (`test_main.py`, `test_app.py`).
-- `.github/workflows/`: CI/CD (`deploy.yml`).
-- `scripts/`: setup helpers.
+### Frontend Highlights
+- Storefront lists products from API.
+- Admin products CRUD against the same API (no auth gating yet).
+- Checkout posts a demo order and redirects to confirmation.
+- POS simulates a running sale and checkout (creates order with source=pos).
 
-### Documentation
-- Project overview (non‑technical): [docs/overview.md](docs/overview.md)
-- Architecture plan (Next.js + FastAPI + Postgres): [docs/architecture.md](docs/architecture.md)
-- Detailed architecture (expanded): [docs/architecture-detailed.md](docs/architecture-detailed.md)
+### Deployment (BlueHost cPanel – manual)
+- Frontend: Setup Node.js App pointing to `frontend/`, run `npm install`, `npm run build`, `npm start` or Next server per cPanel setup.
+- Backend: Setup Python App pointing to `backend/`, install `requirements.txt`, WSGI entry `from app.main import app as application`.
+- Configure environment variables in cPanel for both apps.
+- Ensure CORS or routing so frontend reaches API (`NEXT_PUBLIC_API_BASE_URL`).
 
-### Node.js/Express Scaffold
-- Install Node deps: `npm install`
-- Dev server: `npm run dev` → http://localhost:3000
-- Static site entry: `public/index.html` (served by Express)
-- API routes: `src/routes/{admin,pos,store}.js`
-- Server entry: `src/server.js`
-
-### Dev Convenience Script (Windows PowerShell)
-- Start frontend (Next.js) and backend (FastAPI) together:
-  - `powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1 -Install`
-  - Omitting `-Install` skips dependency installation after first run.
-- Frontend: http://localhost:3000 · Backend: http://127.0.0.1:8000
-
-### Dev Convenience Script (macOS/Linux)
-- Make executable and run both services:
-  - `chmod +x ./scripts/start-dev.sh`
-  - `./scripts/start-dev.sh --install` (first time)
-  - `./scripts/start-dev.sh` (subsequent runs)
-  - Frontend: http://localhost:3000 · Backend: http://127.0.0.1:8000
-
-### Frontend (Next.js) Pages
-- `/` home with logo
-- `/products` fetches from `${NEXT_PUBLIC_API_BASE_URL}/products`
-- `/admin/products` minimal CRUD scaffold (create/delete) calling the same API
-
-Set `NEXT_PUBLIC_API_BASE_URL` in `.env` (example already provided) to your FastAPI URL.
+### Notes
+- DB and JWT verification are stubs. Replace in‑memory stores with Postgres via SQLAlchemy/SQLModel and real JWT as you progress.
+- See `docs/architecture*.md` for the broader plan.
