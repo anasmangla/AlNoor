@@ -36,6 +36,7 @@ Embed the logo in HTML:
 ### Documentation
 - Project overview (non‑technical): [docs/overview.md](docs/overview.md)
 - Architecture plan (Next.js + FastAPI + Postgres): [docs/architecture.md](docs/architecture.md)
+- Detailed architecture (expanded): [docs/architecture-detailed.md](docs/architecture-detailed.md)
 
 ### Node.js/Express Scaffold
 - Install Node deps: `npm install`
