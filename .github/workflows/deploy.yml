@@ -18,7 +18,12 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          fingerprint: ${{ secrets.SSH_FINGERPRINT }}
           port: ${{ secrets.SSH_PORT || 22 }}
+          script_stop: true
+          debug: true
           script: |
             cd ~/public_html/alnoor
             git status
