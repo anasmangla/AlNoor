@@ -1,12 +1,12 @@
-name: Deploy to Server (Bluehost/SSH)
+name: Deploy to Bluehost (SSH)
 
 on:
   push:
-    branches: [ "main" ]          # change per repo if needed
+    branches: [ "main" ]      # change if you deploy another branch
   workflow_dispatch:
     inputs:
       deploy_path:
-        description: "Remote folder to deploy into (e.g., ~/public_html/alnoor)"
+        description: "Remote folder (e.g., ~/public_html/website_18b31db5)"
         required: false
       branch:
         description: "Git branch to deploy"
@@ -16,8 +16,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # If you use Environment-scoped secrets, uncomment:
-    # environment: Bluehost
 
     steps:
       - uses: actions/checkout@v4
@@ -27,11 +25,11 @@ jobs:
           set -e
           for s in SSH_HOST SSH_USER SSH_KEY; do
             if [ -z "${{ secrets[s] }}" ]; then
-              echo "::error::Missing secret: $s"; exit 1;
+              echo "::error::Missing secret: $s"; exit 1
             fi
           done
 
-      - name: Deploy via SSH (appleboy/ssh-action)
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.2
         with:
           host:         ${{ secrets.SSH_HOST }}
@@ -45,36 +43,44 @@ jobs:
           script: |
             set -euo pipefail
 
-            # Resolve deploy path: dispatch input > repo variable > default
+            # Resolve deploy path: dispatch input > repo variable > required
             DEPLOY_PATH="${{ github.event.inputs.deploy_path || vars.DEPLOY_PATH || '' }}"
             if [ -z "$DEPLOY_PATH" ]; then
               echo "DEPLOY_PATH not set. Provide it as a workflow input or set vars.DEPLOY_PATH."; exit 1
             fi
 
             BRANCH="${{ github.event.inputs.branch || 'main' }}"
+
+            echo "→ Deploy path: $DEPLOY_PATH"
+            echo "→ Branch: $BRANCH"
+
             mkdir -p "$DEPLOY_PATH"
             cd "$DEPLOY_PATH"
 
-            if [ ! -d ".git" ]; then
+            # If folder not yet a git repo (rare on first run), initialize & pull once
+            if [ ! -d .git ]; then
               git init
-              git remote add origin https://github.com/${{ github.repository }}.git
+              git remote add origin "https://github.com/${{ github.repository }}.git"
               git fetch --depth=1 origin "$BRANCH"
               git checkout -f FETCH_HEAD
             else
               git fetch origin "$BRANCH"
               git reset --hard "origin/$BRANCH"
+              git clean -fd
             fi
 
-            # Optional Node steps
+            # Optional Node install/build if project uses Node
             if [ -f package.json ]; then
-              command -v npm >/dev/null 2>&1 && npm ci --omit=dev || true
-              # npm run build   # uncomment if your project builds a static site
+              if command -v npm >/dev/null 2>&1; then
+                npm ci --omit=dev || npm install --production || true
+                # npm run build || true
+              fi
             fi
 
-            # Optional Python backend
+            # Optional Python deps
             if [ -f backend/requirements.txt ]; then
               python3 -m pip install --user -r backend/requirements.txt
             fi
 
-            # TODO: restart app if needed (pm2, Passenger, etc.)
-            # e.g., pm2 restart my-app || true
+            # Optional: restart app (pm2/Passenger/etc.) if applicable
+            # pm2 restart my-app || true
