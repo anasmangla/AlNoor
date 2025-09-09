@@ -19,7 +19,7 @@ export default async function ProductsPage() {
                 <div className="font-medium">{p.name}</div>
                 <div className="text-slate-600 text-sm">ID: {p.id}</div>
               </div>
-              <div className="font-semibold">${p.price.toFixed(2)}</div>
+              <div className="font-semibold">${p.price.toFixed(2)} / {(p as any).unit || "unit"}</div>
             </li>
           ))}
         </ul>
@@ -27,4 +27,3 @@ export default async function ProductsPage() {
     </section>
   );
 }
-

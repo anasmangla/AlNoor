@@ -14,12 +14,16 @@ export default function AdminProductsPage() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("0");
   const [stock, setStock] = useState("0");
+  const [unit, setUnit] = useState("");
+  const [isWeightBased, setIsWeightBased] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [editPrice, setEditPrice] = useState("0");
   const [editStock, setEditStock] = useState("0");
+  const [editUnit, setEditUnit] = useState("");
+  const [editIsWeightBased, setEditIsWeightBased] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -49,10 +53,12 @@ export default function AdminProductsPage() {
       const p = parseFloat(price);
       const s = parseFloat(stock);
       if (!n || isNaN(p) || isNaN(s)) return;
-      await createProduct({ name: n, price: p, stock: s } as any);
+      await createProduct({ name: n, price: p, stock: s, unit, is_weight_based: isWeightBased } as any);
       setName("");
       setPrice("0");
       setStock("0");
+      setUnit("");
+      setIsWeightBased(false);
       await load();
     } catch (e: any) {
       setError(e.message || "Failed to create");
@@ -74,6 +80,8 @@ export default function AdminProductsPage() {
     setEditName(p.name);
     setEditPrice(String(p.price));
     setEditStock(String((p as any).stock ?? 0));
+    setEditUnit((p as any).unit ?? "");
+    setEditIsWeightBased(!!(p as any).is_weight_based);
   }
 
   async function onSaveEdit() {
@@ -81,7 +89,7 @@ export default function AdminProductsPage() {
     try {
       const p = parseFloat(editPrice);
       const s = parseFloat(editStock);
-      await updateProduct(editingId, { name: editName, price: p, stock: s } as any);
+      await updateProduct(editingId, { name: editName, price: p, stock: s, unit: editUnit, is_weight_based: editIsWeightBased } as any);
       setEditingId(null);
       await load();
     } catch (e: any) {
@@ -138,6 +146,24 @@ export default function AdminProductsPage() {
             onChange={(e) => setStock(e.target.value)}
           />
         </div>
+        <div>
+          <label className="block text-sm text-slate-600">Unit</label>
+          <input
+            className="border rounded px-2 py-1"
+            value={unit}
+            onChange={(e) => setUnit(e.target.value)}
+            placeholder="e.g., lb, each, dozen"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            id="isWeightBased"
+            type="checkbox"
+            checked={isWeightBased}
+            onChange={(e) => setIsWeightBased(e.target.checked)}
+          />
+          <label htmlFor="isWeightBased" className="text-sm text-slate-600">Weight-based</label>
+        </div>
         <button
           type="submit"
           className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700"
@@ -189,12 +215,29 @@ export default function AdminProductsPage() {
                       onChange={(e) => setEditStock(e.target.value)}
                     />
                   </div>
+                  <div>
+                    <label className="block text-xs text-slate-600">Unit</label>
+                    <input
+                      className="border rounded px-2 py-1"
+                      value={editUnit}
+                      onChange={(e) => setEditUnit(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 pt-5">
+                    <input
+                      id="editIsWeightBased"
+                      type="checkbox"
+                      checked={editIsWeightBased}
+                      onChange={(e) => setEditIsWeightBased(e.target.checked)}
+                    />
+                    <label htmlFor="editIsWeightBased" className="text-xs text-slate-600">Weight-based</label>
+                  </div>
                 </div>
               ) : (
                 <div className="flex-1">
                   <div className="font-medium">{p.name}</div>
                   <div className="text-slate-600 text-sm">
-                    ${p.price.toFixed(2)} • Stock: {(p as any).stock ?? 0}
+                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} • Stock: {(p as any).stock ?? 0} {((p as any).unit || "")}
                   </div>
                 </div>
               )}

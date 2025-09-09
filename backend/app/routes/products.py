@@ -16,7 +16,17 @@ router = APIRouter()
 async def list_products(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(ProductModel))
     rows = result.scalars().all()
-    return [ProductOut(id=p.id, name=p.name, price=p.price, stock=p.stock) for p in rows]
+    return [
+        ProductOut(
+            id=p.id,
+            name=p.name,
+            price=p.price,
+            stock=p.stock,
+            unit=p.unit,
+            is_weight_based=p.is_weight_based,
+        )
+        for p in rows
+    ]
 
 
 @router.get("/products/{product_id}", response_model=ProductOut)
@@ -25,7 +35,14 @@ async def get_product(product_id: int, session: AsyncSession = Depends(get_sessi
     p = result.scalars().first()
     if not p:
         raise HTTPException(status_code=404, detail="Product not found")
-    return ProductOut(id=p.id, name=p.name, price=p.price, stock=p.stock)
+    return ProductOut(
+        id=p.id,
+        name=p.name,
+        price=p.price,
+        stock=p.stock,
+        unit=p.unit,
+        is_weight_based=p.is_weight_based,
+    )
 
 
 @router.post("/products", response_model=ProductOut, status_code=status.HTTP_201_CREATED)
@@ -34,11 +51,24 @@ async def create_product(
     session: AsyncSession = Depends(get_session),
     user: str = Depends(get_current_user),
 ):
-    p = ProductModel(name=payload.name, price=payload.price, stock=payload.stock or 0)
+    p = ProductModel(
+        name=payload.name,
+        price=payload.price,
+        stock=payload.stock or 0,
+        unit=payload.unit or "",
+        is_weight_based=bool(payload.is_weight_based),
+    )
     session.add(p)
     await session.commit()
     await session.refresh(p)
-    return ProductOut(id=p.id, name=p.name, price=p.price, stock=p.stock)
+    return ProductOut(
+        id=p.id,
+        name=p.name,
+        price=p.price,
+        stock=p.stock,
+        unit=p.unit,
+        is_weight_based=p.is_weight_based,
+    )
 
 
 @router.put("/products/{product_id}", response_model=ProductOut)
@@ -58,9 +88,20 @@ async def update_product(
         p.price = payload.price
     if payload.stock is not None:
         p.stock = payload.stock
+    if payload.unit is not None:
+        p.unit = payload.unit
+    if payload.is_weight_based is not None:
+        p.is_weight_based = bool(payload.is_weight_based)
     await session.commit()
     await session.refresh(p)
-    return ProductOut(id=p.id, name=p.name, price=p.price, stock=p.stock)
+    return ProductOut(
+        id=p.id,
+        name=p.name,
+        price=p.price,
+        stock=p.stock,
+        unit=p.unit,
+        is_weight_based=p.is_weight_based,
+    )
 
 
 @router.delete("/products/{product_id}", status_code=status.HTTP_204_NO_CONTENT)

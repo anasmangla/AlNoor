@@ -7,6 +7,8 @@ class Product(SQLModel, table=True):
     name: str
     price: float
     stock: float = 0.0
+    unit: str = ""
+    is_weight_based: bool = False
 
 
 class Order(SQLModel, table=True):

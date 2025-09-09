@@ -25,11 +25,21 @@ async def init_db() -> None:
                 cols = {row[1] for row in res}
                 if "stock" not in cols:
                     await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN stock REAL DEFAULT 0")
+                if "unit" not in cols:
+                    await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN unit TEXT DEFAULT ''")
+                if "is_weight_based" not in cols:
+                    await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN is_weight_based BOOLEAN DEFAULT 0")
         else:
             # Postgres path: safe add if not exists
             async with engine.begin() as conn:
                 await conn.exec_driver_sql(
                     "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS stock DOUBLE PRECISION DEFAULT 0"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS unit TEXT DEFAULT ''"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS is_weight_based BOOLEAN DEFAULT FALSE"
                 )
     except Exception:
         # Best-effort; ignore if cannot alter (e.g., permissions)
@@ -48,9 +58,9 @@ async def seed_if_empty() -> None:
         if not has_any:
             session.add_all(
                 [
-                    Product(name="Chicken (whole)", price=12.99, stock=10),
-                    Product(name="Lamb (per lb)", price=9.99, stock=100),
-                    Product(name="Eggs (dozen)", price=4.50, stock=30),
+                    Product(name="Chicken (whole)", price=12.99, stock=10, unit="each", is_weight_based=False),
+                    Product(name="Lamb", price=9.99, stock=100, unit="lb", is_weight_based=True),
+                    Product(name="Eggs", price=4.50, stock=30, unit="dozen", is_weight_based=False),
                 ]
             )
             await session.commit()

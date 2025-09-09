@@ -6,6 +6,8 @@ class ProductBase(BaseModel):
     name: str = Field(..., max_length=100)
     price: float = Field(..., ge=0)
     stock: float = Field(0, ge=0)
+    unit: str = Field("", max_length=50)
+    is_weight_based: bool = False
 
 
 class ProductCreate(ProductBase):
@@ -16,6 +18,8 @@ class ProductUpdate(BaseModel):
     name: Optional[str] = Field(default=None, max_length=100)
     price: Optional[float] = Field(default=None, ge=0)
     stock: Optional[float] = Field(default=None, ge=0)
+    unit: Optional[str] = Field(default=None, max_length=50)
+    is_weight_based: Optional[bool] = None
 
 
 class ProductOut(ProductBase):

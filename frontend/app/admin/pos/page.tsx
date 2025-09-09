@@ -81,21 +81,32 @@ export default function PosPage() {
             <option value="">Select…</option>
             {products.map((p) => (
               <option key={p.id} value={p.id}>
-                {p.name} (${p.price.toFixed(2)})
+                {p.name} (${p.price.toFixed(2)} / {(p as any).unit || "unit"})
               </option>
             ))}
           </select>
         </div>
         <div>
-          <label className="block text-sm text-slate-600">Quantity</label>
-          <input
-            className="border rounded px-2 py-1 w-24"
-            value={qty}
-            onChange={(e) => setQty(e.target.value)}
-            type="number"
-            min="0"
-            step="0.01"
-          />
+          {(() => {
+            const sel = products.find((p) => String(p.id) === selectedId) as any;
+            const isWeight = sel?.is_weight_based;
+            const unit = sel?.unit || "unit";
+            return (
+              <div>
+                <label className="block text-sm text-slate-600">
+                  {isWeight ? `Weight (${unit})` : "Quantity"}
+                </label>
+                <input
+                  className="border rounded px-2 py-1 w-28"
+                  value={qty}
+                  onChange={(e) => setQty(e.target.value)}
+                  type="number"
+                  min={isWeight ? "0" : "1"}
+                  step={isWeight ? "0.01" : "1"}
+                />
+              </div>
+            );
+          })()}
         </div>
         <button
           onClick={addItem}
@@ -111,7 +122,7 @@ export default function PosPage() {
             <div>
               <div className="font-medium">{s.product.name}</div>
               <div className="text-sm text-slate-600">
-                {s.quantity} x ${s.product.price.toFixed(2)}
+                {s.quantity} {(s.product as any).unit || "unit"} x ${s.product.price.toFixed(2)}
               </div>
             </div>
             <div className="font-semibold">
@@ -134,4 +145,3 @@ export default function PosPage() {
     </section>
   );
 }
-

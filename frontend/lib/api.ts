@@ -3,6 +3,8 @@ export type Product = {
   name: string;
   price: number;
   stock: number;
+  unit: string;
+  is_weight_based: boolean;
 };
 
 export const API_BASE =
