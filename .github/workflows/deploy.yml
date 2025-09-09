@@ -1,34 +1,80 @@
-name: Deploy to Bluehost
+name: Deploy to Server (Bluehost/SSH)
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]          # change per repo if needed
   workflow_dispatch:
+    inputs:
+      deploy_path:
+        description: "Remote folder to deploy into (e.g., ~/public_html/alnoor)"
+        required: false
+      branch:
+        description: "Git branch to deploy"
+        default: "main"
+        required: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    # If you use Environment-scoped secrets, uncomment:
+    # environment: Bluehost
 
-      - name: SSH into Bluehost and pull latest
-        uses: appleboy/ssh-action@v1.0.3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sanity check for required secrets
+        run: |
+          set -e
+          for s in SSH_HOST SSH_USER SSH_KEY; do
+            if [ -z "${{ secrets[s] }}" ]; then
+              echo "::error::Missing secret: $s"; exit 1;
+            fi
+          done
+
+      - name: Deploy via SSH (appleboy/ssh-action)
+        uses: appleboy/ssh-action@v1.2.2
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          fingerprint: ${{ secrets.SSH_FINGERPRINT }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          script_stop: true
+          host:         ${{ secrets.SSH_HOST }}
+          username:     ${{ secrets.SSH_USER }}
+          key:          ${{ secrets.SSH_KEY }}
+          passphrase:   ${{ secrets.SSH_PASSPHRASE }}
+          port:         ${{ secrets.SSH_PORT }}
+          password:     ${{ secrets.SSH_PASSWORD }}
+          fingerprint:  ${{ secrets.SSH_FINGERPRINT }}
           debug: true
           script: |
-            cd ~/public_html/alnoor
-            git status
-            git fetch --all
-            git reset --hard origin/main
-            if command -v npm >/dev/null 2>&1; then
-              npm install --production || true
+            set -euo pipefail
+
+            # Resolve deploy path: dispatch input > repo variable > default
+            DEPLOY_PATH="${{ github.event.inputs.deploy_path || vars.DEPLOY_PATH || '' }}"
+            if [ -z "$DEPLOY_PATH" ]; then
+              echo "DEPLOY_PATH not set. Provide it as a workflow input or set vars.DEPLOY_PATH."; exit 1
             fi
+
+            BRANCH="${{ github.event.inputs.branch || 'main' }}"
+            mkdir -p "$DEPLOY_PATH"
+            cd "$DEPLOY_PATH"
+
+            if [ ! -d ".git" ]; then
+              git init
+              git remote add origin https://github.com/${{ github.repository }}.git
+              git fetch --depth=1 origin "$BRANCH"
+              git checkout -f FETCH_HEAD
+            else
+              git fetch origin "$BRANCH"
+              git reset --hard "origin/$BRANCH"
+            fi
+
+            # Optional Node steps
+            if [ -f package.json ]; then
+              command -v npm >/dev/null 2>&1 && npm ci --omit=dev || true
+              # npm run build   # uncomment if your project builds a static site
+            fi
+
+            # Optional Python backend
+            if [ -f backend/requirements.txt ]; then
+              python3 -m pip install --user -r backend/requirements.txt
+            fi
+
+            # TODO: restart app if needed (pm2, Passenger, etc.)
+            # e.g., pm2 restart my-app || true
