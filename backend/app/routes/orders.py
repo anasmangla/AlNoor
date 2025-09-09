@@ -44,6 +44,7 @@ async def create_order(
             OrderItemOut(
                 product_id=prod.id,
                 name=prod.name,
+                unit=getattr(prod, "unit", ""),
                 quantity=quantity,
                 price_each=price_each,
                 subtotal=subtotal,
@@ -65,6 +66,7 @@ async def create_order(
                 order_id=order_row.id,  # type: ignore[arg-type]
                 product_id=i.product_id,
                 name=i.name,
+                unit=i.unit,
                 quantity=i.quantity,
                 price_each=i.price_each,
             )
@@ -107,6 +109,7 @@ async def list_orders(
             OrderItemOut(
                 product_id=int(it.product_id),
                 name=it.name,
+                unit=getattr(it, "unit", ""),
                 quantity=float(it.quantity),
                 price_each=float(it.price_each),
                 subtotal=subtotal,
@@ -144,6 +147,7 @@ async def get_order(
             OrderItemOut(
                 product_id=int(it.product_id),
                 name=it.name,
+                unit=getattr(it, "unit", ""),
                 quantity=float(it.quantity),
                 price_each=float(it.price_each),
                 subtotal=subtotal,

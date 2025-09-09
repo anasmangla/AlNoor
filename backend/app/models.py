@@ -23,5 +23,6 @@ class OrderItem(SQLModel, table=True):
     order_id: int = Field(foreign_key="order.id")
     product_id: int = Field(foreign_key="product.id")
     name: str
+    unit: str = ""
     quantity: float
     price_each: float

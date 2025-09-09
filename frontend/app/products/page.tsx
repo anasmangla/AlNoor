@@ -1,4 +1,5 @@
 import { fetchProducts } from "@/lib/api";
+import Link from "next/link";
 
 export default async function ProductsPage() {
   const products = await fetchProducts();
@@ -11,12 +12,13 @@ export default async function ProductsPage() {
       ) : (
         <ul className="grid gap-3">
           {products.map((p) => (
-            <li
-              key={p.id}
-              className="border rounded p-4 flex items-center justify-between"
-            >
+            <li key={p.id} className="border rounded p-4 flex items-center justify-between">
               <div>
-                <div className="font-medium">{p.name}</div>
+                <div className="font-medium">
+                  <Link href={`/products/${p.id}`} className="hover:underline">
+                    {p.name}
+                  </Link>
+                </div>
                 <div className="text-slate-600 text-sm">ID: {p.id}</div>
               </div>
               <div className="font-semibold">${p.price.toFixed(2)} / {(p as any).unit || "unit"}</div>

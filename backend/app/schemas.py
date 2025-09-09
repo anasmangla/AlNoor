@@ -41,6 +41,7 @@ class OrderCreate(BaseModel):
 class OrderItemOut(BaseModel):
     product_id: int
     name: str
+    unit: str
     quantity: float
     price_each: float
     subtotal: float

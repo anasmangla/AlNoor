@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "Al Noor Farm",
@@ -14,9 +15,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen antialiased text-slate-800">
-        <main className="max-w-5xl mx-auto p-6">{children}</main>
+        <Providers>
+          <main className="max-w-5xl mx-auto p-6">{children}</main>
+        </Providers>
       </body>
     </html>
   );
 }
-

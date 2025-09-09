@@ -18,6 +18,12 @@ export async function fetchProducts(): Promise<Product[]> {
   return res.json();
 }
 
+export async function fetchProduct(id: number): Promise<Product> {
+  const res = await fetch(`${API_BASE}/products/${id}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to fetch product ${id}: ${res.status}`);
+  return res.json();
+}
+
 export async function createProduct(input: Omit<Product, "id">): Promise<Product> {
   const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
   const res = await fetch(`${API_BASE}/products`, {
@@ -56,6 +62,7 @@ export type Order = {
   items: Array<{
     product_id: number;
     name: string;
+    unit: string;
     quantity: number;
     price_each: number;
     subtotal: number;

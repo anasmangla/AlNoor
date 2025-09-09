@@ -46,7 +46,7 @@ export default function AdminOrdersPage() {
               <ul className="text-sm text-slate-600 mt-1">
                 {o.items.map((i, idx) => (
                   <li key={idx}>
-                    {i.name} x {i.quantity} @ ${i.price_each.toFixed(2)} = $
+                    {i.name} x {i.quantity} {i.unit || ""} @ ${i.price_each.toFixed(2)} = $
                     {i.subtotal.toFixed(2)}
                   </li>
                 ))}

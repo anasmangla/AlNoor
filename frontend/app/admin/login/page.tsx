@@ -18,6 +18,9 @@ export default function AdminLoginPage() {
       const res = await login(username, password);
       // Store token for future use (placeholder)
       localStorage.setItem("alnoor_token", res.access_token);
+      // Also set a cookie so middleware can protect /admin routes
+      const maxAge = 60 * 60 * 24; // 1 day
+      document.cookie = `alnoor_token=${res.access_token}; Path=/; Max-Age=${maxAge}`;
       router.push("/admin/products");
     } catch (e: any) {
       setError(e.message || "Login failed");
@@ -65,4 +68,3 @@ export default function AdminLoginPage() {
     </section>
   );
 }
-
