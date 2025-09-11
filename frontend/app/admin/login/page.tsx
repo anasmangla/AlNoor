@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 import { login } from "@/lib/api";
 import { useRouter } from "next/navigation";
@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
             className="border rounded px-2 py-1 w-full"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="admin"
+            placeholder="Password"
           />
         </div>
         <div>
@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
             className="border rounded px-2 py-1 w-full"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
+            placeholder="Password"
           />
         </div>
         <button
@@ -68,3 +68,4 @@ export default function AdminLoginPage() {
     </section>
   );
 }
+

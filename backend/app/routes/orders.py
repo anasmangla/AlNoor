@@ -2,7 +2,7 @@ from typing import List, Dict
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas import OrderCreate, OrderOut, OrderItemOut
+from app.schemas import OrderCreate, OrderOut, OrderItemOut, OrderUpdate
 from app.deps import get_current_user
 from app.database import get_session
 from app.models import Product as ProductModel, Order as OrderModel, OrderItem as OrderItemModel
@@ -153,6 +153,49 @@ async def get_order(
                 subtotal=subtotal,
             )
         )
+    return OrderOut(
+        id=int(o.id),
+        items=items_out,
+        total_amount=float(o.total_amount),
+        status=o.status,
+        source=o.source,
+    )
+
+
+@router.put("/orders/{order_id}", response_model=OrderOut)
+async def update_order(
+    order_id: int,
+    payload: OrderUpdate,
+    user: str = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    result = await session.execute(select(OrderModel).where(OrderModel.id == order_id))
+    o = result.scalars().first()
+    if not o:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    o.status = payload.status
+    await session.commit()
+    await session.refresh(o)
+
+    # Gather items for response
+    result_items = await session.execute(
+        select(OrderItemModel).where(OrderItemModel.order_id == order_id)
+    )
+    items_out = []
+    for it in result_items.scalars().all():
+        subtotal = float(it.price_each) * float(it.quantity)
+        items_out.append(
+            OrderItemOut(
+                product_id=int(it.product_id),
+                name=it.name,
+                unit=getattr(it, "unit", ""),
+                quantity=float(it.quantity),
+                price_each=float(it.price_each),
+                subtotal=subtotal,
+            )
+        )
+
     return OrderOut(
         id=int(o.id),
         items=items_out,

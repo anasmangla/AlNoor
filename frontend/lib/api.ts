@@ -96,6 +96,23 @@ export async function listOrders(): Promise<Order[]> {
   return res.json();
 }
 
+export async function updateOrderStatus(
+  id: number,
+  status: string
+): Promise<Order> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
+  const res = await fetch(`${API_BASE}/orders/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) throw new Error(`Failed to update order: ${res.status}`);
+  return res.json();
+}
+
 export async function deleteProduct(id: number): Promise<void> {
   const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
   const res = await fetch(`${API_BASE}/products/${id}`, {

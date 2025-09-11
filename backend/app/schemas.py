@@ -53,3 +53,7 @@ class OrderOut(BaseModel):
     total_amount: float
     status: str
     source: str
+
+
+class OrderUpdate(BaseModel):
+    status: str = Field(..., description="Order status, e.g., pending|paid|processing|completed|cancelled")

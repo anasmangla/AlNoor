@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import {
   Product,
@@ -103,7 +103,7 @@ export default function AdminProductsPage() {
 
   return (
     <section>
-      <h1 className="text-2xl font-semibold mb-4">Admin – Products</h1>
+      <h1 className="text-2xl font-semibold mb-4">Admin Products</h1>
       {!hasToken && (
         <div className="mb-3 text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded">
           Not authenticated. Please <a href="/admin/login" className="underline">log in</a> to manage products.
@@ -152,7 +152,7 @@ export default function AdminProductsPage() {
             className="border rounded px-2 py-1"
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
-            placeholder="e.g., lb, each, dozen"
+            placeholder="each, lb, dozen, ..."
           />
         </div>
         <div className="flex items-center gap-2">
@@ -173,7 +173,7 @@ export default function AdminProductsPage() {
       </form>
 
       {loading ? (
-        <p className="text-slate-600">Loading…</p>
+        <p className="text-slate-600">Loading...</p>
       ) : products.length === 0 ? (
         <p className="text-slate-600">No products yet.</p>
       ) : (
@@ -237,7 +237,7 @@ export default function AdminProductsPage() {
                 <div className="flex-1">
                   <div className="font-medium">{p.name}</div>
                   <div className="text-slate-600 text-sm">
-                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} • Stock: {(p as any).stock ?? 0} {((p as any).unit || "")}
+                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} — Stock: {(p as any).stock ?? 0} {((p as any).unit || "")}
                   </div>
                 </div>
               )}
@@ -281,4 +281,3 @@ export default function AdminProductsPage() {
     </section>
   );
 }
-
