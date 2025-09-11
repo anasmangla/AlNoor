@@ -39,7 +39,12 @@ export default async function ProductsPage({ searchParams }: Props) {
                 </div>
                 <div className="text-slate-600 text-sm">ID: {p.id}</div>
               </div>
-              <div className="font-semibold">${p.price.toFixed(2)} / {(p as any).unit || "unit"}</div>
+              <div className="flex items-center gap-3">
+                {(p as any).image_url ? (
+                  <img src={(p as any).image_url} alt={p.name} className="h-10 w-10 object-cover rounded border" />
+                ) : null}
+                <div className="font-semibold">${p.price.toFixed(2)} / {(p as any).unit || "unit"}</div>
+              </div>
             </li>
           ))}
         </ul>

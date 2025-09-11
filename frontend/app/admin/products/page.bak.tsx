@@ -1,6 +1,12 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
-import { Product, fetchProducts, createProduct, deleteProduct, updateProduct } from "@/lib/api";
+import { useEffect, useState } from "react";
+import {
+  Product,
+  fetchProducts,
+  createProduct,
+  deleteProduct,
+  updateProduct,
+} from "@/lib/api";
 
 export default function AdminProductsPage() {
   const [hasToken, setHasToken] = useState<boolean>(false);
@@ -10,7 +16,6 @@ export default function AdminProductsPage() {
   const [stock, setStock] = useState("0");
   const [unit, setUnit] = useState("");
   const [isWeightBased, setIsWeightBased] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -19,7 +24,6 @@ export default function AdminProductsPage() {
   const [editStock, setEditStock] = useState("0");
   const [editUnit, setEditUnit] = useState("");
   const [editIsWeightBased, setEditIsWeightBased] = useState(false);
-  const [editImageUrl, setEditImageUrl] = useState("");
   const [query, setQuery] = useState("");
 
   async function load() {
@@ -50,13 +54,12 @@ export default function AdminProductsPage() {
       const p = parseFloat(price);
       const s = parseFloat(stock);
       if (!n || isNaN(p) || isNaN(s)) return;
-      await createProduct({ name: n, price: p, stock: s, unit, is_weight_based: isWeightBased, image_url: imageUrl } as any);
+      await createProduct({ name: n, price: p, stock: s, unit, is_weight_based: isWeightBased } as any);
       setName("");
       setPrice("0");
       setStock("0");
       setUnit("");
       setIsWeightBased(false);
-      setImageUrl("");
       await load();
     } catch (e: any) {
       setError(e.message || "Failed to create");
@@ -80,7 +83,6 @@ export default function AdminProductsPage() {
     setEditStock(String((p as any).stock ?? 0));
     setEditUnit((p as any).unit ?? "");
     setEditIsWeightBased(!!(p as any).is_weight_based);
-    setEditImageUrl((p as any).image_url || "");
   }
 
   async function onSaveEdit() {
@@ -88,7 +90,7 @@ export default function AdminProductsPage() {
     try {
       const p = parseFloat(editPrice);
       const s = parseFloat(editStock);
-      await updateProduct(editingId, { name: editName, price: p, stock: s, unit: editUnit, is_weight_based: editIsWeightBased, image_url: editImageUrl } as any);
+      await updateProduct(editingId, { name: editName, price: p, stock: s, unit: editUnit, is_weight_based: editIsWeightBased } as any);
       setEditingId(null);
       await load();
     } catch (e: any) {
@@ -100,15 +102,6 @@ export default function AdminProductsPage() {
     setEditingId(null);
   }
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return products;
-    return products.filter((p) => {
-      const unit = String((p as any).unit || "").toLowerCase();
-      return p.name.toLowerCase().includes(q) || unit.includes(q);
-    });
-  }, [products, query]);
-
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">Admin Products</h1>
@@ -118,94 +111,182 @@ export default function AdminProductsPage() {
         </div>
       )}
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">{error}</div>
+        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
+          {error}
+        </div>
       )}
       <form onSubmit={onCreate} className="mb-6 flex gap-2 items-end flex-wrap">
         <div>
           <label className="block text-sm text-slate-600">Name</label>
-          <input className="border rounded px-2 py-1" value={name} onChange={(e)=> setName(e.target.value)} placeholder="Product name" />
+          <input
+            className="border rounded px-2 py-1"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Product name"
+          />
         </div>
         <div>
           <label className="block text-sm text-slate-600">Price (USD)</label>
-          <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={price} onChange={(e)=> setPrice(e.target.value)} />
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            className="border rounded px-2 py-1"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
         </div>
         <div>
           <label className="block text-sm text-slate-600">Stock</label>
-          <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={stock} onChange={(e)=> setStock(e.target.value)} />
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            className="border rounded px-2 py-1"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+          />
         </div>
         <div>
           <label className="block text-sm text-slate-600">Unit</label>
-          <input className="border rounded px-2 py-1" value={unit} onChange={(e)=> setUnit(e.target.value)} placeholder="each, lb, dozen, ..." />
+          <input
+            className="border rounded px-2 py-1"
+            value={unit}
+            onChange={(e) => setUnit(e.target.value)}
+            placeholder="each, lb, dozen, ..."
+          />
         </div>
         <div className="flex items-center gap-2">
-          <input id="isWeightBased" type="checkbox" checked={isWeightBased} onChange={(e)=> setIsWeightBased(e.target.checked)} />
+          <input
+            id="isWeightBased"
+            type="checkbox"
+            checked={isWeightBased}
+            onChange={(e) => setIsWeightBased(e.target.checked)}
+          />
           <label htmlFor="isWeightBased" className="text-sm text-slate-600">Weight-based</label>
         </div>
-        <div>
-          <label className="block text-sm text-slate-600">Image URL</label>
-          <input className="border rounded px-2 py-1 min-w-[280px]" value={imageUrl} onChange={(e)=> setImageUrl(e.target.value)} placeholder="https://..." />
-        </div>
-        <button type="submit" className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700">Add</button>
+        <button
+          type="submit"
+          className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700"
+        >
+          Add
+        </button>
       </form>
 
       <div className="mb-4">
-        <input className="border rounded px-2 py-1" placeholder="Filter by name or unit..." value={query} onChange={(e)=> setQuery(e.target.value)} />
+        <input
+          className="border rounded px-2 py-1"
+          placeholder="Filter by name or unit..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
       </div>
-
       {loading ? (
         <p className="text-slate-600">Loading...</p>
-      ) : filtered.length === 0 ? (
+      ) : products.length === 0 ? (
         <p className="text-slate-600">No products yet.</p>
       ) : (
         <ul className="grid gap-2">
-          {filtered.map((p) => (
-            <li key={p.id} className="border rounded p-3 flex items-center justify-between gap-4">
+          {products
+            .filter((p) => {
+              const q = query.trim().toLowerCase();
+              if (!q) return true;
+              const unit = String((p as any).unit || "").toLowerCase();
+              return p.name.toLowerCase().includes(q) || unit.includes(q);
+            })
+            .map((p) => (
+            <li
+              key={p.id}
+              className="border rounded p-3 flex items-center justify-between gap-4"
+            >
               {editingId === p.id ? (
                 <div className="flex-1 flex items-end gap-2 flex-wrap">
                   <div>
                     <label className="block text-xs text-slate-600">Name</label>
-                    <input className="border rounded px-2 py-1" value={editName} onChange={(e)=> setEditName(e.target.value)} />
+                    <input
+                      className="border rounded px-2 py-1"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-600">Price</label>
-                    <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={editPrice} onChange={(e)=> setEditPrice(e.target.value)} />
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="border rounded px-2 py-1"
+                      value={editPrice}
+                      onChange={(e) => setEditPrice(e.target.value)}
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-600">Stock</label>
-                    <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={editStock} onChange={(e)=> setEditStock(e.target.value)} />
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      className="border rounded px-2 py-1"
+                      value={editStock}
+                      onChange={(e) => setEditStock(e.target.value)}
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-600">Unit</label>
-                    <input className="border rounded px-2 py-1" value={editUnit} onChange={(e)=> setEditUnit(e.target.value)} />
+                    <input
+                      className="border rounded px-2 py-1"
+                      value={editUnit}
+                      onChange={(e) => setEditUnit(e.target.value)}
+                    />
                   </div>
                   <div className="flex items-center gap-2 pt-5">
-                    <input id="editIsWeightBased" type="checkbox" checked={editIsWeightBased} onChange={(e)=> setEditIsWeightBased(e.target.checked)} />
+                    <input
+                      id="editIsWeightBased"
+                      type="checkbox"
+                      checked={editIsWeightBased}
+                      onChange={(e) => setEditIsWeightBased(e.target.checked)}
+                    />
                     <label htmlFor="editIsWeightBased" className="text-xs text-slate-600">Weight-based</label>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-slate-600">Image URL</label>
-                    <input className="border rounded px-2 py-1 min-w-[260px]" value={editImageUrl} onChange={(e)=> setEditImageUrl(e.target.value)} />
                   </div>
                 </div>
               ) : (
                 <div className="flex-1">
                   <div className="font-medium">{p.name}</div>
                   <div className="text-slate-600 text-sm">
-                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} â€” Stock: {(p as any).stock ?? 0} {((p as any).unit || "")}
+                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} — Stock: {(p as any).stock ?? 0} {((p as any).unit || "")}
                   </div>
                 </div>
               )}
               <div className="flex items-center gap-3">
-                {(p as any).image_url ? (<img src={(p as any).image_url} alt={p.name} className="h-10 w-10 object-cover rounded border" />) : null}
                 {editingId === p.id ? (
                   <>
-                    <button onClick={onSaveEdit} className="text-emerald-700 hover:underline">Save</button>
-                    <button onClick={cancelEdit} className="text-slate-600 hover:underline">Cancel</button>
+                    <button
+                      onClick={onSaveEdit}
+                      className="text-emerald-700 hover:underline"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="text-slate-600 hover:underline"
+                    >
+                      Cancel
+                    </button>
                   </>
                 ) : (
                   <>
-                    <button onClick={() => startEdit(p)} className="text-blue-700 hover:underline">Edit</button>
-                    <button onClick={() => onDelete(p.id)} className="text-red-700 hover:underline">Delete</button>
+                    <button
+                      onClick={() => startEdit(p)}
+                      className="text-blue-700 hover:underline"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => onDelete(p.id)}
+                      className="text-red-700 hover:underline"
+                    >
+                      Delete
+                    </button>
                   </>
                 )}
               </div>
@@ -216,4 +297,5 @@ export default function AdminProductsPage() {
     </section>
   );
 }
+
 

@@ -192,6 +192,19 @@ export default function PosPage() {
           >
             {loading ? "Processing..." : "Use Square Terminal"}
           </button>
+          <button
+            onClick={async ()=>{
+              setLoading(true); setError(null); setMessage(null);
+              try{
+                const order = await createOrder({ items: sale.map((s)=>({product_id: s.product.id, quantity: s.quantity})), source: 'pos' });
+                setMessage(`Cash received. Order #${order.id}`); setSale([]);
+              }catch(e:any){ setError(e.message||'Cash checkout failed'); } finally { setLoading(false); }
+            }}
+            disabled={loading || sale.length === 0}
+            className="bg-slate-700 text-white px-3 py-1 rounded hover:bg-slate-800 disabled:opacity-60"
+          >
+            {loading ? 'Processing...' : 'Cash'}
+          </button>
         </div>
       </div>
       {terminalId && (

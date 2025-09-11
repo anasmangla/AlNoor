@@ -82,3 +82,17 @@ async def list_messages(
         for m in msgs
     ]
 
+
+@router.delete("/admin/messages/{message_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_message(
+    message_id: int,
+    user: str = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    result = await session.execute(select(ContactMessage).where(ContactMessage.id == message_id))
+    msg = result.scalars().first()
+    if not msg:
+        raise HTTPException(status_code=404, detail="Message not found")
+    await session.delete(msg)
+    await session.commit()
+    return None

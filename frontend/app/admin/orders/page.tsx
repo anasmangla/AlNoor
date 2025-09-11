@@ -1,6 +1,7 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
 import { listOrders, updateOrderStatus, type Order } from "@/lib/api";
+import { useMemo, useState as useStateReact } from "react";
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -31,9 +32,33 @@ export default function AdminOrdersPage() {
     }
   }
 
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [idQuery, setIdQuery] = useState("");
+  const filtered = useMemo(() => {
+    return orders.filter((o) => {
+      const okStatus = statusFilter === "all" || o.status === statusFilter;
+      const okId = idQuery.trim() === "" || String(o.id).includes(idQuery.trim());
+      return okStatus && okId;
+    });
+  }, [orders, statusFilter, idQuery]);
+
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">Orders</h1>
+      <div className="flex items-center gap-3 mb-3">
+        <label className="text-sm text-slate-600">Status</label>
+        <select className="border rounded px-2 py-1 text-sm" value={statusFilter} onChange={(e)=> setStatusFilter(e.target.value)}>
+          {['all','pending','paid','processing','completed','cancelled'].map(s=> (
+            <option key={s} value={s}>{s}</option>
+          ))}
+        </select>
+        <input
+          className="border rounded px-2 py-1 text-sm"
+          placeholder="Order ID"
+          value={idQuery}
+          onChange={(e)=> setIdQuery(e.target.value)}
+        />
+      </div>
       {error && (
         <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
           {error}
@@ -41,11 +66,11 @@ export default function AdminOrdersPage() {
       )}
       {loading ? (
         <p className="text-slate-600">Loading...</p>
-      ) : orders.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <p className="text-slate-600">No orders yet.</p>
       ) : (
         <ul className="grid gap-3">
-          {orders.map((o) => (
+          {filtered.map((o) => (
             <li key={o.id} className="border rounded p-3">
               <div className="flex items-center justify-between">
                 <div className="font-medium">

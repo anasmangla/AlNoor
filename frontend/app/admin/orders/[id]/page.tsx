@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { API_BASE, type Order } from "@/lib/api";
+import UpdateStatus from "./widgets/UpdateStatus";
 
 type Props = { params: { id: string } };
 
@@ -37,6 +38,7 @@ export default async function AdminOrderDetail({ params }: Props) {
         {order.customer_name && <span>Name: {order.customer_name} · </span>}
         {order.customer_email && <span>Email: {order.customer_email}</span>}
       </div>
+      <UpdateStatus id={order.id} current={order.status} />
       <div>
         <h2 className="font-medium mb-2">Items</h2>
         <ul className="grid gap-2">

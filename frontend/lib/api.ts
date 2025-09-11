@@ -5,6 +5,7 @@ export type Product = {
   stock: number;
   unit: string;
   is_weight_based: boolean;
+  image_url?: string;
 };
 
 export const API_BASE =

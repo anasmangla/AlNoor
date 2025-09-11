@@ -24,6 +24,7 @@ async def list_products(session: AsyncSession = Depends(get_session)):
             stock=p.stock,
             unit=p.unit,
             is_weight_based=p.is_weight_based,
+            image_url=getattr(p, "image_url", ""),
         )
         for p in rows
     ]
@@ -42,6 +43,7 @@ async def get_product(product_id: int, session: AsyncSession = Depends(get_sessi
         stock=p.stock,
         unit=p.unit,
         is_weight_based=p.is_weight_based,
+        image_url=getattr(p, "image_url", ""),
     )
 
 
@@ -57,6 +59,7 @@ async def create_product(
         stock=payload.stock or 0,
         unit=payload.unit or "",
         is_weight_based=bool(payload.is_weight_based),
+        image_url=payload.image_url or "",
     )
     session.add(p)
     await session.commit()
@@ -68,6 +71,7 @@ async def create_product(
         stock=p.stock,
         unit=p.unit,
         is_weight_based=p.is_weight_based,
+        image_url=getattr(p, "image_url", ""),
     )
 
 
@@ -92,6 +96,8 @@ async def update_product(
         p.unit = payload.unit
     if payload.is_weight_based is not None:
         p.is_weight_based = bool(payload.is_weight_based)
+    if getattr(payload, "image_url", None) is not None:
+        p.image_url = payload.image_url or ""
     await session.commit()
     await session.refresh(p)
     return ProductOut(
@@ -101,6 +107,7 @@ async def update_product(
         stock=p.stock,
         unit=p.unit,
         is_weight_based=p.is_weight_based,
+        image_url=getattr(p, "image_url", ""),
     )
 
 
