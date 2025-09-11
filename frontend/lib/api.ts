@@ -114,6 +114,18 @@ export async function updateOrderStatus(
   return res.json();
 }
 
+export async function getOrder(id: number): Promise<Order> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
+  const res = await fetch(`${API_BASE}/orders/${id}`, {
+    cache: "no-store",
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+  if (!res.ok) throw new Error(`Failed to get order: ${res.status}`);
+  return res.json();
+}
+
 export async function deleteProduct(id: number): Promise<void> {
   const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
   const res = await fetch(`${API_BASE}/products/${id}`, {

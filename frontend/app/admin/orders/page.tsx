@@ -48,7 +48,9 @@ export default function AdminOrdersPage() {
           {orders.map((o) => (
             <li key={o.id} className="border rounded p-3">
               <div className="flex items-center justify-between">
-                <div className="font-medium">Order #{o.id}</div>
+                <div className="font-medium">
+                  <a className="hover:underline" href={`/admin/orders/${o.id}`}>Order #{o.id}</a>
+                </div>
                 <div className="text-sm text-slate-600">{o.source.toUpperCase()}</div>
               </div>
               <div className="text-slate-700 flex items-center gap-3">
