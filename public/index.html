@@ -1,23 +1,132 @@
 <!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Al Noor Farm</title>
-  <link rel="icon" href="/assets/favicon.png" type="image/png">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 2rem; }
-    .wrap { max-width: 800px; margin: 0 auto; text-align: center; }
-    img.logo { max-width: 200px; height: auto; }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <img class="logo" src="/assets/alnoorlogo.png" alt="Al Noor Logo">
-    <h1>Welcome to Al Noor Farm</h1>
-    <p>Browse halal meats, eggs, and farm products.</p>
-    <p><a href="/store">Storefront API</a> · <a href="/admin">Admin</a> · <a href="/pos">POS</a></p>
-  </div>
-</body>
-</html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Al Noor Farm</title>
+    <style>
+      :root { --fg: #0f172a; --muted:#475569; --accent:#047857; --link:#2563eb; }
+      *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu; color:var(--fg);} 
+      header{position:sticky;top:0;backdrop-filter:saturate(180%) blur(8px); background:#fff8; border-bottom:1px solid #e2e8f0}
+      .wrap{max-width:960px;margin:0 auto;padding:12px 20px}
+      nav a{margin-right:16px;color:var(--muted);text-decoration:none}
+      nav a:hover{color:var(--link);text-decoration:underline}
+      .hero{padding:48px 20px;text-align:center}
+      .hero img{max-height:90px}
+      .grid{display:grid;gap:12px}
+      .card{border:1px solid #e2e8f0;border-radius:8px;padding:16px}
+      footer{margin-top:40px;border-top:1px solid #e2e8f0}
+      .muted{color:var(--muted)}
+      .btn{background:var(--accent);color:#fff;border-radius:6px;padding:8px 12px;text-decoration:none}
+      .btn:hover{filter:brightness(0.95)}
+      section{scroll-margin-top:72px}
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap" style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <a href="/" class="muted" data-nav>Al Noor</a>
+          <nav style="display:inline-block;margin-left:12px">
+            <a href="/store" data-nav>Store</a>
+            <a href="/admin" data-nav>Admin</a>
+            <a href="/pos" data-nav>POS</a>
+          </nav>
+        </div>
+        <a class="btn" href="/store" data-nav>Shop Now</a>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section id="home" class="hero">
+        <img src="/assets/alnoorlogo.png" alt="Al Noor Farm" />
+        <h1>Welcome to Al Noor Farm</h1>
+        <p class="muted">Fresh products, simple checkout, and an admin POS.</p>
+      </section>
+
+      <section id="store">
+        <h2>Store</h2>
+        <div class="grid">
+          <div class="card">
+            <strong>Browse Products</strong>
+            <p class="muted">Visit the store to see what's available.</p>
+            <a class="btn" href="/store" data-nav>Go to Store</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin">
+        <h2>Admin</h2>
+        <div class="grid">
+          <div class="card">
+            <strong>Admin Login</strong>
+            <p class="muted">Manage products, inventory, and orders.</p>
+            <a class="btn" href="/admin" data-nav>Admin Panel</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="pos">
+        <h2>POS</h2>
+        <div class="grid">
+          <div class="card">
+            <strong>Point of Sale</strong>
+            <p class="muted">Ring up in-person orders and charge customers.</p>
+            <a class="btn" href="/pos" data-nav>Open POS</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap muted" style="display:flex;align-items:center;justify-content:space-between">
+        <div>© <span id="year"></span> Al Noor Farm</div>
+        <div>
+          <a href="/store" data-nav>Store</a>
+          ·
+          <a href="/admin" data-nav>Admin</a>
+          ·
+          <a href="/pos" data-nav>POS</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function() {
+        document.getElementById('year').textContent = new Date().getFullYear();
+        var map = {
+          '/': '#home',
+          '/store': '#store',
+          '/products': '#store',
+          '/admin': '#admin',
+          '/admin/login': '#admin',
+          '/pos': '#pos',
+          '/admin/pos': '#pos'
+        };
+        function goto(path) {
+          var id = map[path] || '#home';
+          var el = document.querySelector(id);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        function handlePath() {
+          var path = location.pathname.replace(/\/$/, '');
+          if (path === '') path = '/';
+          goto(path);
+        }
+        // Intercept clicks on data-nav links
+        document.querySelectorAll('a[data-nav]').forEach(function(a){
+          a.addEventListener('click', function(e){
+            e.preventDefault();
+            var href = a.getAttribute('href');
+            history.pushState({}, '', href);
+            handlePath();
+          });
+        });
+        window.addEventListener('popstate', handlePath);
+        // Initial load
+        handlePath();
+      })();
+    </script>
+  </body>
+  </html>
 
