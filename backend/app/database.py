@@ -31,6 +31,8 @@ async def init_db() -> None:
                     await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN unit TEXT DEFAULT ''")
                 if "is_weight_based" not in cols:
                     await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN is_weight_based BOOLEAN DEFAULT 0")
+                if "image_url" not in cols:
+                    await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN image_url TEXT DEFAULT ''")
                 # OrderItem table
                 res2 = await conn.exec_driver_sql("PRAGMA table_info(orderitem)")
                 cols2 = {row[1] for row in res2}
@@ -56,6 +58,9 @@ async def init_db() -> None:
                 )
                 await conn.exec_driver_sql(
                     "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS is_weight_based BOOLEAN DEFAULT FALSE"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS image_url TEXT DEFAULT ''"
                 )
                 await conn.exec_driver_sql(
                     "ALTER TABLE IF NOT EXISTS orderitem ADD COLUMN IF NOT EXISTS unit TEXT DEFAULT ''"

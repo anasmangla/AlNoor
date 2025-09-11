@@ -53,8 +53,11 @@ export default function AdminOrdersPage() {
                 </div>
                 <div className="text-sm text-slate-600">{o.source.toUpperCase()}</div>
               </div>
-              <div className="text-slate-700 flex items-center gap-3">
+              <div className="text-slate-700 flex items-center gap-3 flex-wrap">
                 <span>${o.total_amount.toFixed(2)}</span>
+                {o.created_at && (
+                  <span className="text-xs text-slate-500">{new Date(o.created_at).toLocaleString()}</span>
+                )}
                 <span className="text-sm text-slate-600">Status:</span>
                 <select
                   className="border rounded px-1 py-0.5 text-sm"

@@ -32,6 +32,11 @@ export default async function AdminOrderDetail({ params }: Props) {
       </div>
       <div className="text-slate-700">Total: ${order.total_amount.toFixed(2)}</div>
       <div className="text-sm text-slate-600">Status: {order.status} · Source: {order.source.toUpperCase()}</div>
+      <div className="text-sm text-slate-600">
+        {order.created_at && <span>Created: {new Date(order.created_at).toLocaleString()} · </span>}
+        {order.customer_name && <span>Name: {order.customer_name} · </span>}
+        {order.customer_email && <span>Email: {order.customer_email}</span>}
+      </div>
       <div>
         <h2 className="font-medium mb-2">Items</h2>
         <ul className="grid gap-2">
@@ -49,4 +54,3 @@ export default async function AdminOrderDetail({ params }: Props) {
     </section>
   );
 }
-

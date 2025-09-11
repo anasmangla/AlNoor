@@ -9,6 +9,7 @@ class ProductBase(BaseModel):
     stock: float = Field(0, ge=0)
     unit: str = Field("", max_length=50)
     is_weight_based: bool = False
+    image_url: Optional[str] = Field(default="", max_length=500)
 
 
 class ProductCreate(ProductBase):
@@ -60,6 +61,20 @@ class OrderOut(BaseModel):
     customer_name: Optional[str] = None
     customer_email: Optional[EmailStr] = None
     created_at: Optional[datetime] = None
+
+
+class ContactCreate(BaseModel):
+    name: Optional[str] = Field(default="", max_length=100)
+    email: Optional[EmailStr] = None
+    message: str = Field(..., max_length=4000)
+
+
+class ContactOut(BaseModel):
+    id: int
+    name: str
+    email: Optional[EmailStr] = None
+    message: str
+    created_at: datetime
 
 
 class OrderUpdate(BaseModel):
