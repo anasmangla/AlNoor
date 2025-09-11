@@ -5,11 +5,11 @@ import { listOrders, type Order } from "@/lib/api";
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [Loading...setLoading...= useState(false);
 
   useEffect(() => {
     (async () => {
-      setLoading(true);
+      setLoading...rue);
       setError(null);
       try {
         const data = await listOrders();
@@ -17,7 +17,7 @@ export default function AdminOrdersPage() {
       } catch (e: any) {
         setError(e.message || "Failed to load orders");
       } finally {
-        setLoading(false);
+        setLoading...alse);
       }
     })();
   }, []);
@@ -30,8 +30,8 @@ export default function AdminOrdersPage() {
           {error}
         </div>
       )}
-      {loading ? (
-        <p className="text-slate-600">Loadingâ€¦</p>
+      {Loading... (
+        <p className="text-slate-600">Loading...¦</p>
       ) : orders.length === 0 ? (
         <p className="text-slate-600">No orders yet.</p>
       ) : (

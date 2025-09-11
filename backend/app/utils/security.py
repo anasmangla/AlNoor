@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import time
 from typing import Any, Dict, Optional
 
@@ -6,6 +7,7 @@ import jwt
 from passlib.context import CryptContext
 
 
+load_dotenv()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -31,4 +33,3 @@ def decode_token(token: str) -> Optional[Dict[str, Any]]:
         return decoded  # type: ignore[return-value]
     except jwt.PyJWTError:
         return None
-

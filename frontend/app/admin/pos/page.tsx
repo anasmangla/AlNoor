@@ -8,7 +8,7 @@ type SaleItem = { product: Product; quantity: number };
 export default function PosPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [sale, setSale] = useState<SaleItem[]>([]);
-  const [selectedId, setSelectedId] = useState<string>("");
+  const [Select...Id, setSelect...Id] = useState<string>("");
   const [qty, setQty] = useState<string>("1");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +24,7 @@ export default function PosPage() {
   );
 
   function addItem() {
-    const id = parseInt(selectedId, 10);
+    const id = parseInt(Select...Id, 10);
     const product = products.find((p) => p.id === id);
     const q = parseFloat(qty);
     if (!product || isNaN(q) || q <= 0) return;
@@ -73,22 +73,22 @@ export default function PosPage() {
       <div className="flex gap-2 items-end mb-4 flex-wrap">
         <div>
           <label className="block text-sm text-slate-600">Product</label>
-          <select
+          <Select...
             className="border rounded px-2 py-1 min-w-[200px]"
-            value={selectedId}
-            onChange={(e) => setSelectedId(e.target.value)}
+            value={Select...Id}
+            onChange={(e) => setSelect...Id(e.target.value)}
           >
-            <option value="">Selectâ€¦</option>
+            <option value="">Select...¦</option>
             {products.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name} (${p.price.toFixed(2)} / {(p as any).unit || "unit"})
               </option>
             ))}
-          </select>
+          </Select...
         </div>
         <div>
           {(() => {
-            const sel = products.find((p) => String(p.id) === selectedId) as any;
+            const sel = products.find((p) => String(p.id) === Select...Id) as any;
             const isWeight = sel?.is_weight_based;
             const unit = sel?.unit || "unit";
             return (
@@ -139,7 +139,7 @@ export default function PosPage() {
           disabled={loading || sale.length === 0}
           className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 disabled:opacity-60"
         >
-          {loading ? "Processingâ€¦" : "Checkout"}
+          {loading ? "Processing...¦" : "Checkout"}
         </button>
       </div>
     </section>
