@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { createOrder } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/context/CartContext";
 
 export default function CheckoutPage() {
+  const { lines, clear, total } = useCart();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,13 +17,14 @@ export default function CheckoutPage() {
     setError(null);
     setLoading(true);
     try {
-      // Placeholder: order 1 qty of product 1
+      if (lines.length === 0) throw new Error("Cart is empty");
       const order = await createOrder({
         customer_name: name || undefined,
         customer_email: email || undefined,
-        items: [{ product_id: 1, quantity: 1 }],
+        items: lines.map((l) => ({ product_id: l.product.id, quantity: l.quantity })),
         source: "web",
       });
+      clear();
       router.push(`/confirmation?orderId=${order.id}`);
     } catch (e: any) {
       setError(e.message || "Order failed");
@@ -33,6 +36,9 @@ export default function CheckoutPage() {
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">Checkout</h1>
+      {lines.length > 0 && (
+        <div className="mb-3 text-sm text-slate-700">Items: {lines.length} • Total ${total.toFixed(2)}</div>
+      )}
       {error && (
         <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
           {error}
@@ -72,4 +78,3 @@ export default function CheckoutPage() {
     </section>
   );
 }
-
