@@ -1,11 +1,13 @@
 import pytest
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from app.main import app
+from app.database import init_db, seed_if_empty
 
 
 @pytest.mark.asyncio
 async def test_health_ok():
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
         resp = await ac.get("/health")
         assert resp.status_code == 200
         assert resp.json().get("status") == "ok"
@@ -13,10 +15,13 @@ async def test_health_ok():
 
 @pytest.mark.asyncio
 async def test_products_seeded():
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    # Ensure DB and seed are ready
+    await init_db()
+    await seed_if_empty()
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
         resp = await ac.get("/products")
         assert resp.status_code == 200
         data = resp.json()
         assert isinstance(data, list)
         assert len(data) >= 1
-

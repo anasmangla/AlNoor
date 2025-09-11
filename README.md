@@ -1,4 +1,4 @@
-## Al Noor Farm â€“ Ecommerce & POS
+## Al Noor Farm — Ecommerce & POS
 
 ![Al Noor Farm Logo](assets/alnoorlogo.png)
 
@@ -15,12 +15,16 @@ Fullâ€‘stack scaffold for storefront, admin, and POS:
 - `.env.example`: all required env variables (no secrets committed).
 
 ### Local Development
-- Prereqs: Node 18+, Python 3.10+, PostgreSQL (optional for now)
-- Oneâ€‘shot dev (Windows): `powershell -ExecutionPolicy Bypass -File .\\scripts\\start-dev.ps1 -Install`
-- Oneâ€‘shot dev (macOS/Linux): `chmod +x ./scripts/start-dev.sh && ./scripts/start-dev.sh --install`
+- Prereqs: Node 18+, Python 3.10+
+- Quick start (Windows): `powershell -ExecutionPolicy Bypass -File ./scripts/dev.ps1 -Install`
+- Quick start (macOS/Linux): `chmod +x ./scripts/dev.sh && ./scripts/dev.sh --install`
 - Manual:
   - Backend: `cd backend && pip install -r requirements.txt && uvicorn app.main:app --reload`
   - Frontend: `cd frontend && npm install && npm run dev`
+
+Build and test scripts:
+- Build: `./scripts/build.ps1` (Windows) or run equivalent Node commands on Unix
+- Test: `./scripts/test.ps1` (runs frontend Jest and backend pytest)
 
 ### Environment
 Copy `.env.example` to `.env` and adjust:
@@ -30,12 +34,12 @@ Copy `.env.example` to `.env` and adjust:
 
 ### Backend Endpoints (current)
 - `GET /` welcome; `GET /health` status
-- `GET /products`, `GET /products/{id}` â€“ public
-- `POST /products`, `PUT /products/{id}`, `DELETE /products/{id}` â€“ inâ€‘memory
-- `POST /orders` â€“ computes totals from products, returns order
-- `GET /orders`, `GET /orders/{id}` â€“ list/detail orders (inâ€‘memory)
-- `POST /auth/login` â€“ returns placeholder bearer token
-- `POST /pos/checkout` â€“ creates POS order (alias to `/orders`)
+- `GET /products`, `GET /products/{id}` — public
+- `POST /products`, `PUT /products/{id}`, `DELETE /products/{id}` — admin (JWT required)
+- `POST /orders` — computes totals and creates order; decrements stock
+- `GET /orders`, `GET /orders/{id}` — admin list/detail orders
+- `POST /auth/login` — returns bearer token
+- `POST /pos/checkout` — creates POS order
 
 ### Frontend Highlights
 - Storefront lists products from API.
@@ -52,3 +56,5 @@ Copy `.env.example` to `.env` and adjust:
 ### Notes
 - DB and JWT verification are stubs. Replace inâ€‘memory stores with Postgres via SQLAlchemy/SQLModel and real JWT as you progress.
 - See `docs/architecture*.md` for the broader plan.
+
+
