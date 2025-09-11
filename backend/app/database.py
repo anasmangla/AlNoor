@@ -36,6 +36,15 @@ async def init_db() -> None:
                 cols2 = {row[1] for row in res2}
                 if "unit" not in cols2:
                     await conn.exec_driver_sql("ALTER TABLE orderitem ADD COLUMN unit TEXT DEFAULT ''")
+                # Order table
+                res3 = await conn.exec_driver_sql("PRAGMA table_info([order])")
+                cols3 = {row[1] for row in res3}
+                if "customer_name" not in cols3:
+                    await conn.exec_driver_sql("ALTER TABLE [order] ADD COLUMN customer_name TEXT DEFAULT ''")
+                if "customer_email" not in cols3:
+                    await conn.exec_driver_sql("ALTER TABLE [order] ADD COLUMN customer_email TEXT DEFAULT ''")
+                if "created_at" not in cols3:
+                    await conn.exec_driver_sql("ALTER TABLE [order] ADD COLUMN created_at TIMESTAMP")
         else:
             # Postgres path: safe add if not exists
             async with engine.begin() as conn:
@@ -50,6 +59,15 @@ async def init_db() -> None:
                 )
                 await conn.exec_driver_sql(
                     "ALTER TABLE IF NOT EXISTS orderitem ADD COLUMN IF NOT EXISTS unit TEXT DEFAULT ''"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS \"order\" ADD COLUMN IF NOT EXISTS customer_name TEXT DEFAULT ''"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS \"order\" ADD COLUMN IF NOT EXISTS customer_email TEXT DEFAULT ''"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS \"order\" ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW()"
                 )
     except Exception:
         # Best-effort; ignore if cannot alter (e.g., permissions)

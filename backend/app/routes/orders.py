@@ -101,6 +101,8 @@ async def create_order(
         total_amount=round(total, 2),
         status=status_val,
         source=(payload.source or "web"),
+        customer_name=payload.customer_name or "",
+        customer_email=str(payload.customer_email or ""),
     )
     session.add(order_row)
     await session.flush()  # get order id
@@ -133,6 +135,9 @@ async def create_order(
         total_amount=order_row.total_amount,
         status=order_row.status,
         source=order_row.source,
+        customer_name=getattr(order_row, "customer_name", None),
+        customer_email=getattr(order_row, "customer_email", None),
+        created_at=getattr(order_row, "created_at", None),
     )
 
 
@@ -168,6 +173,9 @@ async def list_orders(
             total_amount=float(o.total_amount),
             status=o.status,
             source=o.source,
+            customer_name=getattr(o, "customer_name", None),
+            customer_email=getattr(o, "customer_email", None),
+            created_at=getattr(o, "created_at", None),
         )
         for o in orders
     ]
@@ -205,6 +213,9 @@ async def get_order(
         total_amount=float(o.total_amount),
         status=o.status,
         source=o.source,
+        customer_name=getattr(o, "customer_name", None),
+        customer_email=getattr(o, "customer_email", None),
+        created_at=getattr(o, "created_at", None),
     )
 
 
@@ -248,4 +259,7 @@ async def update_order(
         total_amount=float(o.total_amount),
         status=o.status,
         source=o.source,
+        customer_name=getattr(o, "customer_name", None),
+        customer_email=getattr(o, "customer_email", None),
+        created_at=getattr(o, "created_at", None),
     )

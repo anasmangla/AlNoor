@@ -1,4 +1,5 @@
 from typing import Optional
+from datetime import datetime
 from sqlmodel import SQLModel, Field
 
 
@@ -16,6 +17,9 @@ class Order(SQLModel, table=True):
     total_amount: float
     status: str
     source: str
+    customer_name: Optional[str] = ""
+    customer_email: Optional[str] = ""
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class OrderItem(SQLModel, table=True):

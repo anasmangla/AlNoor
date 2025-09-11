@@ -1,4 +1,5 @@
 from typing import List, Optional
+from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr
 
 
@@ -56,6 +57,9 @@ class OrderOut(BaseModel):
     total_amount: float
     status: str
     source: str
+    customer_name: Optional[str] = None
+    customer_email: Optional[EmailStr] = None
+    created_at: Optional[datetime] = None
 
 
 class OrderUpdate(BaseModel):

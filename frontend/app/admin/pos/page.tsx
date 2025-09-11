@@ -1,6 +1,6 @@
 ﻿"use client";
 import { useEffect, useMemo, useState } from "react";
-import { Product, fetchProducts, createOrder } from "@/lib/api";
+import { Product, fetchProducts, createOrder, createTerminalCheckout, pollTerminalCheckout } from "@/lib/api";
 
 type SaleItem = { product: Product; quantity: number };
 
@@ -12,6 +12,9 @@ export default function PosPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [deviceId, setDeviceId] = useState<string>("");
+  const [terminalStatus, setTerminalStatus] = useState<string | null>(null);
+  const [terminalId, setTerminalId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProducts().then(setProducts).catch(() => setProducts([]));
@@ -51,6 +54,41 @@ export default function PosPage() {
       setSale([]);
     } catch (e: any) {
       setError(e.message || "Checkout failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function checkoutWithTerminal() {
+    setError(null);
+    setMessage(null);
+    setTerminalStatus(null);
+    setTerminalId(null);
+    setLoading(true);
+    try {
+      const totalCents = Math.round(total * 100);
+      if (totalCents <= 0) throw new Error("Nothing to charge");
+      const tc = await createTerminalCheckout({ amount_cents: totalCents, device_id: deviceId || undefined, reference_id: `POS-${Date.now()}` });
+      setTerminalId(tc.checkout_id);
+      setTerminalStatus(tc.status);
+      // Poll until COMPLETED or timeout ~60s
+      const started = Date.now();
+      while (Date.now() - started < 60000) {
+        await new Promise((r) => setTimeout(r, 2000));
+        const p = await pollTerminalCheckout(tc.checkout_id);
+        setTerminalStatus(p.status);
+        if (p.status && ["COMPLETED", "CANCELED", "FAILED"].includes(p.status)) break;
+      }
+      if (terminalStatus && terminalStatus !== "COMPLETED") throw new Error(`Terminal status: ${terminalStatus}`);
+      // Record order in DB
+      const order = await createOrder({
+        items: sale.map((s) => ({ product_id: s.product.id, quantity: s.quantity })),
+        source: "pos",
+      });
+      setMessage(`Terminal payment complete. Order #${order.id}`);
+      setSale([]);
+    } catch (e: any) {
+      setError(e.message || "Terminal checkout failed");
     } finally {
       setLoading(false);
     }
@@ -133,14 +171,32 @@ export default function PosPage() {
 
       <div className="flex items-center justify-between">
         <div className="text-lg font-semibold">Total: ${total.toFixed(2)}</div>
-        <button
-          onClick={checkout}
-          disabled={loading || sale.length === 0}
-          className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 disabled:opacity-60"
-        >
-          {loading ? "Processing..." : "Checkout"}
-        </button>
+        <div className="flex items-center gap-2">
+          <input
+            className="border rounded px-2 py-1"
+            placeholder="Terminal Device ID (optional)"
+            value={deviceId}
+            onChange={(e) => setDeviceId(e.target.value)}
+          />
+          <button
+            onClick={checkout}
+            disabled={loading || sale.length === 0}
+            className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 disabled:opacity-60"
+          >
+            {loading ? "Processing..." : "Checkout (simulate)"}
+          </button>
+          <button
+            onClick={checkoutWithTerminal}
+            disabled={loading || sale.length === 0}
+            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 disabled:opacity-60"
+          >
+            {loading ? "Processing..." : "Use Square Terminal"}
+          </button>
+        </div>
       </div>
+      {terminalId && (
+        <div className="text-sm text-slate-600 mt-2">Terminal Checkout ID: {terminalId} · Status: {terminalStatus || "PENDING"}</div>
+      )}
     </section>
   );
 }

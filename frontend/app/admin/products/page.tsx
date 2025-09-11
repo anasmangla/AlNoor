@@ -24,6 +24,7 @@ export default function AdminProductsPage() {
   const [editStock, setEditStock] = useState("0");
   const [editUnit, setEditUnit] = useState("");
   const [editIsWeightBased, setEditIsWeightBased] = useState(false);
+  const [query, setQuery] = useState("");
 
   async function load() {
     setLoading(true);
@@ -172,13 +173,28 @@ export default function AdminProductsPage() {
         </button>
       </form>
 
+      <div className="mb-4">
+        <input
+          className="border rounded px-2 py-1"
+          placeholder="Filter by name or unit..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
       {loading ? (
         <p className="text-slate-600">Loading...</p>
       ) : products.length === 0 ? (
         <p className="text-slate-600">No products yet.</p>
       ) : (
         <ul className="grid gap-2">
-          {products.map((p) => (
+          {products
+            .filter((p) => {
+              const q = query.trim().toLowerCase();
+              if (!q) return true;
+              const unit = String((p as any).unit || "").toLowerCase();
+              return p.name.toLowerCase().includes(q) || unit.includes(q);
+            })
+            .map((p) => (
             <li
               key={p.id}
               className="border rounded p-3 flex items-center justify-between gap-4"

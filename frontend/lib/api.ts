@@ -59,6 +59,9 @@ export type Order = {
   total_amount: number;
   status: string;
   source: string;
+  customer_name?: string | null;
+  customer_email?: string | null;
+  created_at?: string | null;
   items: Array<{
     product_id: number;
     name: string;
@@ -111,6 +114,39 @@ export async function updateOrderStatus(
     body: JSON.stringify({ status }),
   });
   if (!res.ok) throw new Error(`Failed to update order: ${res.status}`);
+  return res.json();
+}
+
+// POS Terminal (Square) — optional
+export type TerminalCheckout = { checkout_id: string; status: string; url?: string };
+
+export async function createTerminalCheckout(args: {
+  amount_cents: number;
+  device_id?: string;
+  reference_id?: string;
+}): Promise<TerminalCheckout> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
+  const res = await fetch(`${API_BASE}/pos/terminal/checkout`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(args),
+  });
+  if (!res.ok) throw new Error(`Terminal checkout failed: ${res.status}`);
+  return res.json();
+}
+
+export async function pollTerminalCheckout(id: string): Promise<TerminalCheckout> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
+  const res = await fetch(`${API_BASE}/pos/terminal/checkout/${id}`, {
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`Poll failed: ${res.status}`);
   return res.json();
 }
 

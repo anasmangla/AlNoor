@@ -1,12 +1,16 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="text-center">
-      <img
+      <Image
         src="/alnoorlogo.png"
         alt="Al Noor Farm Logo"
-        className="mx-auto mb-6 max-h-28"
+        width={220}
+        height={80}
+        className="mx-auto mb-6 h-auto w-auto max-h-28"
+        priority
       />
       <h1 className="text-3xl font-semibold mb-2">Al Noor Farm</h1>
       <p className="text-slate-600 mb-6">
