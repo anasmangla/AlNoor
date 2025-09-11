@@ -4,6 +4,16 @@ RewriteCond %{HTTPS} !=on [OR]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteRule ^ https://alnoorfarm716.com%{REQUEST_URI} [L,R=301]
 
+# Set root index to /public/index.html
+DirectoryIndex public/index.html index.html index.php
+
+# Prevent directory listings
+Options -Indexes
+
+# Internally rewrite the site root to /public/
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^$ public/ [L]
+
 # Compression
 AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 
