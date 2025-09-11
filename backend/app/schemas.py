@@ -36,6 +36,9 @@ class OrderCreate(BaseModel):
     customer_email: Optional[EmailStr] = None
     items: List[OrderItemIn]
     source: Optional[str] = Field(default="web", description="web|pos")
+    payment_token: Optional[str] = Field(
+        default=None, description="Square payment token (nonce) if using sandbox"
+    )
 
 
 class OrderItemOut(BaseModel):

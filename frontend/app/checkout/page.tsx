@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { createOrder } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import SquareCard from "@/components/payments/SquareCard";
 
 export default function CheckoutPage() {
   const { lines, clear, total } = useCart();
@@ -64,17 +65,41 @@ export default function CheckoutPage() {
             placeholder="you@example.com"
           />
         </div>
+        <div className="text-sm text-slate-600">Pay with Square (sandbox) or place a simulated order.</div>
+        {typeof window !== "undefined" && process.env.NEXT_PUBLIC_SQUARE_APP_ID ? (
+          <SquareCard
+            amountCents={Math.round(total * 100)}
+            disabled={loading || lines.length === 0}
+            onToken={async (token) => {
+              setLoading(true);
+              setError(null);
+              try {
+                const order = await createOrder({
+                  customer_name: name || undefined,
+                  customer_email: email || undefined,
+                  items: lines.map((l) => ({ product_id: l.product.id, quantity: l.quantity })),
+                  source: "web",
+                  payment_token: token,
+                });
+                clear();
+                router.push(`/confirmation?orderId=${order.id}`);
+              } catch (e: any) {
+                setError(e.message || "Payment failed");
+              } finally {
+                setLoading(false);
+              }
+            }}
+          />
+        ) : null}
         <button
           type="submit"
-          className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700"
+          className="bg-slate-700 text-white px-3 py-1 rounded hover:bg-slate-800"
           disabled={loading}
         >
-          {loading ? "Placing order..." : "Place Order"}
+          {loading ? "Placing order..." : "Place Order (simulate)"}
         </button>
       </form>
-      <p className="text-xs text-slate-500 mt-2">
-        Payment is simulated. No card required in this demo.
-      </p>
+      <p className="text-xs text-slate-500 mt-2">If Square is configured (sandbox), payment will be processed; otherwise, the order is simulated.</p>
     </section>
   );
 }

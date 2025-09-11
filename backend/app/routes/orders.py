@@ -1,4 +1,6 @@
 from typing import List, Dict
+import os
+import uuid
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -51,9 +53,53 @@ async def create_order(
             )
         )
 
+    status_val = "paid"
+
+    # Optional Square payment (sandbox/production) if token and env configured
+    token = getattr(payload, "payment_token", None)
+    access_token = os.getenv("SQUARE_ACCESS_TOKEN")
+    location_id = os.getenv("SQUARE_LOCATION_ID")
+    env = (os.getenv("SQUARE_ENV") or "sandbox").lower()
+    use_square = bool(token and access_token and location_id)
+
+    if use_square:
+        try:
+            import httpx  # type: ignore
+
+            base = (
+                "https://connect.squareupsandbox.com"
+                if env == "sandbox"
+                else "https://connect.squareup.com"
+            )
+            headers = {
+                "Authorization": f"Bearer {access_token}",
+                "Content-Type": "application/json",
+                "Square-Version": "2024-05-15",
+            }
+            body = {
+                "idempotency_key": str(uuid.uuid4()),
+                "source_id": token,
+                "location_id": location_id,
+                "amount_money": {
+                    "amount": int(round(total * 100)),
+                    "currency": "USD",
+                },
+            }
+            async with httpx.AsyncClient(timeout=20) as client:
+                resp = await client.post(f"{base}/v2/payments", headers=headers, json=body)
+            data = resp.json()
+            if resp.status_code >= 300:
+                detail = data.get("errors") if isinstance(data, dict) else data
+                raise HTTPException(status_code=400, detail=f"Payment failed: {detail}")
+            status_val = "paid"
+        except HTTPException:
+            raise
+        except Exception as e:  # If SDK call fails, surface error gracefully
+            raise HTTPException(status_code=400, detail=f"Payment error: {e}")
+
     order_row = OrderModel(
         total_amount=round(total, 2),
-        status="paid",  # Placeholder until real payment
+        status=status_val,
         source=(payload.source or "web"),
     )
     session.add(order_row)

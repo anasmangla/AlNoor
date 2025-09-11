@@ -74,6 +74,7 @@ export async function createOrder(input: {
   customer_email?: string;
   items: OrderItemInput[];
   source?: string;
+  payment_token?: string;
 }): Promise<Order> {
   const res = await fetch(`${API_BASE}/orders`, {
     method: "POST",
