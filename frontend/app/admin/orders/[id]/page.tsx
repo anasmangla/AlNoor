@@ -32,10 +32,10 @@ export default async function AdminOrderDetail({ params }: Props) {
         <Link className="text-blue-600 hover:underline" href="/admin/orders">Back to Orders</Link>
       </div>
       <div className="text-slate-700">Total: ${order.total_amount.toFixed(2)}</div>
-      <div className="text-sm text-slate-600">Status: {order.status} · Source: {order.source.toUpperCase()}</div>
+      <div className="text-sm text-slate-600">Status: {order.status} • Source: {order.source.toUpperCase()}</div>
       <div className="text-sm text-slate-600">
-        {order.created_at && <span>Created: {new Date(order.created_at).toLocaleString()} · </span>}
-        {order.customer_name && <span>Name: {order.customer_name} · </span>}
+        {order.created_at && <span>Created: {new Date(order.created_at).toLocaleString()} • </span>}
+        {order.customer_name && <span>Name: {order.customer_name} • </span>}
         {order.customer_email && <span>Email: {order.customer_email}</span>}
       </div>
       <UpdateStatus id={order.id} current={order.status} />
@@ -46,7 +46,7 @@ export default async function AdminOrderDetail({ params }: Props) {
             <li key={idx} className="border rounded p-2 flex items-center justify-between">
               <div>
                 <div className="font-medium">{i.name}</div>
-                <div className="text-sm text-slate-600">{i.quantity} {i.unit || ""} × ${i.price_each.toFixed(2)}</div>
+                <div className="text-sm text-slate-600">{i.quantity} {i.unit || ""} • ${i.price_each.toFixed(2)}</div>
               </div>
               <div className="font-semibold">${i.subtotal.toFixed(2)}</div>
             </li>
@@ -56,3 +56,4 @@ export default async function AdminOrderDetail({ params }: Props) {
     </section>
   );
 }
+

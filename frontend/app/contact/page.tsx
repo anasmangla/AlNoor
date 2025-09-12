@@ -19,18 +19,18 @@ export default function ContactPage() {
           <div className="border rounded p-4">
             <h2 className="font-medium mb-2">Address</h2>
             <p className="text-slate-700">{address}</p>
-            <a className="text-blue-700 hover:underline text-sm" href={`https://maps.google.com/?q=${encodeURIComponent(address)}`} target="_blank">Open in Google Maps</a>
+            <a className="text-blue-700 hover:underline text-sm" href={`https://maps.google.com/?q=${encodeURIComponent(address)}`} target="_blank" rel="noopener">Open in Google Maps</a>
           </div>
           <div className="border rounded p-4">
             <h2 className="font-medium mb-2">Phone</h2>
             <p className="text-slate-700">
-              <a className="hover:underline" href="tel:+17165241717">716-524-1717</a> (calls) ·
-              <a className="hover:underline ml-1" href="https://wa.me/17165241717" target="_blank">WhatsApp</a>
+              <a className="hover:underline" href="tel:+17165241717">716-524-1717</a> (calls) •
+              <a className="hover:underline ml-1" href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>
             </p>
           </div>
           <div className="border rounded p-4">
             <h2 className="font-medium mb-2">Facebook</h2>
-            <a className="text-blue-700 hover:underline" href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank">Follow us on Facebook</a>
+            <a className="text-blue-700 hover:underline" href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Follow us on Facebook</a>
           </div>
         </div>
       </div>
@@ -45,3 +45,4 @@ export default function ContactPage() {
 
 // Client form component
 import ContactForm from "@/components/contact/ContactForm";
+

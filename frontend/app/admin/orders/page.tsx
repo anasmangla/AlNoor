@@ -1,7 +1,6 @@
-﻿"use client";
-import { useEffect, useState } from "react";
+"use client";
+import { useEffect, useMemo, useState } from "react";
 import { listOrders, updateOrderStatus, type Order } from "@/lib/api";
-import { useMemo } from "react";
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -131,7 +130,7 @@ export default function AdminOrdersPage() {
           className="text-slate-700 hover:underline text-sm"
         >This Month</button>
       </div>
-      <div className="mb-2 text-sm text-slate-700">{totals.count} orders · ${totals.sum.toFixed(2)}</div>
+      <div className="mb-2 text-sm text-slate-700">{totals.count} orders • ${totals.sum.toFixed(2)}</div>
       <div className="mb-3 text-xs text-slate-600 flex items-center gap-3 flex-wrap">
         <span>CSV columns:</span>
         {(["id","created_at","status","source","total","customer_name","customer_email","items"] as const).map((k) => (

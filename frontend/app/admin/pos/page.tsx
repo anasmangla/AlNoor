@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useMemo, useState } from "react";
 import { Product, fetchProducts, createOrder, createTerminalCheckout, pollTerminalCheckout } from "@/lib/api";
 
@@ -208,8 +208,9 @@ export default function PosPage() {
         </div>
       </div>
       {terminalId && (
-        <div className="text-sm text-slate-600 mt-2">Terminal Checkout ID: {terminalId} · Status: {terminalStatus || "PENDING"}</div>
+        <div className="text-sm text-slate-600 mt-2">Terminal Checkout ID: {terminalId} • Status: {terminalStatus || "PENDING"}</div>
       )}
     </section>
   );
 }
+

@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   title: "Al Noor Farm",
   description: "Storefront, Admin, and POS UI",
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: "/alnoorlogo.png",
+    shortcut: "/alnoorlogo.png",
+    apple: "/alnoorlogo.png",
   },
 };
 

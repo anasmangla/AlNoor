@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="text-center">
       <Image
-        src="/favicon.png"
+        src="/alnoorlogo.png"
         alt="Al Noor Farm Icon"
         width={96}
         height={96}

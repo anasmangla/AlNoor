@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { createOrder } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
@@ -103,3 +103,4 @@ export default function CheckoutPage() {
     </section>
   );
 }
+

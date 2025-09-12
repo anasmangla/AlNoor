@@ -5,16 +5,17 @@ export default function Footer() {
         <div>© {new Date().getFullYear()} Al Noor Farm</div>
         <div className="flex items-center gap-3 flex-wrap">
           <a className="hover:underline" href="/products">Store</a>
-          <span className="hidden sm:inline">·</span>
+          <span className="hidden sm:inline">•</span>
           <a className="hover:underline" href="/admin/login">Admin</a>
-          <span className="hidden sm:inline">·</span>
-          <a className="hover:underline" href="tel:+17165241717">Call 716‑524‑1717</a>
-          <span className="hidden sm:inline">·</span>
+          <span className="hidden sm:inline">•</span>
+          <a className="hover:underline" href="tel:+17165241717">Call 716-524-1717</a>
+          <span className="hidden sm:inline">•</span>
           <a className="hover:underline" href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>
-          <span className="hidden sm:inline">·</span>
+          <span className="hidden sm:inline">•</span>
           <a className="hover:underline" href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Facebook</a>
         </div>
       </div>
     </footer>
   );
 }
+

@@ -29,7 +29,7 @@ export default function Navbar() {
       <nav className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80">
-            <Image src="/favicon.png" alt="Al Noor" width={24} height={24} />
+            <Image src="/alnoorlogo.png" alt="Al Noor" width={24} height={24} />
             <span className="font-semibold">Al Noor</span>
           </Link>
           <Link href="/products" className="text-slate-700 hover:underline">Products</Link>
