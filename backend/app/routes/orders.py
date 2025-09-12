@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 import os
 import uuid
 from fastapi import APIRouter, HTTPException, status, Depends
@@ -145,9 +145,26 @@ async def create_order(
 async def list_orders(
     user: str = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
 ):
-    # Fetch orders
-    result = await session.execute(select(OrderModel))
+    # Fetch orders with optional date filter
+    stmt = select(OrderModel)
+    if start_date:
+        try:
+            from datetime import datetime
+            sd = datetime.fromisoformat(start_date)
+            stmt = stmt.where(OrderModel.created_at >= sd)
+        except Exception:
+            pass
+    if end_date:
+        try:
+            from datetime import datetime
+            ed = datetime.fromisoformat(end_date)
+            stmt = stmt.where(OrderModel.created_at <= ed)
+        except Exception:
+            pass
+    result = await session.execute(stmt)
     orders = result.scalars().all()
     # Fetch items for all orders and bucket by order_id
     result_items = await session.execute(select(OrderItemModel))

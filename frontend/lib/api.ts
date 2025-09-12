@@ -89,9 +89,13 @@ export async function createOrder(input: {
   return res.json();
 }
 
-export async function listOrders(): Promise<Order[]> {
+export async function listOrders(params?: { startDate?: string; endDate?: string }): Promise<Order[]> {
   const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
-  const res = await fetch(`${API_BASE}/orders`, {
+  const qs = params ? new URLSearchParams({
+    ...(params.startDate ? { start_date: params.startDate } : {}),
+    ...(params.endDate ? { end_date: params.endDate } : {}),
+  }).toString() : "";
+  const res = await fetch(`${API_BASE}/orders${qs ? `?${qs}` : ""}`, {
     cache: "no-store",
     headers: {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
