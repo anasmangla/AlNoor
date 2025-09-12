@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -28,12 +28,12 @@
         <div>
           <a href="/" class="muted" data-nav>Al Noor</a>
           <nav style="display:inline-block;margin-left:12px">
-            <a href="/store" data-nav>Store</a>
-            <a href="/admin" data-nav>Admin</a>
-            <a href="/pos" data-nav>POS</a>
+            <a href="/alnoor/products">Store</a>
+            <a href="/alnoor/admin/login">Admin</a>
+            <a href="/alnoor/admin/pos">POS</a>
           </nav>
         </div>
-        <a class="btn" href="/store" data-nav>Shop Now</a>
+        <a class="btn" href="/alnoor/products">Shop Now</a>
       </div>
     </header>
 
@@ -50,7 +50,7 @@
           <div class="card">
             <strong>Browse Products</strong>
             <p class="muted">Visit the store to see what's available.</p>
-            <a class="btn" href="/store" data-nav>Go to Store</a>
+            <a class="btn" href="/alnoor/products">Go to Store</a>
           </div>
         </div>
       </section>
@@ -61,7 +61,7 @@
           <div class="card">
             <strong>Admin Login</strong>
             <p class="muted">Manage products, inventory, and orders.</p>
-            <a class="btn" href="/admin" data-nav>Admin Panel</a>
+            <a class="btn" href="/alnoor/admin/login">Admin Panel</a>
           </div>
         </div>
       </section>
@@ -72,7 +72,7 @@
           <div class="card">
             <strong>Point of Sale</strong>
             <p class="muted">Ring up in-person orders and charge customers.</p>
-            <a class="btn" href="/pos" data-nav>Open POS</a>
+            <a class="btn" href="/alnoor/admin/pos">Open POS</a>
           </div>
         </div>
       </section>
@@ -84,9 +84,9 @@
             <strong>Our Mission</strong>
             <p class="muted">We provide fresh, local products with transparent sourcing and fair pricing. Our storefront and POS make it easy to buy online or in person.</p>
             <ul class="muted">
-              <li>• Fresh eggs, poultry, and seasonal items</li>
-              <li>• Clear pricing per unit or per pound</li>
-              <li>• Simple online checkout and receipts</li>
+              <li>â€¢ Fresh eggs, poultry, and seasonal items</li>
+              <li>â€¢ Clear pricing per unit or per pound</li>
+              <li>â€¢ Simple online checkout and receipts</li>
             </ul>
           </div>
         </div>
@@ -103,7 +103,7 @@
               Facebook: <a href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Follow us on Facebook</a><br />
               Email: <a href="mailto:info@alnoorfarm716.com">info@alnoorfarm716.com</a>
             </p>
-            <p class="muted">Hours: Mon‑Sat 9:00am–6:00pm</p>
+            <p class="muted">Hours: Monâ€‘Sat 9:00amâ€“6:00pm</p>
             <form id="contactForm" style="margin-top:8px" novalidate>
               <div style="display:grid;gap:8px;max-width:480px">
                 <input id="cName" type="text" placeholder="Your name" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
@@ -121,13 +121,13 @@
 
     <footer>
       <div class="wrap muted" style="display:flex;align-items:center;justify-content:space-between">
-        <div>© <span id="year"></span> Al Noor Farm</div>
+        <div>Â© <span id="year"></span> Al Noor Farm</div>
         <div>
-          <a href="/store" data-nav>Store</a>
-          ·
-          <a href="/admin" data-nav>Admin</a>
-          ·
-          <a href="/pos" data-nav>POS</a>
+          <a href="/alnoor/products">Store</a>
+          Â·
+          <a href="/alnoor/admin/login">Admin</a>
+          Â·
+          <a href="/alnoor/admin/pos">POS</a>
         </div>
       </div>
     </footer>
@@ -155,10 +155,9 @@
           goto(path);
         }
         // Intercept clicks on data-nav links
-        document.querySelectorAll('a[data-nav]').forEach(function(a){
+        document.querySelectorAll('a[data-nav], header nav a, footer a').forEach(function(a){
           a.addEventListener('click', function(e){
-            e.preventDefault();
-            var href = a.getAttribute('href');
+            var href = a.getAttribute('href');\n            if (href && (href.indexOf('/alnoor') === 0 || href.indexOf('/api') === 0)) { return; }\n            e.preventDefault();
             history.pushState({}, '', href);
             handlePath();
           });
@@ -193,3 +192,4 @@
     </script>
   </body>
   </html>
+
