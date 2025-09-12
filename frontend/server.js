@@ -10,6 +10,12 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
+    if (parsedUrl.pathname === '/__health') {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end('ok');
+      return;
+    }
     handle(req, res, parsedUrl);
   });
   const port = process.env.PORT || 3000;
@@ -18,4 +24,3 @@ app.prepare().then(() => {
     console.log(`> Next.js ready on http://localhost:${port}`);
   });
 });
-

@@ -163,6 +163,20 @@
           });
         });
         window.addEventListener('popstate', handlePath);
+        // Show a note if Next.js app under /alnoor is not reachable
+        (function(){
+          fetch('/alnoor/__health', { cache: 'no-store' }).then(function(r){
+            if(!r.ok) throw new Error();
+          }).catch(function(){
+            var bar=document.createElement('div');
+            bar.style.background='#fff7ed';
+            bar.style.borderBottom='1px solid #fed7aa';
+            bar.style.color='#9a3412';
+            bar.style.fontSize='12px';
+            bar.innerHTML='<div class="wrap" style="padding:6px 20px">Store/Admin app not reachable at /alnoor yet. This static homepage will be shown until the Node app is started in cPanel.</div>';
+            document.body.prepend(bar);
+          });
+        })();
         // Contact form
         var form = document.getElementById('contactForm');
         if (form) {

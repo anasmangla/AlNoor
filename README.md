@@ -65,6 +65,7 @@ Copy `.env.example` to `.env` and adjust:
   - `.htaccess` in document root points `/` to `public/index.html` and falls back unknown paths to that file
   - Paths `/alnoor` (Next.js app) and `/api` (FastAPI) are excluded from the fallback
   - In production, set `NEXT_PUBLIC_API_BASE_URL=https://<your-api-host-or-path>`
+  - Static homepage links point into the Next app at `/alnoor` (Store/Admin/POS)
 
 ### Notes
 - DB and JWT verification are stubs. Replace in‑memory stores with Postgres via SQLAlchemy/SQLModel and real JWT as you progress.

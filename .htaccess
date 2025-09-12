@@ -4,6 +4,11 @@ RewriteCond %{HTTPS} !=on [OR]
 RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteRule ^ https://alnoorfarm716.com%{REQUEST_URI} [L,R=301]
 
+# Redirect short paths to Next.js app under /alnoor
+RewriteRule ^store/?$ alnoor/products [L,R=302]
+RewriteRule ^admin/?$ alnoor/admin/login [L,R=302]
+RewriteRule ^pos/?$   alnoor/admin/pos [L,R=302]
+
 # Set root index to /public/index.html
 DirectoryIndex public/index.html index.html index.php
 
