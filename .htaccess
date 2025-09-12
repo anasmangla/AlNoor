@@ -1,31 +1,24 @@
 RewriteEngine On
-# Force HTTPS and non-www
+# Canonical: force HTTPS and www.alnoor716.com
 RewriteCond %{HTTPS} !=on [OR]
-RewriteCond %{HTTP_HOST} ^www\. [NC]
-RewriteRule ^ https://alnoorfarm716.com%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTP_HOST} !^www\.alnoor716\.com$ [NC]
+RewriteRule ^ https://www.alnoor716.com%{REQUEST_URI} [L,R=301]
 
-# Redirect short paths to Next.js app under /alnoor
-RewriteRule ^store/?$ alnoor/products [L,R=302]
-RewriteRule ^admin/?$ alnoor/admin/login [L,R=302]
-RewriteRule ^pos/?$   alnoor/admin/pos [L,R=302]
+# Remove legacy short-path redirects; Next.js handles routes at root
 
-# Set root index to /public/index.html
-DirectoryIndex public/index.html index.html index.php
+# Optional: DirectoryIndex if serving static; not needed when Next.js at root
+# DirectoryIndex public/index.html index.html index.php
 
 # Prevent directory listings
 Options -Indexes
 
-# Redirect the site root to the Next.js app under /alnoor
-RewriteCond %{REQUEST_URI} ^/$
-RewriteRule ^$ alnoor/ [L,R=302]
+# Do not redirect root; Next.js app should be mounted at '/'
 
-# Fallback: for any non-existent file/dir, serve /public/index.html
-# But do not rewrite app/API subpaths (adjust as needed)
-RewriteCond %{REQUEST_URI} !^/alnoor(/|$)
-RewriteCond %{REQUEST_URI} !^/api(/|$)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ public/index.html [L]
+# Disable static fallback to avoid conflicts when Next.js serves root
+# If you need static fallback, uncomment below and ensure it doesn’t collide with app paths.
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteRule ^ public/index.html [L]
 
 # Compression
 AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
