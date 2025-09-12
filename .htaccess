@@ -15,9 +15,9 @@ DirectoryIndex public/index.html index.html index.php
 # Prevent directory listings
 Options -Indexes
 
-# Internally rewrite the site root to /public/
+# Redirect the site root to the Next.js app under /alnoor
 RewriteCond %{REQUEST_URI} ^/$
-RewriteRule ^$ public/ [L]
+RewriteRule ^$ alnoor/ [L,R=302]
 
 # Fallback: for any non-existent file/dir, serve /public/index.html
 # But do not rewrite app/API subpaths (adjust as needed)

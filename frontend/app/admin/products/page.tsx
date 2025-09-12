@@ -186,6 +186,58 @@ export default function AdminProductsPage() {
         </select>
         <label className="text-sm text-slate-600">Low stock ≤</label>
         <input type="number" step="0.01" min="0" className="border rounded px-2 py-1 text-sm w-24" value={lowThreshold} onChange={(e)=> setLowThreshold(parseFloat(e.target.value)||0)} />
+        <button
+          type="button"
+          onClick={() => {
+            const rows = [["id","name","price","stock","unit","is_weight_based","image_url"],
+              ...sorted.map(p => [
+                (p as any).id || "",
+                p.name,
+                typeof p.price === 'number' ? p.price.toFixed(2) : p.price,
+                (p as any).stock ?? "",
+                (p as any).unit ?? "",
+                (p as any).is_weight_based ? 'true' : 'false',
+                (p as any).image_url || ''
+              ])
+            ];
+            const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'products.csv'; a.click(); URL.revokeObjectURL(url);
+          }}
+          className="text-emerald-700 hover:underline text-sm"
+        >Export CSV</button>
+        <label className="text-sm text-slate-600 ml-2">Import CSV</label>
+        <input
+          type="file"
+          accept=".csv,text/csv"
+          onChange={async (e)=>{
+            const file = e.target.files?.[0]; if(!file) return;
+            try{
+              const text = await file.text();
+              const lines = text.split(/\r?\n/).filter(Boolean);
+              const header = lines.shift() || '';
+              const cols = header.split(',').map(s=> s.replace(/^"|"$/g,'').trim().toLowerCase());
+              const idx = (name:string)=> cols.indexOf(name);
+              let created = 0; let failed = 0;
+              for(const line of lines){
+                const vals = line.match(/\"([^\"]|\"\")*\"|[^,]+/g)?.map(s=> s.replace(/^\"|\"$/g,'').replace(/\"\"/g,'"').trim()) || [];
+                const rec: any = {
+                  name: vals[idx('name')] || '',
+                  price: parseFloat(vals[idx('price')] || '0') || 0,
+                  stock: parseFloat(vals[idx('stock')] || '0') || 0,
+                  unit: vals[idx('unit')] || '',
+                  is_weight_based: /^(true|1|yes)$/i.test(vals[idx('is_weight_based')] || ''),
+                  image_url: vals[idx('image_url')] || '',
+                };
+                if(!rec.name){ failed++; continue; }
+                try{ await createProduct(rec); created++; } catch{ failed++; }
+              }
+              alert(`Import complete. Created: ${created}, Failed: ${failed}`);
+              await load();
+            }catch(err){ alert('Failed to import CSV'); }
+          }}
+        />
       </div>
 
       {loading ? (
