@@ -66,6 +66,7 @@ class OrderOut(BaseModel):
 class ContactCreate(BaseModel):
     name: Optional[str] = Field(default="", max_length=100)
     email: Optional[EmailStr] = None
+    phone: Optional[str] = Field(default=None, max_length=30)
     message: str = Field(..., max_length=4000)
 
 
@@ -73,6 +74,7 @@ class ContactOut(BaseModel):
     id: int
     name: str
     email: Optional[EmailStr] = None
+    phone: Optional[str] = None
     message: str
     created_at: datetime
 

@@ -21,6 +21,9 @@ export default function AdminProductsPage() {
   const [editIsWeightBased, setEditIsWeightBased] = useState(false);
   const [editImageUrl, setEditImageUrl] = useState("");
   const [query, setQuery] = useState("");
+  const [sortBy, setSortBy] = useState<string>("name");
+  const [sortDir, setSortDir] = useState<string>("asc");
+  const LOW = 5;
 
   async function load() {
     setLoading(true);
@@ -109,6 +112,18 @@ export default function AdminProductsPage() {
     });
   }, [products, query]);
 
+  const sorted = useMemo(() => {
+    const arr = [...filtered];
+    arr.sort((a, b) => {
+      const mul = sortDir === "asc" ? 1 : -1;
+      if (sortBy === "name") return a.name.localeCompare(b.name) * mul;
+      if (sortBy === "price") return ((a.price || 0) - (b.price || 0)) * mul;
+      if (sortBy === "stock") return (((a as any).stock || 0) - ((b as any).stock || 0)) * mul;
+      return 0;
+    });
+    return arr;
+  }, [filtered, sortBy, sortDir]);
+
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">Admin Products</h1>
@@ -148,8 +163,19 @@ export default function AdminProductsPage() {
         <button type="submit" className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700">Add</button>
       </form>
 
-      <div className="mb-4">
+      <div className="mb-4 flex items-center gap-3 flex-wrap">
         <input className="border rounded px-2 py-1" placeholder="Filter by name or unit..." value={query} onChange={(e)=> setQuery(e.target.value)} />
+        <label className="text-sm text-slate-600">Sort</label>
+        <select className="border rounded px-2 py-1 text-sm" value={sortBy} onChange={(e)=> setSortBy(e.target.value)}>
+          <option value="name">Name</option>
+          <option value="price">Price</option>
+          <option value="stock">Stock</option>
+        </select>
+        <select className="border rounded px-2 py-1 text-sm" value={sortDir} onChange={(e)=> setSortDir(e.target.value)}>
+          <option value="asc">Asc</option>
+          <option value="desc">Desc</option>
+        </select>
+        <span className="text-xs text-slate-500">Low stock threshold: {LOW}</span>
       </div>
 
       {loading ? (
@@ -158,8 +184,8 @@ export default function AdminProductsPage() {
         <p className="text-slate-600">No products yet.</p>
       ) : (
         <ul className="grid gap-2">
-          {filtered.map((p) => (
-            <li key={p.id} className="border rounded p-3 flex items-center justify-between gap-4">
+          {sorted.map((p) => (
+            <li key={p.id} className={`border rounded p-3 flex items-center justify-between gap-4 ${((p as any).stock||0) <= LOW ? 'border-red-300 bg-red-50' : ''}`}>
               {editingId === p.id ? (
                 <div className="flex-1 flex items-end gap-2 flex-wrap">
                   <div>
@@ -216,4 +242,3 @@ export default function AdminProductsPage() {
     </section>
   );
 }
-

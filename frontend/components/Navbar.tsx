@@ -32,9 +32,11 @@ export default function Navbar() {
           <Link href="/checkout" className="text-slate-700 hover:underline">Checkout</Link>
           {hasToken ? (
             <>
+              <Link href="/admin/dashboard" className="text-slate-700 hover:underline">Dashboard</Link>
               <Link href="/admin/products" className="text-slate-700 hover:underline">Admin Products</Link>
               <Link href="/admin/orders" className="text-slate-700 hover:underline">Orders</Link>
               <Link href="/admin/pos" className="text-slate-700 hover:underline">POS</Link>
+              <Link href="/admin/messages" className="text-slate-700 hover:underline">Messages</Link>
             </>
           ) : (
             <Link href="/admin/login" className="text-slate-700 hover:underline">Admin</Link>

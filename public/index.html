@@ -98,12 +98,22 @@
           <div class="card">
             <strong>Get in touch</strong>
             <p class="muted">
-              Address: <span id="addr">123 Farm Lane, Your City, ST 00000</span><br />
-              Phone: <a href="tel:+1-555-123-4567">(555) 123‑4567</a><br />
+              Address: <span id="addr">4028 Dickersonville Rd, Ransomville NY 14131</span><br />
+              Phone: <a href="tel:+17165241717">716‑524‑1717</a> (calls or <a href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>)<br />
+              Facebook: <a href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Follow us on Facebook</a><br />
               Email: <a href="mailto:info@alnoorfarm716.com">info@alnoorfarm716.com</a>
             </p>
             <p class="muted">Hours: Mon‑Sat 9:00am–6:00pm</p>
-            <a class="btn" href="mailto:info@alnoorfarm716.com?subject=Inquiry%20from%20Website">Email Us</a>
+            <form id="contactForm" style="margin-top:8px" novalidate>
+              <div style="display:grid;gap:8px;max-width:480px">
+                <input id="cName" type="text" placeholder="Your name" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
+                <input id="cEmail" type="email" placeholder="you@example.com" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
+                <input id="cPhone" type="text" placeholder="Phone (optional)" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
+                <textarea id="cMsg" rows="4" placeholder="Your message" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px"></textarea>
+                <button class="btn" type="submit">Send</button>
+                <div id="cStatus" class="muted"></div>
+              </div>
+            </form>
           </div>
         </div>
       </section>
@@ -154,6 +164,29 @@
           });
         });
         window.addEventListener('popstate', handlePath);
+        // Contact form
+        var form = document.getElementById('contactForm');
+        if (form) {
+          form.addEventListener('submit', async function(e){
+            e.preventDefault();
+            var name = (document.getElementById('cName')||{}).value||'';
+            var email = (document.getElementById('cEmail')||{}).value||'';
+            var message = (document.getElementById('cMsg')||{}).value||'';
+            var phone = (document.getElementById('cPhone')||{}).value||'';
+            var statusEl = document.getElementById('cStatus');
+            statusEl.textContent='';
+            if(!message.trim()){ statusEl.textContent='Please enter a message.'; return; }
+            try{
+              var resp = await fetch('/api/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name:name, email:email, phone:phone, message:message }) });
+              if(!resp.ok){ throw new Error('Failed: '+resp.status); }
+              statusEl.textContent='Thanks! We will get back to you soon.';
+              (document.getElementById('cName')||{}).value='';
+              (document.getElementById('cEmail')||{}).value='';
+              (document.getElementById('cMsg')||{}).value='';
+              (document.getElementById('cPhone')||{}).value='';
+            }catch(err){ statusEl.textContent='Could not send. Please try again later.'; }
+          });
+        }
         // Initial load
         handlePath();
       })();

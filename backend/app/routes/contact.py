@@ -3,7 +3,8 @@ import smtplib
 from email.message import EmailMessage
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import datetime, timedelta
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,12 +19,33 @@ router = APIRouter()
 
 @router.post("/contact", response_model=ContactOut, status_code=status.HTTP_201_CREATED)
 async def create_contact(
-    payload: ContactCreate, session: AsyncSession = Depends(get_session)
+    payload: ContactCreate, request: Request, session: AsyncSession = Depends(get_session)
 ):
+    # Basic rate limiting by IP and time window
+    client_ip = request.client.host if request.client else ""
+    window = datetime.utcnow() - timedelta(minutes=10)
+    result = await session.execute(
+        select(ContactMessage).where(
+            ContactMessage.created_at >= window,
+        )
+    )
+    recent = [
+        m
+        for m in result.scalars().all()
+        if (
+            m.ip == client_ip
+            or (payload.email and m.email == str(payload.email))
+            or (payload.phone and m.phone == str(payload.phone))
+        )
+    ]
+    if len(recent) >= 3:
+        raise HTTPException(status_code=429, detail="Too many messages, please try later")
     msg = ContactMessage(
         name=payload.name or "",
         email=str(payload.email or ""),
+        phone=str(payload.phone or ""),
         message=payload.message,
+        ip=client_ip,
     )
     session.add(msg)
     await session.commit()
@@ -43,7 +65,7 @@ async def create_contact(
             email_msg["Subject"] = f"New Contact Message from {msg.name or 'Website'}"
             email_msg["From"] = smtp_user or to_addr
             email_msg["To"] = to_addr
-            body = f"Name: {msg.name}\nEmail: {msg.email}\n\n{msg.message}"
+            body = f"Name: {msg.name}\nEmail: {msg.email}\nPhone: {msg.phone}\n\n{msg.message}"
             email_msg.set_content(body)
 
             with smtplib.SMTP(host, smtp_port, timeout=10) as server:
@@ -60,6 +82,7 @@ async def create_contact(
         id=int(msg.id),
         name=msg.name,
         email=msg.email or None,
+        phone=msg.phone or None,
         message=msg.message,
         created_at=msg.created_at,
     )
@@ -76,6 +99,7 @@ async def list_messages(
             id=int(m.id),
             name=m.name,
             email=m.email or None,
+            phone=m.phone or None,
             message=m.message,
             created_at=m.created_at,
         )
