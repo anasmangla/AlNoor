@@ -32,3 +32,7 @@ AddOutputFilterByType DEFLATE text/html text/css application/javascript applicat
   ExpiresByType image/jpeg "access plus 30 days"
   ExpiresByType image/svg+xml "access plus 30 days"
 </IfModule>
+
+# Safety: strip any leaked filesystem path from URL back to a clean web path
+RewriteCond %{REQUEST_URI} ^/home\d+/.+?/public_html/website_18b31db5/(.*)$ [NC]
+RewriteRule ^home\d+/.+?/public_html/website_18b31db5/(.*)$ /$1 [L,R=302]

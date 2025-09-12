@@ -22,7 +22,6 @@ export default function AdminProductsPage() {
   const [editIsWeightBased, setEditIsWeightBased] = useState(false);
   const [editImageUrl, setEditImageUrl] = useState("");
   const [editDesc, setEditDesc] = useState("");
-  const [editImageUrl, setEditImageUrl] = useState("");
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<string>("name");
   const [sortDir, setSortDir] = useState<string>("asc");

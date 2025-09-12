@@ -5,11 +5,11 @@ export default function Home() {
   return (
     <div className="text-center">
       <Image
-        src="/alnoorlogo.png"
-        alt="Al Noor Farm Logo"
-        width={220}
-        height={80}
-        className="mx-auto mb-6 h-auto w-auto max-h-28"
+        src="/favicon.png"
+        alt="Al Noor Farm Icon"
+        width={96}
+        height={96}
+        className="mx-auto mb-6 h-auto w-auto"
         priority
       />
       <h1 className="text-3xl font-semibold mb-2">Al Noor Farm</h1>
