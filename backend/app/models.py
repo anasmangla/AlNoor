@@ -39,3 +39,4 @@ class ContactMessage(SQLModel, table=True):
     email: str = ""
     message: str = ""
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    ip: str = ""

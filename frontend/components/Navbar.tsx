@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useEffect, useState } from "react";
+import ApiStatus from "@/components/ApiStatus";
 
 export default function Navbar() {
   const { lines, total } = useCart();
@@ -52,7 +53,7 @@ export default function Navbar() {
           )}
         </div>
       </nav>
+      <ApiStatus />
     </header>
   );
 }
-

@@ -1,4 +1,4 @@
-## Al Noor Farm — Ecommerce & POS
+ï»¿## Al Noor Farm ï¿½ Ecommerce & POS
 
 ![Al Noor Farm Logo](assets/alnoorlogo.png)
 
@@ -34,12 +34,12 @@ Copy `.env.example` to `.env` and adjust:
 
 ### Backend Endpoints (current)
 - `GET /` welcome; `GET /health` status
-- `GET /products`, `GET /products/{id}` — public
-- `POST /products`, `PUT /products/{id}`, `DELETE /products/{id}` — admin (JWT required)
-- `POST /orders` — computes totals and creates order; decrements stock
-- `GET /orders`, `GET /orders/{id}` — admin list/detail orders
-- `POST /auth/login` — returns bearer token
-- `POST /pos/checkout` — creates POS order
+- `GET /products`, `GET /products/{id}` ï¿½ public
+- `POST /products`, `PUT /products/{id}`, `DELETE /products/{id}` ï¿½ admin (JWT required)
+- `POST /orders` ï¿½ computes totals and creates order; decrements stock
+- `GET /orders`, `GET /orders/{id}` ï¿½ admin list/detail orders
+- `POST /auth/login` ï¿½ returns bearer token
+- `POST /pos/checkout` ï¿½ creates POS order
 
 ### Frontend Highlights
 - Storefront lists products from API.
@@ -48,10 +48,23 @@ Copy `.env.example` to `.env` and adjust:
 - POS simulates a running sale and checkout (creates order with source=pos).
 
 ### Deployment (BlueHost cPanel â€“ manual)
-- Frontend: Setup Node.js App pointing to `frontend/`, run `npm install`, `npm run build`, `npm start` or Next server per cPanel setup.
-- Backend: Setup Python App pointing to `backend/`, install `requirements.txt`, WSGI entry `from app.main import app as application`.
-- Configure environment variables in cPanel for both apps.
-- Ensure CORS or routing so frontend reaches API (`NEXT_PUBLIC_API_BASE_URL`).
+- Frontend (Next.js):
+  - cPanel > Setup Node.js App
+  - Application Root: path to `frontend`
+  - Application URL: `/` or a subpath like `/alnoor`
+  - Startup file: `server.js`
+  - Run NPM Install, then `npm run build`, then start the app
+  - If mounted under a subpath, set `NEXT_PUBLIC_BASE_PATH=/alnoor` in the app environment
+- Backend (FastAPI):
+  - cPanel > Setup Python App
+  - Application Root: path to `backend`
+  - WSGI: `passenger_wsgi.py` (contains `from app.main import app as application`)
+  - Run Pip Install for `requirements.txt`
+  - Configure environment variables: `DATABASE_URL`, `SECRET_KEY`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `SQUARE_*`, optional SMTP
+- Apache routing:
+  - `.htaccess` in document root points `/` to `public/index.html` and falls back unknown paths to that file
+  - Paths `/alnoor` (Next.js app) and `/api` (FastAPI) are excluded from the fallback
+  - In production, set `NEXT_PUBLIC_API_BASE_URL=https://<your-api-host-or-path>`
 
 ### Notes
 - DB and JWT verification are stubs. Replace inâ€‘memory stores with Postgres via SQLAlchemy/SQLModel and real JWT as you progress.

@@ -78,6 +78,12 @@ export default function AdminOrdersPage() {
                 </div>
                 <div className="text-sm text-slate-600">{o.source.toUpperCase()}</div>
               </div>
+              {(o.customer_name || o.customer_email) && (
+                <div className="text-xs text-slate-600 mt-1">
+                  {o.customer_name ? <span>{o.customer_name}</span> : null}
+                  {o.customer_email ? <span> · {o.customer_email}</span> : null}
+                </div>
+              )}
               <div className="text-slate-700 flex items-center gap-3 flex-wrap">
                 <span>${o.total_amount.toFixed(2)}</span>
                 {o.created_at && (

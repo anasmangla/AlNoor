@@ -139,6 +139,34 @@ export async function createTerminalCheckout(args: {
   return res.json();
 }
 
+// Contact messages
+export type ContactMessage = {
+  id: number;
+  name: string;
+  email?: string | null;
+  message: string;
+  created_at: string;
+};
+
+export async function listMessages(): Promise<ContactMessage[]> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
+  const res = await fetch(`${API_BASE}/admin/messages`, {
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`Failed to list messages: ${res.status}`);
+  return res.json();
+}
+
+export async function deleteMessage(id: number): Promise<void> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
+  const res = await fetch(`${API_BASE}/admin/messages/${id}`, {
+    method: "DELETE",
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+  });
+  if (!res.ok) throw new Error(`Failed to delete message: ${res.status}`);
+}
+
 export async function pollTerminalCheckout(id: string): Promise<TerminalCheckout> {
   const token = typeof window !== "undefined" ? localStorage.getItem("alnoor_token") : null;
   const res = await fetch(`${API_BASE}/pos/terminal/checkout/${id}`, {
