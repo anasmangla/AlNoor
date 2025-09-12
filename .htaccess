@@ -1,8 +1,8 @@
-RewriteEngine On
+﻿RewriteEngine On
 # Canonical: force HTTPS and www.alnoor716.com
 RewriteCond %{HTTPS} !=on [OR]
-RewriteCond %{HTTP_HOST} !^www\.alnoor716\.com$ [NC]
-RewriteRule ^ https://www.alnoor716.com%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTP_HOST} !^alnoorfarm716\.com$ [NC]
+RewriteRule ^ https://alnoorfarm716.com%{REQUEST_URI} [L,R=301]
 
 # Remove legacy short-path redirects; Next.js handles routes at root
 
@@ -15,7 +15,7 @@ Options -Indexes
 # Do not redirect root; Next.js app should be mounted at '/'
 
 # Disable static fallback to avoid conflicts when Next.js serves root
-# If you need static fallback, uncomment below and ensure it doesn’t collide with app paths.
+# If you need static fallback, uncomment below and ensure it doesnâ€™t collide with app paths.
 # RewriteCond %{REQUEST_FILENAME} !-f
 # RewriteCond %{REQUEST_FILENAME} !-d
 # RewriteRule ^ public/index.html [L]
@@ -36,3 +36,5 @@ AddOutputFilterByType DEFLATE text/html text/css application/javascript applicat
 # Safety: strip any leaked filesystem path from URL back to a clean web path
 RewriteCond %{REQUEST_URI} ^/home\d+/.+?/public_html/website_18b31db5/(.*)$ [NC]
 RewriteRule ^home\d+/.+?/public_html/website_18b31db5/(.*)$ /$1 [L,R=302]
+
+RewriteRule ^alnoor/(.*)$ / [L,R=301]
