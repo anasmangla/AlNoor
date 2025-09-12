@@ -193,7 +193,7 @@ export default function AdminProductsPage() {
           <option value="asc">Asc</option>
           <option value="desc">Desc</option>
         </select>
-        <label className="text-sm text-slate-600">Low stock â‰¤</label>
+        <label className="text-sm text-slate-600">Low stock ≤</label>
         <input type="number" step="0.01" min="0" className="border rounded px-2 py-1 text-sm w-24" value={lowThreshold} onChange={(e)=> setLowThreshold(parseFloat(e.target.value)||0)} />
         <button
           type="button"
@@ -313,3 +313,4 @@ export default function AdminProductsPage() {
     </section>
   );
 }
+

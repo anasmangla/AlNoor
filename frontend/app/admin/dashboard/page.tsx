@@ -7,6 +7,8 @@ type Metrics = {
   revenue_total: number;
   orders_today: number;
   revenue_today: number;
+  orders_month: number;
+  revenue_month: number;
   low_stock_threshold: number;
   low_stock: Array<{ id: number; name: string; stock: number; unit: string }>;
 };
@@ -34,6 +36,14 @@ export default async function AdminDashboardPage() {
             <div className="border rounded p-3">
               <div className="text-xs text-slate-600">Revenue Today</div>
               <div className="text-2xl font-semibold">${metrics.revenue_today.toFixed(2)}</div>
+            </div>
+            <div className="border rounded p-3">
+              <div className="text-xs text-slate-600">Orders This Month</div>
+              <div className="text-2xl font-semibold">{metrics.orders_month}</div>
+            </div>
+            <div className="border rounded p-3">
+              <div className="text-xs text-slate-600">Revenue This Month</div>
+              <div className="text-2xl font-semibold">${metrics.revenue_month.toFixed(2)}</div>
             </div>
             <div className="border rounded p-3">
               <div className="text-xs text-slate-600">Orders Total</div>

@@ -101,6 +101,21 @@ export default function AdminOrdersPage() {
           }}
           className="text-slate-700 hover:underline text-sm"
         >Last 7 days</button>
+        <button
+          onClick={() => {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth()+1).padStart(2,'0');
+            const firstDay = `${y}-${m}-01`;
+            const toM = String(now.getMonth()+1).padStart(2,'0');
+            const toD = String(now.getDate()).padStart(2,'0');
+            const lastDay = `${y}-${toM}-${toD}`;
+            setFromDate(firstDay);
+            setToDate(lastDay);
+            load();
+          }}
+          className="text-slate-700 hover:underline text-sm"
+        >This Month</button>
       </div>
       <div className="mb-3 text-sm text-slate-700">{totals.count} orders -  ${totals.sum.toFixed(2)}</div>
         <button
