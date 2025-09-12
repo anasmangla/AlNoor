@@ -51,7 +51,7 @@ Copy `.env.example` to `.env` and adjust:
 - Frontend (Next.js):
   - cPanel > Setup Node.js App
   - Application Root: path to `frontend`
-  - Application URL: `/` or a subpath like `/alnoor`
+  - Application URL: `/alnoor`
   - Startup file: `server.js`
   - Run NPM Install, then `npm run build`, then start the app
   - If mounted under a subpath, set `NEXT_PUBLIC_BASE_PATH=/alnoor` in the app environment
@@ -66,6 +66,20 @@ Copy `.env.example` to `.env` and adjust:
   - Paths `/alnoor` (Next.js app) and `/api` (FastAPI) are excluded from the fallback
   - In production, set `NEXT_PUBLIC_API_BASE_URL=https://<your-api-host-or-path>`
   - Static homepage links point into the Next app at `/alnoor` (Store/Admin/POS)
+  - Short paths `/store`, `/admin`, `/pos` and `/` redirect to `/alnoor` equivalents
+
+#### Example environment variables (Node app)
+- `NEXT_PUBLIC_BASE_PATH=/alnoor`
+- `NEXT_PUBLIC_API_BASE_URL=https://alnoorfarm716.com/api` (or your API location)
+- Optional:
+  - `NEXT_PUBLIC_SQUARE_APP_ID`, `NEXT_PUBLIC_SQUARE_LOCATION_ID`, `NEXT_PUBLIC_SQUARE_ENV`
+
+#### Example environment variables (Python app)
+- `DATABASE_URL` (e.g., `postgresql+asyncpg://user:pass@host:5432/db`)
+- `SECRET_KEY`
+- `ADMIN_USERNAME`, `ADMIN_PASSWORD`
+- Optional Square: `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, `SQUARE_ENV`
+- Optional SMTP: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_TLS`, `CONTACT_TO`
 
 ### Notes
 - DB and JWT verification are stubs. Replace in‑memory stores with Postgres via SQLAlchemy/SQLModel and real JWT as you progress.

@@ -1,7 +1,7 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
 import { listOrders, updateOrderStatus, type Order } from "@/lib/api";
-import { useMemo, useState as useStateReact } from "react";
+import { useMemo } from "react";
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -44,10 +44,16 @@ export default function AdminOrdersPage() {
     });
   }, [orders, statusFilter, idQuery]);
 
+  const totals = useMemo(() => {
+    const count = filtered.length;
+    const sum = filtered.reduce((acc, o) => acc + (o.total_amount || 0), 0);
+    return { count, sum };
+  }, [filtered]);
+
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">Orders</h1>
-      <div className="flex items-center gap-3 mb-3 flex-wrap">
+      <div className="flex items-center gap-3 mb-2 flex-wrap">
         <label className="text-sm text-slate-600">Status</label>
         <select className="border rounded px-2 py-1 text-sm" value={statusFilter} onChange={(e)=> setStatusFilter(e.target.value)}>
           {['all','pending','paid','processing','completed','cancelled'].map(s=> (
@@ -66,6 +72,37 @@ export default function AdminOrdersPage() {
         <input type="date" className="border rounded px-2 py-1 text-sm" value={toDate} onChange={(e)=> setToDate(e.target.value)} />
         <button onClick={load} className="text-blue-700 hover:underline text-sm">Apply</button>
         <button onClick={()=>{ setFromDate(""); setToDate(""); load(); }} className="text-slate-600 hover:underline text-sm">Clear</button>
+        <span className="text-xs text-slate-500">Quick:</span>
+        <button
+          onClick={() => {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth()+1).padStart(2,'0');
+            const d = String(today.getDate()).padStart(2,'0');
+            setFromDate(`${y}-${m}-${d}`);
+            setToDate(`${y}-${m}-${d}`);
+            load();
+          }}
+          className="text-slate-700 hover:underline text-sm"
+        >Today</button>
+        <button
+          onClick={() => {
+            const now = new Date();
+            const toY = now.getFullYear();
+            const toM = String(now.getMonth()+1).padStart(2,'0');
+            const toD = String(now.getDate()).padStart(2,'0');
+            const past = new Date(now.getTime() - 6*24*60*60*1000);
+            const fy = past.getFullYear();
+            const fm = String(past.getMonth()+1).padStart(2,'0');
+            const fd = String(past.getDate()).padStart(2,'0');
+            setFromDate(`${fy}-${fm}-${fd}`);
+            setToDate(`${toY}-${toM}-${toD}`);
+            load();
+          }}
+          className="text-slate-700 hover:underline text-sm"
+        >Last 7 days</button>
+      </div>
+      <div className="mb-3 text-sm text-slate-700">{totals.count} orders ·  ${totals.sum.toFixed(2)}</div>
         <button
           onClick={() => {
             const rows = [
@@ -99,7 +136,7 @@ export default function AdminOrdersPage() {
       {loading ? (
         <p className="text-slate-600">Loading...</p>
       ) : filtered.length === 0 ? (
-        <p className="text-slate-600">No orders yet.</p>
+        <p className="text-slate-600">No orders · et.</p>
       ) : (
         <ul className="grid gap-3">
           {filtered.map((o) => (
