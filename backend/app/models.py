@@ -11,6 +11,7 @@ class Product(SQLModel, table=True):
     unit: str = ""
     is_weight_based: bool = False
     image_url: str = ""
+    description: str = ""
 
 
 class Order(SQLModel, table=True):

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useMemo, useState } from "react";
 import { Product, fetchProducts, createProduct, deleteProduct, updateProduct } from "@/lib/api";
 
@@ -11,6 +11,7 @@ export default function AdminProductsPage() {
   const [unit, setUnit] = useState("");
   const [isWeightBased, setIsWeightBased] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
+  const [desc, setDesc] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -19,6 +20,8 @@ export default function AdminProductsPage() {
   const [editStock, setEditStock] = useState("0");
   const [editUnit, setEditUnit] = useState("");
   const [editIsWeightBased, setEditIsWeightBased] = useState(false);
+  const [editImageUrl, setEditImageUrl] = useState("");
+  const [editDesc, setEditDesc] = useState("");
   const [editImageUrl, setEditImageUrl] = useState("");
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<string>("name");
@@ -62,13 +65,14 @@ export default function AdminProductsPage() {
       const p = parseFloat(price);
       const s = parseFloat(stock);
       if (!n || isNaN(p) || isNaN(s)) return;
-      await createProduct({ name: n, price: p, stock: s, unit, is_weight_based: isWeightBased, image_url: imageUrl } as any);
+      await createProduct({ name: n, price: p, stock: s, unit, is_weight_based: isWeightBased, image_url: imageUrl, description: desc } as any);
       setName("");
       setPrice("0");
       setStock("0");
       setUnit("");
       setIsWeightBased(false);
       setImageUrl("");
+      setDesc("");
       await load();
     } catch (e: any) {
       setError(e.message || "Failed to create");
@@ -93,6 +97,8 @@ export default function AdminProductsPage() {
     setEditUnit((p as any).unit ?? "");
     setEditIsWeightBased(!!(p as any).is_weight_based);
     setEditImageUrl((p as any).image_url || "");
+    setEditDesc((p as any).description || "");
+    setEditImageUrl((p as any).image_url || "");
   }
 
   async function onSaveEdit() {
@@ -100,7 +106,7 @@ export default function AdminProductsPage() {
     try {
       const p = parseFloat(editPrice);
       const s = parseFloat(editStock);
-      await updateProduct(editingId, { name: editName, price: p, stock: s, unit: editUnit, is_weight_based: editIsWeightBased, image_url: editImageUrl } as any);
+      await updateProduct(editingId, { name: editName, price: p, stock: s, unit: editUnit, is_weight_based: editIsWeightBased, image_url: editImageUrl, description: editDesc } as any);
       setEditingId(null);
       await load();
     } catch (e: any) {
@@ -169,6 +175,10 @@ export default function AdminProductsPage() {
           <label className="block text-sm text-slate-600">Image URL</label>
           <input className="border rounded px-2 py-1 min-w-[280px]" value={imageUrl} onChange={(e)=> setImageUrl(e.target.value)} placeholder="https://..." />
         </div>
+        <div className="w-full max-w-xl">
+          <label className="block text-sm text-slate-600">Description</label>
+          <textarea className="border rounded px-2 py-1 w-full" rows={3} value={desc} onChange={(e)=> setDesc(e.target.value)} placeholder="Short description..." />
+        </div>
         <button type="submit" className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700">Add</button>
       </form>
 
@@ -184,7 +194,7 @@ export default function AdminProductsPage() {
           <option value="asc">Asc</option>
           <option value="desc">Desc</option>
         </select>
-        <label className="text-sm text-slate-600">Low stock ≤</label>
+        <label className="text-sm text-slate-600">Low stock â‰¤</label>
         <input type="number" step="0.01" min="0" className="border rounded px-2 py-1 text-sm w-24" value={lowThreshold} onChange={(e)=> setLowThreshold(parseFloat(e.target.value)||0)} />
         <button
           type="button"
@@ -279,7 +289,7 @@ export default function AdminProductsPage() {
                 <div className="flex-1">
                   <div className="font-medium">{p.name}</div>
                   <div className="text-slate-600 text-sm">
-                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} — Stock: {(p as any).stock ?? 0} {((p as any).unit || "")} {((p as any).stock||0) <= lowThreshold ? '(low)' : ''}
+                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} â€” Stock: {(p as any).stock ?? 0} {((p as any).unit || "")} {((p as any).stock||0) <= lowThreshold ? '(low)' : ''}
                   </div>
                 </div>
               )}
