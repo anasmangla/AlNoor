@@ -7,21 +7,23 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await listOrders();
-        setOrders(data);
-      } catch (e: any) {
-        setError(e.message || "Failed to load orders");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  async function load() {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await listOrders({ startDate: fromDate || undefined, endDate: toDate || undefined });
+      setOrders(data);
+    } catch (e: any) {
+      setError(e.message || "Failed to load orders");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { load(); }, []);
 
   async function onChangeStatus(id: number, newStatus: string) {
     try {
@@ -45,7 +47,7 @@ export default function AdminOrdersPage() {
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">Orders</h1>
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3 mb-3 flex-wrap">
         <label className="text-sm text-slate-600">Status</label>
         <select className="border rounded px-2 py-1 text-sm" value={statusFilter} onChange={(e)=> setStatusFilter(e.target.value)}>
           {['all','pending','paid','processing','completed','cancelled'].map(s=> (
@@ -58,6 +60,36 @@ export default function AdminOrdersPage() {
           value={idQuery}
           onChange={(e)=> setIdQuery(e.target.value)}
         />
+        <label className="text-sm text-slate-600">From</label>
+        <input type="date" className="border rounded px-2 py-1 text-sm" value={fromDate} onChange={(e)=> setFromDate(e.target.value)} />
+        <label className="text-sm text-slate-600">To</label>
+        <input type="date" className="border rounded px-2 py-1 text-sm" value={toDate} onChange={(e)=> setToDate(e.target.value)} />
+        <button onClick={load} className="text-blue-700 hover:underline text-sm">Apply</button>
+        <button onClick={()=>{ setFromDate(""); setToDate(""); load(); }} className="text-slate-600 hover:underline text-sm">Clear</button>
+        <button
+          onClick={() => {
+            const rows = [
+              ["id","created_at","status","source","total","customer_name","customer_email","items"],
+              ...filtered.map(o => [
+                o.id,
+                o.created_at ? new Date(o.created_at).toISOString() : "",
+                o.status,
+                o.source,
+                o.total_amount.toFixed(2),
+                o.customer_name || "",
+                o.customer_email || "",
+                o.items.map(i=>`${i.name} x ${i.quantity} ${i.unit||""} @ ${i.price_each.toFixed(2)}`).join("; ")
+              ])
+            ];
+            const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'orders.csv'; a.click(); URL.revokeObjectURL(url);
+          }}
+          className="text-emerald-700 hover:underline text-sm"
+        >
+          Export CSV
+        </button>
       </div>
       {error && (
         <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
@@ -116,3 +148,4 @@ export default function AdminOrdersPage() {
     </section>
   );
 }
+

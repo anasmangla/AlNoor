@@ -23,7 +23,16 @@ export default function AdminProductsPage() {
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<string>("name");
   const [sortDir, setSortDir] = useState<string>("asc");
-  const LOW = 5;
+  const [lowThreshold, setLowThreshold] = useState<number>(5);
+  useEffect(() => {
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('alnoor_low_threshold') : null;
+    if (raw) {
+      const n = parseFloat(raw); if (!isNaN(n)) setLowThreshold(n);
+    }
+  }, []);
+  useEffect(() => {
+    if (typeof window !== 'undefined') localStorage.setItem('alnoor_low_threshold', String(lowThreshold));
+  }, [lowThreshold]);
 
   async function load() {
     setLoading(true);
@@ -175,7 +184,8 @@ export default function AdminProductsPage() {
           <option value="asc">Asc</option>
           <option value="desc">Desc</option>
         </select>
-        <span className="text-xs text-slate-500">Low stock threshold: {LOW}</span>
+        <label className="text-sm text-slate-600">Low stock ≤</label>
+        <input type="number" step="0.01" min="0" className="border rounded px-2 py-1 text-sm w-24" value={lowThreshold} onChange={(e)=> setLowThreshold(parseFloat(e.target.value)||0)} />
       </div>
 
       {loading ? (
@@ -185,7 +195,7 @@ export default function AdminProductsPage() {
       ) : (
         <ul className="grid gap-2">
           {sorted.map((p) => (
-            <li key={p.id} className={`border rounded p-3 flex items-center justify-between gap-4 ${((p as any).stock||0) <= LOW ? 'border-red-300 bg-red-50' : ''}`}>
+            <li key={p.id} className={`border rounded p-3 flex items-center justify-between gap-4 ${((p as any).stock||0) <= lowThreshold ? 'border-red-300 bg-red-50' : ''}`}>
               {editingId === p.id ? (
                 <div className="flex-1 flex items-end gap-2 flex-wrap">
                   <div>
@@ -217,7 +227,7 @@ export default function AdminProductsPage() {
                 <div className="flex-1">
                   <div className="font-medium">{p.name}</div>
                   <div className="text-slate-600 text-sm">
-                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} — Stock: {(p as any).stock ?? 0} {((p as any).unit || "")}
+                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} — Stock: {(p as any).stock ?? 0} {((p as any).unit || "")} {((p as any).stock||0) <= lowThreshold ? '(low)' : ''}
                   </div>
                 </div>
               )}
