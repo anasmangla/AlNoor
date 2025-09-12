@@ -102,7 +102,7 @@ export default function AdminOrdersPage() {
           className="text-slate-700 hover:underline text-sm"
         >Last 7 days</button>
       </div>
-      <div className="mb-3 text-sm text-slate-700">{totals.count} orders ·  ${totals.sum.toFixed(2)}</div>
+      <div className="mb-3 text-sm text-slate-700">{totals.count} orders -  ${totals.sum.toFixed(2)}</div>
         <button
           onClick={() => {
             const rows = [
@@ -126,9 +126,7 @@ export default function AdminOrdersPage() {
           className="text-emerald-700 hover:underline text-sm"
         >
           Export CSV
-        </button>
-      </div>
-      {error && (
+        </button>\n      {error && (
         <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
           {error}
         </div>
@@ -136,7 +134,7 @@ export default function AdminOrdersPage() {
       {loading ? (
         <p className="text-slate-600">Loading...</p>
       ) : filtered.length === 0 ? (
-        <p className="text-slate-600">No orders · et.</p>
+        <p className="text-slate-600">No orders - et.</p>
       ) : (
         <ul className="grid gap-3">
           {filtered.map((o) => (
@@ -150,7 +148,7 @@ export default function AdminOrdersPage() {
               {(o.customer_name || o.customer_email) && (
                 <div className="text-xs text-slate-600 mt-1">
                   {o.customer_name ? <span>{o.customer_name}</span> : null}
-                  {o.customer_email ? <span> · {o.customer_email}</span> : null}
+                  {o.customer_email ? <span> - {o.customer_email}</span> : null}
                 </div>
               )}
               <div className="text-slate-700 flex items-center gap-3 flex-wrap">
