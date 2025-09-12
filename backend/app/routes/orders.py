@@ -135,8 +135,8 @@ async def create_order(
         total_amount=order_row.total_amount,
         status=order_row.status,
         source=order_row.source,
-        customer_name=getattr(order_row, "customer_name", None),
-        customer_email=getattr(order_row, "customer_email", None),
+        customer_name=(getattr(order_row, "customer_name", None) or None),
+        customer_email=(getattr(order_row, "customer_email", None) or None),
         created_at=getattr(order_row, "created_at", None),
     )
 
@@ -190,12 +190,93 @@ async def list_orders(
             total_amount=float(o.total_amount),
             status=o.status,
             source=o.source,
-            customer_name=getattr(o, "customer_name", None),
-            customer_email=getattr(o, "customer_email", None),
+            customer_name=(getattr(o, "customer_name", None) or None),
+            customer_email=(getattr(o, "customer_email", None) or None),
             created_at=getattr(o, "created_at", None),
         )
         for o in orders
     ]
+
+
+@router.get("/orders/{order_id}", response_model=OrderOut)
+async def get_order(
+    order_id: int,
+    user: str = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    result = await session.execute(select(OrderModel).where(OrderModel.id == order_id))
+    order = result.scalars().first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    # Fetch items for this order
+    result_items = await session.execute(
+        select(OrderItemModel).where(OrderItemModel.order_id == int(order.id))
+    )
+    items = [
+        OrderItemOut(
+            product_id=int(it.product_id),
+            name=it.name,
+            unit=getattr(it, "unit", ""),
+            quantity=float(it.quantity),
+            price_each=float(it.price_each),
+            subtotal=float(it.price_each) * float(it.quantity),
+        )
+        for it in result_items.scalars().all()
+    ]
+    return OrderOut(
+        id=int(order.id),
+        items=items,
+        total_amount=float(order.total_amount),
+        status=order.status,
+        source=order.source,
+        customer_name=(getattr(order, "customer_name", None) or None),
+        customer_email=(getattr(order, "customer_email", None) or None),
+        created_at=getattr(order, "created_at", None),
+    )
+
+
+@router.put("/orders/{order_id}", response_model=OrderOut)
+async def update_order(
+    order_id: int,
+    payload: OrderUpdate,
+    user: str = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    # Find order
+    result = await session.execute(select(OrderModel).where(OrderModel.id == order_id))
+    order = result.scalars().first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    # Update allowed fields
+    order.status = payload.status
+    session.add(order)
+    await session.commit()
+    await session.refresh(order)
+    # Return populated view
+    result_items = await session.execute(
+        select(OrderItemModel).where(OrderItemModel.order_id == int(order.id))
+    )
+    items = [
+        OrderItemOut(
+            product_id=int(it.product_id),
+            name=it.name,
+            unit=getattr(it, "unit", ""),
+            quantity=float(it.quantity),
+            price_each=float(it.price_each),
+            subtotal=float(it.price_each) * float(it.quantity),
+        )
+        for it in result_items.scalars().all()
+    ]
+    return OrderOut(
+        id=int(order.id),
+        items=items,
+        total_amount=float(order.total_amount),
+        status=order.status,
+        source=order.source,
+        customer_name=(getattr(order, "customer_name", None) or None),
+        customer_email=(getattr(order, "customer_email", None) or None),
+        created_at=getattr(order, "created_at", None),
+    )
 
 
 @router.get("/orders/{order_id}", response_model=OrderOut)

@@ -1,12 +1,6 @@
-"use client";
+﻿"use client";
 import { useEffect, useMemo, useState } from "react";
-import {
-  Product,
-  fetchProducts,
-  createProduct,
-  deleteProduct,
-  updateProduct,
-} from "@/lib/api";
+import { Product, fetchProducts, createProduct, deleteProduct, updateProduct } from "@/lib/api";
 
 export default function AdminProductsPage() {
   const [hasToken, setHasToken] = useState<boolean>(false);
@@ -29,21 +23,17 @@ export default function AdminProductsPage() {
   const [editImageUrl, setEditImageUrl] = useState("");
   const [editDesc, setEditDesc] = useState("");
   const [query, setQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "price" | "stock">("name");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [sortBy, setSortBy] = useState<string>("name");
+  const [sortDir, setSortDir] = useState<string>("asc");
   const [lowThreshold, setLowThreshold] = useState<number>(5);
-
   useEffect(() => {
-    const raw = typeof window !== "undefined" ? localStorage.getItem("alnoor_low_threshold") : null;
+    const raw = typeof window !== 'undefined' ? localStorage.getItem('alnoor_low_threshold') : null;
     if (raw) {
-      const n = parseFloat(raw);
-      if (!isNaN(n)) setLowThreshold(n);
+      const n = parseFloat(raw); if (!isNaN(n)) setLowThreshold(n);
     }
   }, []);
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("alnoor_low_threshold", String(lowThreshold));
-    }
+    if (typeof window !== 'undefined') localStorage.setItem('alnoor_low_threshold', String(lowThreshold));
   }, [lowThreshold]);
 
   async function load() {
@@ -74,112 +64,7 @@ export default function AdminProductsPage() {
       const p = parseFloat(price);
       const s = parseFloat(stock);
       if (!n || isNaN(p) || isNaN(s)) return;
-      await createProduct({
-        name: n,
-        price: p,
-        stock: s,
-        unit,
-        is_weight_based: isWeightBased,
-        image_url: imageUrl || undefined,
-        description: desc || undefined,
-      } as any);
-      setName("");
-      setPrice("0");
-      setStock("0");
-      setUnit("");
-      setIsWeightBased(false);
-      setImageUrl("");
-      setDesc("");
-      await load();
-    } catch (e: any) {
-      setError(e.message || "Failed to create");
-    }
-  }
-
-  async function onDelete(id: number) {
-    setError(null);
-    try {
-      await deleteProduct(id);
-      await load();
-    } catch (e: any) {
-      setError(e.message || "Failed to delete");
-    }
-  }
-
-  function startEdit(p: Product) {
-    setEditingId(p.id);
-    setEditName(p.name);
-    setEditPrice(String(p.price));
-    setEditStock(String((p as any).stock ?? 0));
-    setEditUnit((p as any).unit ?? "");
-    setEditIsWeightBased(!!(p as any).is_weight_based);
-    setEditImageUrl((p as any).image_url || "");
-    setEditDesc((p as any).description || "");
-  }
-
-  async function onSaveEdit() {
-    if (editingId == null) return;
-    try {
-      const p = parseFloat(editPrice);
-      const s = parseFloat(editStock);
-      await updateProduct(
-        editingId,
-        {
-          name: editName,
-          price: p,
-          stock: s,
-          unit: editUnit,
-          is_weight_based: editIsWeightBased,
-          image_url: editImageUrl || undefined,
-          description: editDesc || undefined,
-        } as any
-      );
-      setEditingId(null);
-      await load();
-    } catch (e: any) {
-      setError(e.message || "Failed to update");
-    }
-  }
-
-  function cancelEdit() {
-    setEditingId(null);
-  }
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return products;
-    return products.filter((p) => {
-      const unit = String((p as any).unit || "").toLowerCase();
-      const desc = String((p as any).description || "").toLowerCase();
-      return (
-        p.name.toLowerCase().includes(q) || unit.includes(q) || desc.includes(q)
-      );
-    });
-  }, [products, query]);
-
-  const sorted = useMemo(() => {
-    const arr = [...filtered];
-    arr.sort((a, b) => {
-      let av: number | string = a.name;
-      let bv: number | string = b.name;
-      if (sortBy === "price") {
-        av = a.price;
-        bv = b.price;
-      } else if (sortBy === "stock") {
-        av = (a as any).stock ?? 0;
-        bv = (b as any).stock ?? 0;
-      }
-      if (typeof av === "string" && typeof bv === "string") {
-        return sortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
-      }
-      const diff = Number(av) - Number(bv);
-      return sortDir === "asc" ? diff : -diff;
-    });
-    return arr;
-  }, [filtered, sortBy, sortDir]);
-
-  return (
-    <section>
+      await createProduct({ name: n, price: p, Stock: <section>
       <h1 className="text-2xl font-semibold mb-4">Admin Products</h1>
       {!hasToken && (
         <div className="mb-3 text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded">
@@ -189,7 +74,6 @@ export default function AdminProductsPage() {
       {error && (
         <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">{error}</div>
       )}
-
       <form onSubmit={onCreate} className="mb-6 flex gap-2 items-end flex-wrap">
         <div>
           <label className="block text-sm text-slate-600">Name</label>
@@ -223,45 +107,31 @@ export default function AdminProductsPage() {
       </form>
 
       <div className="mb-4 flex items-center gap-3 flex-wrap">
-        <input
-          className="border rounded px-2 py-1"
-          placeholder="Filter by name, unit, or description..."
-          value={query}
-          onChange={(e)=> setQuery(e.target.value)}
-        />
+        <input className="border rounded px-2 py-1" placeholder="Filter by name or unit..." value={query} onChange={(e)=> setQuery(e.target.value)} />
         <label className="text-sm text-slate-600">Sort</label>
-        <select className="border rounded px-2 py-1 text-sm" value={sortBy} onChange={(e)=> setSortBy(e.target.value as any)}>
+        <select className="border rounded px-2 py-1 text-sm" value={sortBy} onChange={(e)=> setSortBy(e.target.value)}>
           <option value="name">Name</option>
           <option value="price">Price</option>
           <option value="stock">Stock</option>
         </select>
-        <select className="border rounded px-2 py-1 text-sm" value={sortDir} onChange={(e)=> setSortDir(e.target.value as any)}>
+        <select className="border rounded px-2 py-1 text-sm" value={sortDir} onChange={(e)=> setSortDir(e.target.value)}>
           <option value="asc">Asc</option>
           <option value="desc">Desc</option>
         </select>
         <label className="text-sm text-slate-600">Low stock ≤</label>
-        <input
-          type="number"
-          step="0.1"
-          min="0"
-          className="border rounded px-2 py-1 w-24 text-sm"
-          value={lowThreshold}
-          onChange={(e)=> setLowThreshold(parseFloat(e.target.value)||0)}
-        />
+        <input type="number" step="0.01" min="0" className="border rounded px-2 py-1 text-sm w-24" value={lowThreshold} onChange={(e)=> setLowThreshold(parseFloat(e.target.value)||0)} />
         <button
+          type="button"
           onClick={() => {
-            const header = ["id","name","price","stock","unit","is_weight_based","image_url","description"];
-            const rows = [
-              header,
-              ...sorted.map((p) => [
-                p.id,
+            const rows = [["id","name","price","stock","unit","is_weight_based","image_url","description"],
+              ...sorted.map(p => [
+                (p as any).id || "",
                 p.name,
                 typeof p.price === 'number' ? p.price.toFixed(2) : p.price,
                 (p as any).stock ?? "",
                 (p as any).unit ?? "",
                 (p as any).is_weight_based ? 'true' : 'false',
-                (p as any).image_url || '',
-                (p as any).description || '',
+                (p as any).image_url || ''
               ])
             ];
             const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
@@ -289,20 +159,7 @@ export default function AdminProductsPage() {
                 const rec: any = {
                   name: vals[idx('name')] || '',
                   price: parseFloat(vals[idx('price')] || '0') || 0,
-                  stock: parseFloat(vals[idx('stock')] || '0') || 0,
-                  unit: vals[idx('unit')] || '',
-                  is_weight_based: ((vals[idx('is_weight_based')] || '').toLowerCase() === 'true'),
-                  image_url: vals[idx('image_url')] || '',
-                  description: vals[idx('description')] || '',
-                };
-                try { await createProduct(rec); created++; } catch { failed++; }
-              }
-              setError(`Import done. Created ${created}, failed ${failed}.`);
-              await load();
-            }catch(e:any){ setError(e.message||'Import failed'); }
-          }}
-        />
-      </div>
+                  Stock: </div>
 
       {loading ? (
         <p className="text-slate-600">Loading...</p>
@@ -338,16 +195,12 @@ export default function AdminProductsPage() {
                     <label className="block text-xs text-slate-600">Image URL</label>
                     <input className="border rounded px-2 py-1 min-w-[260px]" value={editImageUrl} onChange={(e)=> setEditImageUrl(e.target.value)} />
                   </div>
-                  <div className="w-full max-w-xl">
-                    <label className="block text-xs text-slate-600">Description</label>
-                    <textarea className="border rounded px-2 py-1 w-full" rows={2} value={editDesc} onChange={(e)=> setEditDesc(e.target.value)} />
-                  </div>
                 </div>
               ) : (
                 <div className="flex-1">
                   <div className="font-medium">{p.name}</div>
                   <div className="text-slate-600 text-sm">
-                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} - Stock: {(p as any).stock ?? 0}
+                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} â€” Stock: <= lowThreshold ? '(low)' : ''}
                   </div>
                 </div>
               )}
@@ -372,4 +225,7 @@ export default function AdminProductsPage() {
     </section>
   );
 }
+
+
+
 
