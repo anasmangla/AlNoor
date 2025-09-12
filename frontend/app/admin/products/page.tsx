@@ -64,82 +64,7 @@ export default function AdminProductsPage() {
       const p = parseFloat(price);
       const s = parseFloat(stock);
       if (!n || isNaN(p) || isNaN(s)) return;
-      await createProduct({ name: n, price: p, stock: s, unit, is_weight_based: isWeightBased, image_url: imageUrl, description: desc } as any);
-      setName("");
-      setPrice("0");
-      setStock("0");
-      setUnit("");
-      setIsWeightBased(false);
-      setImageUrl("");
-      setDesc("");
-      await load();
-    } catch (e: any) {
-      setError(e.message || "Failed to create");
-    }
-  }
-
-  async function onDelete(id: number) {
-    setError(null);
-    try {
-      await deleteProduct(id);
-      await load();
-    } catch (e: any) {
-      setError(e.message || "Failed to delete");
-    }
-  }
-
-  function startEdit(p: Product) {
-    setEditingId(p.id);
-    setEditName(p.name);
-    setEditPrice(String(p.price));
-    setEditStock(String((p as any).stock ?? 0));
-    setEditUnit((p as any).unit ?? "");
-    setEditIsWeightBased(!!(p as any).is_weight_based);
-    setEditImageUrl((p as any).image_url || "");
-    setEditDesc((p as any).description || "");
-    setEditImageUrl((p as any).image_url || "");
-  }
-
-  async function onSaveEdit() {
-    if (editingId == null) return;
-    try {
-      const p = parseFloat(editPrice);
-      const s = parseFloat(editStock);
-      await updateProduct(editingId, { name: editName, price: p, stock: s, unit: editUnit, is_weight_based: editIsWeightBased, image_url: editImageUrl, description: editDesc } as any);
-      setEditingId(null);
-      await load();
-    } catch (e: any) {
-      setError(e.message || "Failed to update");
-    }
-  }
-
-  function cancelEdit() {
-    setEditingId(null);
-  }
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return products;
-    return products.filter((p) => {
-      const unit = String((p as any).unit || "").toLowerCase();
-      return p.name.toLowerCase().includes(q) || unit.includes(q);
-    });
-  }, [products, query]);
-
-  const sorted = useMemo(() => {
-    const arr = [...filtered];
-    arr.sort((a, b) => {
-      const mul = sortDir === "asc" ? 1 : -1;
-      if (sortBy === "name") return a.name.localeCompare(b.name) * mul;
-      if (sortBy === "price") return ((a.price || 0) - (b.price || 0)) * mul;
-      if (sortBy === "stock") return (((a as any).stock || 0) - ((b as any).stock || 0)) * mul;
-      return 0;
-    });
-    return arr;
-  }, [filtered, sortBy, sortDir]);
-
-  return (
-    <section>
+      await createProduct({ name: n, price: p, Stock: <section>
       <h1 className="text-2xl font-semibold mb-4">Admin Products</h1>
       {!hasToken && (
         <div className="mb-3 text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded">
@@ -198,7 +123,7 @@ export default function AdminProductsPage() {
         <button
           type="button"
           onClick={() => {
-            const rows = [["id","name","price","stock","unit","is_weight_based","image_url"],
+            const rows = [["id","name","price","stock","unit","is_weight_based","image_url","description"],
               ...sorted.map(p => [
                 (p as any).id || "",
                 p.name,
@@ -234,20 +159,7 @@ export default function AdminProductsPage() {
                 const rec: any = {
                   name: vals[idx('name')] || '',
                   price: parseFloat(vals[idx('price')] || '0') || 0,
-                  stock: parseFloat(vals[idx('stock')] || '0') || 0,
-                  unit: vals[idx('unit')] || '',
-                  is_weight_based: /^(true|1|yes)$/i.test(vals[idx('is_weight_based')] || ''),
-                  image_url: vals[idx('image_url')] || '',
-                };
-                if(!rec.name){ failed++; continue; }
-                try{ await createProduct(rec); created++; } catch{ failed++; }
-              }
-              alert(`Import complete. Created: ${created}, Failed: ${failed}`);
-              await load();
-            }catch(err){ alert('Failed to import CSV'); }
-          }}
-        />
-      </div>
+                  Stock: </div>
 
       {loading ? (
         <p className="text-slate-600">Loading...</p>
@@ -288,7 +200,7 @@ export default function AdminProductsPage() {
                 <div className="flex-1">
                   <div className="font-medium">{p.name}</div>
                   <div className="text-slate-600 text-sm">
-                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} â€” Stock: {(p as any).stock ?? 0} {((p as any).unit || "")} {((p as any).stock||0) <= lowThreshold ? '(low)' : ''}
+                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} â€” Stock: <= lowThreshold ? '(low)' : ''}
                   </div>
                 </div>
               )}
@@ -313,4 +225,7 @@ export default function AdminProductsPage() {
     </section>
   );
 }
+
+
+
 
