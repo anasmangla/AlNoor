@@ -50,6 +50,20 @@ export default function AdminOrdersPage() {
     return { count, sum };
   }, [filtered]);
 
+  const [cols, setCols] = useState({
+    id: true,
+    created_at: true,
+    status: true,
+    source: true,
+    total: true,
+    customer_name: true,
+    customer_email: true,
+    items: true,
+  });
+  function toggleCol(k: keyof typeof cols) {
+    setCols((c) => ({ ...c, [k]: !c[k] }));
+  }
+
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">Orders</h1>
@@ -117,31 +131,44 @@ export default function AdminOrdersPage() {
           className="text-slate-700 hover:underline text-sm"
         >This Month</button>
       </div>
-      <div className="mb-3 text-sm text-slate-700">{totals.count} orders -  ${totals.sum.toFixed(2)}</div>
+      <div className="mb-2 text-sm text-slate-700">{totals.count} orders · ${totals.sum.toFixed(2)}</div>
+      <div className="mb-3 text-xs text-slate-600 flex items-center gap-3 flex-wrap">
+        <span>CSV columns:</span>
+        {(["id","created_at","status","source","total","customer_name","customer_email","items"] as const).map((k) => (
+          <label key={k} className="inline-flex items-center gap-1">
+            <input type="checkbox" checked={cols[k as keyof typeof cols]} onChange={() => toggleCol(k as any)} /> {k}
+          </label>
+        ))}
         <button
           onClick={() => {
-            const rows = [
-              ["id","created_at","status","source","total","customer_name","customer_email","items"],
-              ...filtered.map(o => [
-                o.id,
-                o.created_at ? new Date(o.created_at).toISOString() : "",
-                o.status,
-                o.source,
-                o.total_amount.toFixed(2),
-                o.customer_name || "",
-                o.customer_email || "",
-                o.items.map(i=>`${i.name} x ${i.quantity} ${i.unit||""} @ ${i.price_each.toFixed(2)}`).join("; ")
-              ])
+            const header: string[] = [];
+            const push = (n: string, ok: boolean) => { if (ok) header.push(n); };
+            push('id', cols.id); push('created_at', cols.created_at); push('status', cols.status);
+            push('source', cols.source); push('total', cols.total); push('customer_name', cols.customer_name);
+            push('customer_email', cols.customer_email); push('items', cols.items);
+            const rows = [header,
+              ...filtered.map(o => {
+                const row: any[] = [];
+                if (cols.id) row.push(o.id);
+                if (cols.created_at) row.push(o.created_at ? new Date(o.created_at).toISOString() : "");
+                if (cols.status) row.push(o.status);
+                if (cols.source) row.push(o.source);
+                if (cols.total) row.push(o.total_amount.toFixed(2));
+                if (cols.customer_name) row.push(o.customer_name || "");
+                if (cols.customer_email) row.push(o.customer_email || "");
+                if (cols.items) row.push(o.items.map(i=>`${i.name} x ${i.quantity} ${i.unit||""} @ ${i.price_each.toFixed(2)}`).join("; "));
+                return row;
+              })
             ];
             const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = 'orders.csv'; a.click(); URL.revokeObjectURL(url);
           }}
-          className="text-emerald-700 hover:underline text-sm"
-        >
-          Export CSV
-        </button>\n      {error && (
+          className="text-emerald-700 hover:underline"
+        >Export CSV</button>
+      </div>
+      {error && (
         <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
           {error}
         </div>
@@ -149,7 +176,7 @@ export default function AdminOrdersPage() {
       {loading ? (
         <p className="text-slate-600">Loading...</p>
       ) : filtered.length === 0 ? (
-        <p className="text-slate-600">No orders - et.</p>
+        <p className="text-slate-600">No orders yet.</p>
       ) : (
         <ul className="grid gap-3">
           {filtered.map((o) => (
