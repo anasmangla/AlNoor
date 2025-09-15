@@ -32,10 +32,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="fixed top-3 right-3 z-[9999] grid gap-2">
+      <div className="fixed top-3 right-3 z-[9999] grid gap-2" aria-live="polite">
         {toasts.map((t) => (
           <div
             key={t.id}
+            role="status"
             className={
               "px-3 py-2 rounded shadow text-sm " +
               (t.type === "success"
@@ -58,4 +59,3 @@ export function useToast() {
   if (!ctx) throw new Error("useToast must be used within ToastProvider");
   return ctx;
 }
-

@@ -5,11 +5,6 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import SquareCard from "@/components/payments/SquareCard";
 
-export const metadata = {
-  title: "Checkout | Al Noor Farm",
-  robots: { index: false, follow: true },
-};
-
 export default function CheckoutPage() {
   const { lines, clear, total } = useCart();
   const [name, setName] = useState("");

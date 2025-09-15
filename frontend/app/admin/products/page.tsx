@@ -10,8 +10,6 @@ import {
 import Spinner from "@/components/Spinner";
 import { useToast } from "@/components/Toast";
 
-export const metadata = { title: "Admin Products", robots: { index: false, follow: false } };
-
 export default function AdminProductsPage() {
   const toast = useToast();
   const [hasToken, setHasToken] = useState<boolean>(false);
@@ -205,7 +203,10 @@ export default function AdminProductsPage() {
         </div>
       )}
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">{error}</div>
+        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={load} className="text-red-800 underline text-sm">Retry</button>
+        </div>
       )}
 
       <form onSubmit={onCreate} className="mb-6 flex gap-2 items-end flex-wrap">

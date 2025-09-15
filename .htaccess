@@ -34,6 +34,14 @@ AddOutputFilterByType DEFLATE text/html text/css application/javascript applicat
   ExpiresByType image/svg+xml "access plus 30 days"
 </IfModule>
 
+# Security headers
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "no-referrer-when-downgrade"
+  Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
 # Safety: strip leaked filesystem paths (BlueHost paths) back to clean web paths
 RewriteCond %{REQUEST_URI} ^/home\d+/.+?/public_html/website_18b31db5/(.*)$ [NC]
 RewriteRule ^home\d+/.+?/public_html/website_18b31db5/(.*)$ /$1 [L,R=302]
@@ -42,4 +50,3 @@ RewriteRule ^home\d+/.+?/public_html/website_18b31db5/(.*)$ /$1 [L,R=302]
 RewriteRule ^store/?$ /alnoor/products [L,R=302]
 RewriteRule ^pos/?$ /alnoor/admin/pos [L,R=302]
 RewriteRule ^admin/?$ /alnoor/admin/login [L,R=302]
-

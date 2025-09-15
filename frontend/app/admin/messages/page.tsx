@@ -41,7 +41,10 @@ export default function AdminMessagesPage() {
     <section>
       <h1 className="text-2xl font-semibold mb-4">Contact Messages</h1>
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">{error}</div>
+        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={load} className="text-red-800 underline text-sm">Retry</button>
+        </div>
       )}
       {loading ? (
         <Spinner />
