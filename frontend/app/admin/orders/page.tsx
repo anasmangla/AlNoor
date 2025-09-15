@@ -186,7 +186,6 @@ export default function AdminOrdersPage() {
             const a = document.createElement('a'); a.href = url; a.download = 'orders.csv'; a.click(); URL.revokeObjectURL(url); try { toast.success('Exported'); } catch {}
           }}
           className="text-emerald-700 hover:underline"
-          aria-label="Export orders to CSV"
         >Export CSV</button>
       </div>
       {error && (
