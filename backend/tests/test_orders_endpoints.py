@@ -36,6 +36,7 @@ async def test_get_and_update_order_flow():
         assert resp.status_code == 201
         order = resp.json()
         order_id = order["id"]
+        assert order["status"] == "pending"
 
         # Admin token
         token = await get_token(ac)
@@ -48,6 +49,7 @@ async def test_get_and_update_order_flow():
         assert body["id"] == order_id
         assert body["total_amount"] >= 0
         assert isinstance(body["items"], list) and len(body["items"]) == 1
+        assert body["status"] == "pending"
 
         # Update status
         resp = await ac.put(

@@ -53,7 +53,7 @@ async def create_order(
             )
         )
 
-    status_val = "paid"
+    status_val = "pending"
 
     # Optional Square payment (sandbox/production) if token and env configured
     token = getattr(payload, "payment_token", None)
@@ -91,7 +91,8 @@ async def create_order(
             if resp.status_code >= 300:
                 detail = data.get("errors") if isinstance(data, dict) else data
                 raise HTTPException(status_code=400, detail=f"Payment failed: {detail}")
-            status_val = "paid"
+            else:
+                status_val = "paid"
         except HTTPException:
             raise
         except Exception as e:  # If SDK call fails, surface error gracefully
