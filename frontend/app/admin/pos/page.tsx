@@ -17,6 +17,16 @@ export default function PosPage() {
   const [terminalId, setTerminalId] = useState<string | null>(null);
   const [hasToken, setHasToken] = useState<boolean>(false);
 
+  function logoutAndRedirect(nextPath: string) {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('alnoor_token');
+        document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
+        window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
+      }
+    } catch {}
+  }
+
   useEffect(() => {
     if (typeof window !== 'undefined') setHasToken(!!localStorage.getItem('alnoor_token'));
     fetchProducts().then(setProducts).catch(() => setProducts([]));
@@ -55,7 +65,9 @@ export default function PosPage() {
       setMessage(`Payment successful. Order #${order.id}`);
       setSale([]);
     } catch (e: any) {
-      setError(e.message || "Checkout failed");
+      const msg = e?.message || "Checkout failed";
+      setError(msg);
+      if (msg.includes('401')) logoutAndRedirect('/admin/pos');
     } finally {
       setLoading(false);
     }
@@ -90,7 +102,9 @@ export default function PosPage() {
       setMessage(`Terminal payment complete. Order #${order.id}`);
       setSale([]);
     } catch (e: any) {
-      setError(e.message || "Terminal checkout failed");
+      const msg = e?.message || "Terminal checkout failed";
+      setError(msg);
+      if (msg.includes('401')) logoutAndRedirect('/admin/pos');
     } finally {
       setLoading(false);
     }
@@ -105,12 +119,12 @@ export default function PosPage() {
         </div>
       )}
       {message && (
-        <div className="mb-3 text-emerald-700 bg-emerald-50 border border-emerald-200 p-2 rounded">
+        <div className="mb-3 text-emerald-700 bg-emerald-50 border border-emerald-200 p-2 rounded" role="status" aria-live="polite">
           {message}
         </div>
       )}
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
+        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded" role="alert">
           {error}
         </div>
       )}

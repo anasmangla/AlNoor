@@ -219,7 +219,7 @@ export default function AdminProductsPage() {
         </div>
       )}
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded flex items-center justify-between">
+        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded flex items-center justify-between" role="alert">
           <span>{error}</span>
           <button onClick={load} className="text-red-800 underline text-sm">Retry</button>
         </div>

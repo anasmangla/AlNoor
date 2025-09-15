@@ -189,7 +189,7 @@ export default function AdminOrdersPage() {
         >Export CSV</button>
       </div>
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded flex items-center justify-between">
+        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded flex items-center justify-between" role="alert">
           <span>{error}</span>
           <button onClick={load} className="text-red-800 underline text-sm">Retry</button>
         </div>
@@ -203,8 +203,15 @@ export default function AdminOrdersPage() {
           {filtered.map((o) => (
             <li key={o.id} className="border rounded p-3">
               <div className="flex items-center justify-between">
-                <div className="font-medium">
+                <div className="font-medium flex items-center gap-2">
                   <a className="hover:underline" href={`/admin/orders/${o.id}`}>Order #{o.id}</a>
+                  <button
+                    className="text-xs text-slate-600 hover:underline"
+                    onClick={async () => {
+                      try { await navigator.clipboard.writeText(String(o.id)); } catch {}
+                    }}
+                    aria-label={`Copy order id ${o.id}`}
+                  >Copy</button>
                 </div>
                 <div className="text-sm text-slate-600">{o.source.toUpperCase()}</div>
               </div>
@@ -246,4 +253,6 @@ export default function AdminOrdersPage() {
     </section>
   );
 }
+
+
 
