@@ -314,6 +314,7 @@ export default function AdminProductsPage() {
         <input
           type="file"
           accept=".csv,text/csv"
+          aria-label="Import products from CSV"
           onChange={async (e)=>{
             const file = e.target.files?.[0]; if(!file) return;
             try{
@@ -399,8 +400,8 @@ export default function AdminProductsPage() {
                   </>
                 ) : (
                   <>
-                    <button onClick={() => startEdit(p)} className="text-blue-700 hover:underline">Edit</button>
-                    <button onClick={() => onDelete(p.id)} className="text-red-700 hover:underline">Delete</button>
+                    <button onClick={() => startEdit(p)} className="text-blue-700 hover:underline" aria-label={`Edit ${p.name}`}>Edit</button>
+                    <button onClick={() => onDelete(p.id)} className="text-red-700 hover:underline" aria-label={`Delete ${p.name}`}>Delete</button>
                   </>
                 )}
               </div>

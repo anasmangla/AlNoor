@@ -76,7 +76,7 @@ export default function AdminMessagesPage() {
               )}
               <div className="text-slate-700 whitespace-pre-wrap">{m.message}</div>
               <div className="mt-2">
-                <button onClick={() => onDelete(m.id)} className="text-red-700 hover:underline text-sm">Delete</button>
+                <button onClick={() => onDelete(m.id)} className="text-red-700 hover:underline text-sm" aria-label={`Delete message ${m.id}`}>Delete</button>
               </div>
             </li>
           ))}
