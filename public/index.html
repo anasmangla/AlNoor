@@ -14,6 +14,51 @@
       nav a:hover{color:var(--link);text-decoration:underline}
       .hero{padding:48px 20px;text-align:center}
       .hero img{max-height:90px}
+      .hero-title{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:12px;
+        flex-wrap:wrap;
+        margin:16px 0 12px;
+      }
+      .hero-badge{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        background:#dcfce7;
+        color:#047857;
+        border-radius:999px;
+        padding:6px 12px;
+        font-size:14px;
+        font-weight:600;
+        text-transform:uppercase;
+        letter-spacing:0.08em;
+      }
+      .hero-subtitle{
+        max-width:540px;
+        margin:0 auto 16px;
+        color:var(--muted);
+        font-size:18px;
+        line-height:1.5;
+      }
+      .hero-points{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:12px;
+        list-style:none;
+        padding:0;
+        margin:0;
+      }
+      .hero-points li{
+        background:#f8fafc;
+        border:1px solid #e2e8f0;
+        border-radius:999px;
+        padding:8px 16px;
+        color:var(--fg);
+        font-weight:500;
+      }
       .grid{display:grid;gap:12px}
       .card{border:1px solid #e2e8f0;border-radius:8px;padding:16px}
       footer{margin-top:40px;border-top:1px solid #e2e8f0}
@@ -41,12 +86,18 @@
     <main class="wrap">
       <section id="home" class="hero">
         <img src="/assets/alnoorlogo.png" alt="Al Noor Farm" style="height:90px;width:90px" />
-        <h1>Welcome to Al Noor Farm</h1>
-        <p class="muted">Fresh products, simple checkout, and an admin POS.</p>
-        <div class="grid" style="margin-top:20px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
-          <a class="btn" href="/assets/certificates/halal-certificate.pdf" target="_blank" rel="noopener">Halal Certificate (PDF)</a>
-          <a class="btn" href="/assets/certificates/halal-badge.svg" target="_blank" rel="noopener">Processing Badge (Image)</a>
+        <div class="hero-title">
+          <h1>Fresh Zabiha Halal Meat</h1>
+          <span class="hero-badge">Certified Halal</span>
         </div>
+        <p class="hero-subtitle">
+          Experience farm-to-table quality with hand-slaughtered selections prepared for your family.
+        </p>
+        <ul class="hero-points">
+          <li>Locally raised, humanely processed meats</li>
+          <li>Custom cuts and same-day pickup</li>
+          <li>Trusted halal standards for every order</li>
+        </ul>
       </section>
 
       <section id="store">
