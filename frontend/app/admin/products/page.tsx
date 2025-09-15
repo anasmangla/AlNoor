@@ -23,6 +23,7 @@ export default function AdminProductsPage() {
   const [desc, setDesc] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; price?: string; stock?: string; unit?: string }>({});
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState("");
   const [editPrice, setEditPrice] = useState("0");
@@ -72,11 +73,17 @@ export default function AdminProductsPage() {
   async function onCreate(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setFieldErrors({});
     try {
       const n = name.trim();
       const p = parseFloat(price);
       const s = parseFloat(stock);
-      if (!n || isNaN(p) || isNaN(s)) return;
+      const fe: any = {};
+      if (!n) fe.name = "Name is required";
+      if (isNaN(p) || p < 0) fe.price = "Price must be a non-negative number";
+      if (isNaN(s) || s < 0) fe.stock = "Stock must be a non-negative number";
+      if ((unit || '').length > 50) fe.unit = "Unit max length is 50";
+      if (Object.keys(fe).length) { setFieldErrors(fe); return; }
       await createProduct({
         name: n,
         price: p,
@@ -203,18 +210,22 @@ export default function AdminProductsPage() {
         <div>
           <label className="block text-sm text-slate-600">Name</label>
           <input className="border rounded px-2 py-1" value={name} onChange={(e)=> setName(e.target.value)} placeholder="Product name" />
+          {fieldErrors.name && <div className="text-xs text-red-700 mt-1">{fieldErrors.name}</div>}
         </div>
         <div>
           <label className="block text-sm text-slate-600">Price (USD)</label>
           <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={price} onChange={(e)=> setPrice(e.target.value)} />
+          {fieldErrors.price && <div className="text-xs text-red-700 mt-1">{fieldErrors.price}</div>}
         </div>
         <div>
           <label className="block text-sm text-slate-600">Stock</label>
           <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={stock} onChange={(e)=> setStock(e.target.value)} />
+          {fieldErrors.stock && <div className="text-xs text-red-700 mt-1">{fieldErrors.stock}</div>}
         </div>
         <div>
           <label className="block text-sm text-slate-600">Unit</label>
           <input className="border rounded px-2 py-1" value={unit} onChange={(e)=> setUnit(e.target.value)} placeholder="each, lb, dozen, ..." />
+          {fieldErrors.unit && <div className="text-xs text-red-700 mt-1">{fieldErrors.unit}</div>}
         </div>
         <div className="flex items-center gap-2">
           <input id="isWeightBased" type="checkbox" checked={isWeightBased} onChange={(e)=> setIsWeightBased(e.target.checked)} />

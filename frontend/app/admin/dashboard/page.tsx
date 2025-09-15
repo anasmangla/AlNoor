@@ -13,6 +13,11 @@ type Metrics = {
   low_stock: Array<{ id: number; name: string; stock: number; unit: string }>;
 };
 
+export const metadata = {
+  title: "Admin Dashboard",
+  robots: { index: false, follow: false },
+};
+
 export default async function AdminDashboardPage() {
   const token = cookies().get("alnoor_token")?.value;
   const res = await fetch(`${API_BASE}/admin/metrics`, {
@@ -21,6 +26,22 @@ export default async function AdminDashboardPage() {
   });
   const metrics: Metrics | null = res.ok ? await res.json() : null;
 
+  // System status: API health and Next health
+  let apiHealth: string = "";
+  let appHealth: string = "";
+  try {
+    const r = await fetch(`${API_BASE}/health`, { cache: "no-store" });
+    apiHealth = r.ok ? "ok" : String(r.status);
+  } catch {
+    apiHealth = "unreachable";
+  }
+  try {
+    const r2 = await fetch(`/api/health`, { cache: "no-store" });
+    appHealth = r2.ok ? "ok" : String(r2.status);
+  } catch {
+    appHealth = "unreachable";
+  }
+
   return (
     <section className="grid gap-6">
       <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
@@ -28,6 +49,13 @@ export default async function AdminDashboardPage() {
         <p className="text-slate-600">Unable to load metrics.</p>
       ) : (
         <>
+          <div className="border rounded p-3">
+            <div className="text-xs text-slate-600">System Status</div>
+            <div className="text-sm text-slate-700 flex items-center gap-4">
+              <span>API: <strong className={apiHealth==='ok' ? 'text-emerald-700' : 'text-red-700'}>{apiHealth||'unknown'}</strong></span>
+              <span>App: <strong className={appHealth==='ok' ? 'text-emerald-700' : 'text-red-700'}>{appHealth||'unknown'}</strong></span>
+            </div>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="border rounded p-3">
               <div className="text-xs text-slate-600">Orders Today</div>
