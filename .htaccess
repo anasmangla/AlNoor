@@ -12,6 +12,9 @@ DirectoryIndex public/index.html index.html index.php
 # Prevent directory listings
 Options -Indexes
 
+# Serve root index statically; Next app under /alnoor
+DirectoryIndex index.html index.php
+
 # If your Next.js app is mounted under a base path (e.g., /alnoor),
 # do NOT rewrite or redirect that path. Let the Node app handle it.
 
@@ -40,6 +43,8 @@ RewriteRule ^home\d+/.+?/public_html/website_18b31db5/(.*)$ /$1 [L,R=302]
 
 # Allow /alnoor (Next.js app) and /api (FastAPI) to pass through untouched
 RewriteRule ^(alnoor|api)(/.*)?$ - [L]
+# Also allow assets to serve statically
+RewriteRule ^assets/(.*)$ - [L]
 RewriteCond %{REQUEST_URI} ^/$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
