@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 const featuredItems = [
   {
@@ -20,6 +20,7 @@ const featuredItems = [
 ];
 
 export default function Home() {
+
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-16 px-6 py-16 lg:px-8">
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-teal-500 to-lime-400 px-6 py-16 text-white shadow-2xl sm:px-12">
