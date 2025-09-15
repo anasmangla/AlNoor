@@ -11,10 +11,25 @@ export default async function ProductsPage({ searchParams }: Props) {
         p.name.toLowerCase().includes(q) || String((p as any).unit || "").toLowerCase().includes(q)
       )
     : products;
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const bp = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">Products</h1>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}${bp}/` },
+              { '@type': 'ListItem', position: 2, name: 'Products', item: `${site}${bp}/products` },
+            ],
+          }),
+        }}
+      />
       <form method="get" className="mb-4 flex items-center gap-2">
         <input
           className="border rounded px-2 py-1"
