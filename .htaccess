@@ -40,3 +40,8 @@ RewriteRule ^home\d+/.+?/public_html/website_18b31db5/(.*)$ /$1 [L,R=302]
 
 # Allow /alnoor (Next.js app) and /api (FastAPI) to pass through untouched
 RewriteRule ^(alnoor|api)(/.*)?$ - [L]
+
+# Convenience redirects for short paths at root
+RewriteRule ^store/?$ /alnoor/products [L,R=302]
+RewriteRule ^pos/?$ /alnoor/admin/pos [L,R=302]
+RewriteRule ^admin/?$ /alnoor/admin/login [L,R=302]

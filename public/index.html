@@ -1,10 +1,10 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Al Noor Farm</title>
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" href="/alnoorlogo.png" />
     <style>
       :root { --fg: #0f172a; --muted:#475569; --accent:#047857; --link:#2563eb; }
       *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu; color:var(--fg);} 
@@ -27,20 +27,20 @@
     <header>
       <div class="wrap" style="display:flex;align-items:center;justify-content:space-between">
         <div>
-          <a href="/" class="muted" data-nav>Al Noor</a>
+          <a href="/" class="muted">Al Noor</a>
           <nav style="display:inline-block;margin-left:12px">
-            <a href="/products">Store</a>
-            <a href="/admin/login">Admin</a>
-            <a href="/admin/pos">POS</a>
+            <a href="/alnoor/products">Store</a>
+            <a href="/alnoor/admin/login">Admin</a>
+            <a href="/alnoor/admin/pos">POS</a>
           </nav>
         </div>
-        <a class="btn" href="/products">Shop Now</a>
+        <a class="btn" href="/alnoor/products">Shop Now</a>
       </div>
     </header>
 
     <main class="wrap">
       <section id="home" class="hero">
-        <img src="/favicon.png" alt="Al Noor Farm" style="height:90px;width:90px" />
+        <img src="/alnoorlogo.png" alt="Al Noor Farm" style="height:90px;width:90px" />
         <h1>Welcome to Al Noor Farm</h1>
         <p class="muted">Fresh products, simple checkout, and an admin POS.</p>
       </section>
@@ -51,7 +51,7 @@
           <div class="card">
             <strong>Browse Products</strong>
             <p class="muted">Visit the store to see what's available.</p>
-            <a class="btn" href="/products">Go to Store</a>
+            <a class="btn" href="/alnoor/products">Go to Store</a>
           </div>
         </div>
       </section>
@@ -62,7 +62,7 @@
           <div class="card">
             <strong>Admin Login</strong>
             <p class="muted">Manage products, inventory, and orders.</p>
-            <a class="btn" href="/admin/login">Admin Panel</a>
+            <a class="btn" href="/alnoor/admin/login">Admin Panel</a>
           </div>
         </div>
       </section>
@@ -73,7 +73,7 @@
           <div class="card">
             <strong>Point of Sale</strong>
             <p class="muted">Ring up in-person orders and charge customers.</p>
-            <a class="btn" href="/admin/pos">Open POS</a>
+            <a class="btn" href="/alnoor/admin/pos">Open POS</a>
           </div>
         </div>
       </section>
@@ -85,9 +85,9 @@
             <strong>Our Mission</strong>
             <p class="muted">We provide fresh, local products with transparent sourcing and fair pricing. Our storefront and POS make it easy to buy online or in person.</p>
             <ul class="muted">
-              <li>â€¢ Fresh eggs, poultry, and seasonal items</li>
-              <li>â€¢ Clear pricing per unit or per pound</li>
-              <li>â€¢ Simple online checkout and receipts</li>
+              <li>• Fresh eggs, poultry, and seasonal items</li>
+              <li>• Clear pricing per unit or per pound</li>
+              <li>• Simple online checkout and receipts</li>
             </ul>
           </div>
         </div>
@@ -100,11 +100,14 @@
             <strong>Get in touch</strong>
             <p class="muted">
               Address: <span id="addr">4028 Dickersonville Rd, Ransomville NY 14131</span><br />
-              Phone: <a href="tel:+17165241717">716‑524‑1717</a> (calls or <a href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>)<br />
+              Phone: <a href="tel:+17165241717">716-524-1717</a> (calls or <a href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>)<br />
               Facebook: <a href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Follow us on Facebook</a><br />
               Email: <a href="mailto:info@alnoorfarm716.com">info@alnoorfarm716.com</a>
             </p>
-            <p class="muted">Hours: Mon–Sat 9:00am–6:00pm</p>\n            <div style="margin:10px 0; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden">\n              <iframe title="Al Noor Farm Location" width="100%" height="240" style="border:0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=4028%20Dickersonville%20Rd%2C%20Ransomville%20NY%2014131&output=embed"></iframe>\n            </div>
+            <p class="muted">Hours: Mon-Sat 9:00am-6:00pm</p>
+            <div style="margin:10px 0; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden">
+              <iframe title="Al Noor Farm Location" width="100%" height="240" style="border:0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=4028%20Dickersonville%20Rd%2C%20Ransomville%20NY%2014131&output=embed"></iframe>
+            </div>
             <form id="contactForm" style="margin-top:8px" novalidate>
               <div style="display:grid;gap:8px;max-width:480px">
                 <input id="cName" type="text" placeholder="Your name" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
@@ -122,63 +125,20 @@
 
     <footer>
       <div class="wrap muted" style="display:flex;align-items:center;justify-content:space-between">
-        <div>Â© <span id="year"></span> Al Noor Farm</div>
+        <div>© <span id="year"></span> Al Noor Farm</div>
         <div>
-          <a href="/products">Store</a>
-          Â·
-          <a href="/admin/login">Admin</a>
-          Â·
-          <a href="/admin/pos">POS</a>
+          <a href="/alnoor/products">Store</a>
+          •
+          <a href="/alnoor/admin/login">Admin</a>
+          •
+          <a href="/alnoor/admin/pos">POS</a>
         </div>
       </div>
     </footer>
 
     <script>
-      (function() {
+      (function(){
         document.getElementById('year').textContent = new Date().getFullYear();
-        var map = {
-          '/': '#home',
-          '/store': '#store',
-          '/products': '#store',
-          '/admin': '#admin',
-          '/admin/login': '#admin',
-          '/pos': '#pos',
-          '/admin/pos': '#pos'
-        };
-        function goto(path) {
-          var id = map[path] || '#home';
-          var el = document.querySelector(id);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        function handlePath() {
-          var path = location.pathname.replace(/\/$/, '');
-          if (path === '') path = '/';
-          goto(path);
-        }
-        // Intercept clicks on data-nav links
-        document.querySelectorAll('a[data-nav], header nav a, footer a').forEach(function(a){
-          a.addEventListener('click', function(e){
-            var href = a.getAttribute('href');\n            if (href && (href.indexOf('/alnoor') === 0 || href.indexOf('/api') === 0)) { return; }\n            e.preventDefault();
-            history.pushState({}, '', href);
-            handlePath();
-          });
-        });
-        window.addEventListener('popstate', handlePath);
-        // Show a note if Next.js app under /alnoor is not reachable
-        (function(){
-          fetch('/alnoor/__health', { cache: 'no-store' }).then(function(r){
-            if(!r.ok) throw new Error();
-          }).catch(function(){
-            var bar=document.createElement('div');
-            bar.style.background='#fff7ed';
-            bar.style.borderBottom='1px solid #fed7aa';
-            bar.style.color='#9a3412';
-            bar.style.fontSize='12px';
-            bar.innerHTML='<div class="wrap" style="padding:6px 20px">Store/Admin app not reachable at /alnoor yet. This static homepage will be shown until the Node app is started in cPanel.</div>';
-            document.body.prepend(bar);
-          });
-        })();
-        // Contact form
         var form = document.getElementById('contactForm');
         if (form) {
           form.addEventListener('submit', async function(e){
@@ -201,11 +161,7 @@
             }catch(err){ statusEl.textContent='Could not send. Please try again later.'; }
           });
         }
-        // Initial load
-        handlePath();
       })();
     </script>
   </body>
   </html>
-
-
