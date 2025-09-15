@@ -12,7 +12,8 @@ RewriteRule ^ https://alnoorfarm716.com%{REQUEST_URI} [L,R=301]
 # Prevent directory listings
 Options -Indexes
 
-# Do not redirect root; Next.js app should be mounted at '/'
+# If your Next.js app is mounted under a base path (e.g., /alnoor),
+# do NOT rewrite or redirect that path. Let the Node app handle it.
 
 # Disable static fallback to avoid conflicts when Next.js serves root
 # If you need static fallback, uncomment below and ensure it doesnâ€™t collide with app paths.
@@ -37,4 +38,5 @@ AddOutputFilterByType DEFLATE text/html text/css application/javascript applicat
 RewriteCond %{REQUEST_URI} ^/home\d+/.+?/public_html/website_18b31db5/(.*)$ [NC]
 RewriteRule ^home\d+/.+?/public_html/website_18b31db5/(.*)$ /$1 [L,R=302]
 
-RewriteRule ^alnoor/(.*)$ / [L,R=301]
+# Allow /alnoor (Next.js app) and /api (FastAPI) to pass through untouched
+RewriteRule ^(alnoor|api)(/.*)?$ - [L]
