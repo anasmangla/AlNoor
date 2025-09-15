@@ -42,6 +42,7 @@ export default function Navbar() {
               <Link href="/admin/orders" className="text-slate-700 hover:underline">Orders</Link>
               <Link href="/admin/pos" className="text-slate-700 hover:underline">POS</Link>
               <Link href="/admin/messages" className="text-slate-700 hover:underline">Messages</Link>
+              <Link href="/admin/settings" className="text-slate-700 hover:underline">Settings</Link>
             </>
           ) : (
             <Link href="/admin/login" className="text-slate-700 hover:underline">Admin</Link>
