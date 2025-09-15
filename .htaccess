@@ -1,28 +1,25 @@
-﻿RewriteEngine On
-# Canonical: force HTTPS and www.alnoor716.com
+RewriteEngine On
+
+# Canonical: force HTTPS and primary host
 RewriteCond %{HTTPS} !=on [OR]
 RewriteCond %{HTTP_HOST} !^alnoorfarm716\.com$ [NC]
 RewriteRule ^ https://alnoorfarm716.com%{REQUEST_URI} [L,R=301]
 
-# Remove legacy short-path redirects; Next.js handles routes at root
-
-# Serve static landing at root
-DirectoryIndex public/index.html index.html index.php
-
 # Prevent directory listings
 Options -Indexes
 
-# Serve root index statically; Next app under /alnoor
+# Serve root index statically; Next app runs under /alnoor
 DirectoryIndex index.html index.php
 
-# If your Next.js app is mounted under a base path (e.g., /alnoor),
-# do NOT rewrite or redirect that path. Let the Node app handle it.
+# Pass-through: Next app (/alnoor), API (/api), Next assets (/_next), and site assets (/assets)
+RewriteRule ^(alnoor|api|_next)(/.*)?$ - [L]
+RewriteRule ^assets/(.*)$ - [L]
 
-# Disable static fallback to avoid conflicts when Next.js serves root
-# If you need static fallback, uncomment below and ensure it doesnâ€™t collide with app paths.
-# RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteCond %{REQUEST_FILENAME} !-d
-# RewriteRule ^ public/index.html [L]
+# Root fallback: if not a real file/dir, serve index.html
+RewriteCond %{REQUEST_URI} ^/$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^$ index.html [L]
 
 # Compression
 AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
@@ -37,22 +34,12 @@ AddOutputFilterByType DEFLATE text/html text/css application/javascript applicat
   ExpiresByType image/svg+xml "access plus 30 days"
 </IfModule>
 
-# Safety: strip any leaked filesystem path from URL back to a clean web path
+# Safety: strip leaked filesystem paths (BlueHost paths) back to clean web paths
 RewriteCond %{REQUEST_URI} ^/home\d+/.+?/public_html/website_18b31db5/(.*)$ [NC]
 RewriteRule ^home\d+/.+?/public_html/website_18b31db5/(.*)$ /$1 [L,R=302]
 
-# Allow /alnoor (Next.js app) and /api (FastAPI) to pass through untouched
-RewriteRule ^(alnoor|api)(/.*)?$ - [L]
-# Also allow assets to serve statically
-RewriteRule ^assets/(.*)$ - [L]
-RewriteCond %{REQUEST_URI} ^/$
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^$ public/index.html [L]
-# Also allow assets to serve statically
-RewriteRule ^assets/(.*)$ - [L]
-
-# Convenience redirects for short paths at root
+# Shortcuts at root
 RewriteRule ^store/?$ /alnoor/products [L,R=302]
 RewriteRule ^pos/?$ /alnoor/admin/pos [L,R=302]
 RewriteRule ^admin/?$ /alnoor/admin/login [L,R=302]
+
