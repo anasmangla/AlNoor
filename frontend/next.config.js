@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -16,6 +18,13 @@ const nextConfig = {
       rules.push({ source: `${bp}/favicon.ico`, destination: `${bp}/alnoorlogo.png` });
     }
     return rules;
+  },
+  webpack(config) {
+    config.resolve.alias = config.resolve.alias || {};
+    if (!config.resolve.alias['@']) {
+      config.resolve.alias['@'] = path.resolve(__dirname);
+    }
+    return config;
   },
 };
 
