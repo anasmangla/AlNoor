@@ -73,6 +73,7 @@ Copy `.env.example` to `.env` and adjust:
 - `NEXT_PUBLIC_API_BASE_URL=https://alnoorfarm716.com/api` (or your API location)
 - Optional:
   - `NEXT_PUBLIC_SQUARE_APP_ID`, `NEXT_PUBLIC_SQUARE_LOCATION_ID`, `NEXT_PUBLIC_SQUARE_ENV`
+  - `HOSTING_MONITOR_PING_URL` (optional URL that receives a GET when `/__health` is hit)
 
 #### Example environment variables (Python app)
 - `DATABASE_URL` (e.g., `postgresql+asyncpg://user:pass@host:5432/db`)
@@ -80,6 +81,14 @@ Copy `.env.example` to `.env` and adjust:
 - `ADMIN_USERNAME`, `ADMIN_PASSWORD`
 - Optional Square: `SQUARE_ACCESS_TOKEN`, `SQUARE_LOCATION_ID`, `SQUARE_ENV`
 - Optional SMTP: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_TLS`, `CONTACT_TO`
+
+### Health checks & monitoring
+- Frontend custom server exposes `GET /__health` for cPanel monitoring. When
+  `HOSTING_MONITOR_PING_URL` is set the server pings that URL (GET, 2-second
+  timeout) each time the health endpoint is invoked.
+- Backend FastAPI app exposes `GET /health` returning `{ "status": "ok" }`.
+- Run `python scripts/monitor_health.py --once` to verify both endpoints locally
+  or leave it running to poll them at regular intervals (`--interval 30`).
 
 ### Notes
 - DB and JWT verification are stubs. Replace in‑memory stores with Postgres via SQLAlchemy/SQLModel and real JWT as you progress.
