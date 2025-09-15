@@ -4,21 +4,27 @@ from typing import Optional
 
 import httpx
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel, Field
 
 from app.schemas import OrderCreate, OrderOut
 from .orders import create_order
 from app.deps import get_current_user
+from app.database import get_session
 
 
 router = APIRouter()
 
 
 @router.post("/pos/checkout", response_model=OrderOut)
-async def pos_checkout(payload: OrderCreate, user: str = Depends(get_current_user)):
+async def pos_checkout(
+    payload: OrderCreate,
+    session: AsyncSession = Depends(get_session),
+    user: str = Depends(get_current_user),
+):
     # Force source to 'pos' and reuse order creation logic
     payload.source = "pos"
-    return await create_order(payload)  # type: ignore[arg-type]
+    return await create_order(payload, session)
 
 
 class TerminalCheckoutRequest(BaseModel):
