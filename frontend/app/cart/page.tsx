@@ -2,6 +2,11 @@
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Cart | Al Noor Farm",
+  robots: { index: false, follow: true },
+};
+
 export default function CartPage() {
   const { lines, update, remove, total } = useCart();
   return (

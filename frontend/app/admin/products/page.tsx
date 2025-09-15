@@ -10,6 +10,8 @@ import {
 import Spinner from "@/components/Spinner";
 import { useToast } from "@/components/Toast";
 
+export const metadata = { title: "Admin Products", robots: { index: false, follow: false } };
+
 export default function AdminProductsPage() {
   const toast = useToast();
   const [hasToken, setHasToken] = useState<boolean>(false);

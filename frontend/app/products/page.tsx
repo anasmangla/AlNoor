@@ -3,6 +3,12 @@ import Link from "next/link";
 
 type Props = { searchParams?: { q?: string } };
 
+export const metadata = {
+  title: "Products | Al Noor Farm",
+  description: "Browse fresh products at Al Noor Farm.",
+  robots: { index: true, follow: true },
+};
+
 export default async function ProductsPage({ searchParams }: Props) {
   const products = await fetchProducts();
   const q = (searchParams?.q || "").toLowerCase().trim();
