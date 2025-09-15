@@ -50,6 +50,16 @@ export default function AdminProductsPage() {
     }
   }, [lowThreshold]);
 
+  function logoutAndRedirect(nextPath: string) {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('alnoor_token');
+        document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
+        window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
+      }
+    } catch {}
+  }
+
   async function load() {
     setLoading(true);
     setError(null);
@@ -57,7 +67,9 @@ export default function AdminProductsPage() {
       const data = await fetchProducts();
       setProducts(data);
     } catch (e: any) {
-      setError(e.message || "Failed to load products");
+      const msg = e?.message || "Failed to load products";
+      setError(msg);
+      if (msg.includes('401')) logoutAndRedirect('/admin/products');
     } finally {
       setLoading(false);
     }
@@ -115,7 +127,9 @@ export default function AdminProductsPage() {
       toast.success("Product deleted");
       await load();
     } catch (e: any) {
-      setError(e.message || "Failed to delete");
+      const msg = e?.message || "Failed to delete";
+      setError(msg);
+      if (msg.includes('401')) logoutAndRedirect('/admin/products');
       toast.error(e.message || "Failed to delete product");
     }
   }
@@ -152,7 +166,9 @@ export default function AdminProductsPage() {
       toast.success("Product updated");
       await load();
     } catch (e: any) {
-      setError(e.message || "Failed to update");
+      const msg = e?.message || "Failed to update";
+      setError(msg);
+      if (msg.includes('401')) logoutAndRedirect('/admin/products');
       toast.error(e.message || "Failed to update product");
     }
   }

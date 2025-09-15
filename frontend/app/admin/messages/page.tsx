@@ -9,6 +9,15 @@ export default function AdminMessagesPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  function logoutAndRedirect(nextPath: string) {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('alnoor_token');
+        document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
+        window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
+      }
+    } catch {}
+  }
 
   async function load() {
     setLoading(true);
@@ -17,7 +26,9 @@ export default function AdminMessagesPage() {
       const data = await listMessages();
       setMessages(data.sort((a,b)=> (a.created_at < b.created_at ? 1 : -1)));
     } catch (e: any) {
-      setError(e.message || "Failed to load messages");
+      const msg = e?.message || "Failed to load messages";
+      setError(msg);
+      if (msg.includes('401')) logoutAndRedirect('/admin/messages');
     } finally {
       setLoading(false);
     }
@@ -32,7 +43,9 @@ export default function AdminMessagesPage() {
       setMessages((prev) => prev.filter((m) => m.id !== id));
       toast.success("Message deleted");
     } catch (e: any) {
-      setError(e.message || "Failed to delete message");
+      const msg = e?.message || "Failed to delete message";
+      setError(msg);
+      if (msg.includes('401')) logoutAndRedirect('/admin/messages');
       toast.error(e.message || "Failed to delete message");
     }
   }
