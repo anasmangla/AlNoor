@@ -6,8 +6,8 @@ RewriteRule ^ https://alnoorfarm716.com%{REQUEST_URI} [L,R=301]
 
 # Remove legacy short-path redirects; Next.js handles routes at root
 
-# Optional: DirectoryIndex if serving static; not needed when Next.js at root
-# DirectoryIndex public/index.html index.html index.php
+# Serve static landing at root
+DirectoryIndex public/index.html index.html index.php
 
 # Prevent directory listings
 Options -Indexes
@@ -40,6 +40,12 @@ RewriteRule ^home\d+/.+?/public_html/website_18b31db5/(.*)$ /$1 [L,R=302]
 
 # Allow /alnoor (Next.js app) and /api (FastAPI) to pass through untouched
 RewriteRule ^(alnoor|api)(/.*)?$ - [L]
+RewriteCond %{REQUEST_URI} ^/$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^$ public/index.html [L]
+# Also allow assets to serve statically
+RewriteRule ^assets/(.*)$ - [L]
 
 # Convenience redirects for short paths at root
 RewriteRule ^store/?$ /alnoor/products [L,R=302]
