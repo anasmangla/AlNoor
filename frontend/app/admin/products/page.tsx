@@ -287,7 +287,7 @@ export default function AdminProductsPage() {
           value={lowThreshold}
           onChange={(e)=> setLowThreshold(parseFloat(e.target.value)||0)}
         />
-        <button
+        <button aria-label="Export products to CSV"
           onClick={() => {
             const header = ["id","name","price","stock","unit","is_weight_based","image_url","description"];
             const rows = [

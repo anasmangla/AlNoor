@@ -159,7 +159,7 @@ export default function AdminOrdersPage() {
             <input type="checkbox" checked={cols[k as keyof typeof cols]} onChange={() => toggleCol(k as any)} /> {k}
           </label>
         ))}
-        <button
+        <button aria-label="Export orders to CSV"
           onClick={() => {
             const header: string[] = [];
             const push = (n: string, ok: boolean) => { if (ok) header.push(n); };
@@ -209,6 +209,7 @@ export default function AdminOrdersPage() {
                     className="text-xs text-slate-600 hover:underline"
                     onClick={async () => {
                       try { await navigator.clipboard.writeText(String(o.id)); } catch {}
+                      try { toast.success('Copied'); } catch {}
                     }}
                     aria-label={`Copy order id ${o.id}`}
                   >Copy</button>
@@ -253,6 +254,8 @@ export default function AdminOrdersPage() {
     </section>
   );
 }
+
+
 
 
 
