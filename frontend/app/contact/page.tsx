@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "Contact | Al Noor Farm",
+  description: "Contact Al Noor Farm: address, phone, WhatsApp, and contact form.",
+  robots: { index: true, follow: true },
+};
+
 export default function ContactPage() {
   const address = "4028 Dickersonville Rd, Ransomville NY 14131";
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
@@ -45,4 +51,3 @@ export default function ContactPage() {
 
 // Client form component
 import ContactForm from "@/components/contact/ContactForm";
-
