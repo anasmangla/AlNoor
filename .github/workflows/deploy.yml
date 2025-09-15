@@ -30,6 +30,7 @@ jobs:
           port:         ${{ secrets.SSH_PORT }}
           password:     ${{ secrets.SSH_PASSWORD }}
           fingerprint:  ${{ secrets.SSH_FINGERPRINT }}
+          use_insecure_cipher: true # required for cPanel servers that only offer diffie-hellman-group-exchange key exchange
           debug: true
           script: |
             set -euo pipefail
