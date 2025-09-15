@@ -47,6 +47,7 @@ export default function Navbar() {
             <span className="font-semibold">Al Noor</span>
           </Link>
           <Link href="/products" className="text-slate-700 hover:underline">Products</Link>
+          <Link href="/about" className="text-slate-700 hover:underline">About</Link>
           <Link href="/contact" className="text-slate-700 hover:underline">Contact</Link>
           <Link href="/checkout" className="text-slate-700 hover:underline">Checkout</Link>
           {hasToken ? (

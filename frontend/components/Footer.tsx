@@ -6,6 +6,8 @@ export default function Footer() {
         <div className="flex items-center gap-3 flex-wrap">
           <a className="hover:underline" href="/products">Store</a>
           <span className="hidden sm:inline">•</span>
+          <a className="hover:underline" href="/about">About</a>
+          <span className="hidden sm:inline">•</span>
           <a className="hover:underline" href="/admin/login">Admin</a>
           <span className="hidden sm:inline">•</span>
           <a className="hover:underline" href="tel:+17165241717">Call 716-524-1717</a>
