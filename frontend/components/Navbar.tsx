@@ -44,34 +44,34 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80">
             <Image src="/alnoorlogo.png" alt="Al Noor" width={24} height={24} />
-            <span className="font-semibold">Al Noor</span>
+            <span className="font-heading text-brand text-lg leading-none">Al Noor</span>
           </Link>
-          <Link href="/products" className="text-slate-700 hover:underline">Products</Link>
-          <Link href="/contact" className="text-slate-700 hover:underline">Contact</Link>
-          <Link href="/checkout" className="text-slate-700 hover:underline">Checkout</Link>
+          <Link href="/products" className="text-brand hover:text-brand-dark hover:underline">Products</Link>
+          <Link href="/contact" className="text-brand hover:text-brand-dark hover:underline">Contact</Link>
+          <Link href="/checkout" className="text-brand hover:text-brand-dark hover:underline">Checkout</Link>
           {hasToken ? (
             <>
-              <Link href="/admin/dashboard" className="text-slate-700 hover:underline">Dashboard</Link>
-              <Link href="/admin/products" className="text-slate-700 hover:underline">Admin Products</Link>
-              <Link href="/admin/orders" className="text-slate-700 hover:underline">Orders</Link>
-              <Link href="/admin/pos" className="text-slate-700 hover:underline">POS</Link>
-              <Link href="/admin/messages" className="text-slate-700 hover:underline">Messages</Link>
-              <Link href="/admin/settings" className="text-slate-700 hover:underline">Settings</Link>
+              <Link href="/admin/dashboard" className="text-brand hover:text-brand-dark hover:underline">Dashboard</Link>
+              <Link href="/admin/products" className="text-brand hover:text-brand-dark hover:underline">Admin Products</Link>
+              <Link href="/admin/orders" className="text-brand hover:text-brand-dark hover:underline">Orders</Link>
+              <Link href="/admin/pos" className="text-brand hover:text-brand-dark hover:underline">POS</Link>
+              <Link href="/admin/messages" className="text-brand hover:text-brand-dark hover:underline">Messages</Link>
+              <Link href="/admin/settings" className="text-brand hover:text-brand-dark hover:underline">Settings</Link>
             </>
           ) : (
-            <Link href="/admin/login" className="text-slate-700 hover:underline">Admin</Link>
+            <Link href="/admin/login" className="text-brand hover:text-brand-dark hover:underline">Admin</Link>
           )}
         </div>
         <div className="flex items-center gap-4">
-          <Link href="/cart" className="relative hover:underline">
+          <Link href="/cart" className="relative text-brand hover:text-brand-dark hover:underline">
             Cart
-            <span className="ml-1 inline-flex items-center justify-center text-xs rounded-full bg-emerald-600 text-white px-2 py-0.5">
+            <span className="ml-1 inline-flex items-center justify-center text-xs rounded-full bg-brand text-white px-2 py-0.5">
               {count.toFixed(0)}
             </span>
           </Link>
-          <div className="text-sm text-slate-600 hidden sm:block">${total.toFixed(2)}</div>
+          <div className="text-sm text-brand hidden sm:block font-heading">${total.toFixed(2)}</div>
           {hasToken && (
-            <button onClick={logout} className="text-slate-600 hover:underline text-sm">Logout</button>
+            <button onClick={logout} className="text-brand hover:text-brand-dark hover:underline text-sm">Logout</button>
           )}
         </div>
       </nav>
