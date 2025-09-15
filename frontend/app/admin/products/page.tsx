@@ -326,7 +326,6 @@ export default function AdminProductsPage() {
             const a = document.createElement('a'); a.href = url; a.download = 'products.csv'; a.click(); URL.revokeObjectURL(url); try { toast.success('Exported'); } catch {}
           }}
           className="text-emerald-700 hover:underline text-sm"
-          aria-label="Export products to CSV"
         >Export CSV</button>
         <label className="text-sm text-slate-600 ml-2">Import CSV</label>
         <input
