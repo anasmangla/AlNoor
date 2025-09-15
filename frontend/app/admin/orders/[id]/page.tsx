@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { API_BASE, type Order } from "@/lib/api";
 import UpdateStatus from "./widgets/UpdateStatus";
@@ -15,6 +16,9 @@ export default async function AdminOrderDetail({ params }: Props) {
     },
   });
   if (!res.ok) {
+    if (res.status === 401) {
+      redirect(`/admin/login?next=/admin/orders/${id}`);
+    }
     return (
       <section>
         <h1 className="text-2xl font-semibold mb-4">Order #{id}</h1>
@@ -56,4 +60,3 @@ export default async function AdminOrderDetail({ params }: Props) {
     </section>
   );
 }
-
