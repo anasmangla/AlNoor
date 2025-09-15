@@ -15,7 +15,9 @@ try {
 Write-Host "Running backend tests (pytest)..." -ForegroundColor Cyan
 Push-Location (Join-Path $root 'backend')
 try {
-  $venv = Join-Path $root 'venv\Scripts\python.exe'
+  $venvWin = Join-Path $root 'venv\Scripts\python.exe'
+  $venvNix = Join-Path $root 'venv/bin/python'
+  $venv = if (Test-Path $venvWin) { $venvWin } elseif (Test-Path $venvNix) { $venvNix } else { $null }
   if (Test-Path $venv) {
     & $venv -m pip install -q -r (Join-Path $root 'backend\requirements.txt') pytest pytest-asyncio httpx pytest-cov
     & $venv -m pytest -q
