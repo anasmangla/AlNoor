@@ -77,68 +77,40 @@ export default function Navbar() {
 
   return (
     <header className="border-b bg-white/80 backdrop-blur sticky top-0 z-10">
-      <nav className="max-w-5xl mx-auto px-6 py-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2 hover:opacity-80">
-              <Image src="/alnoorlogo.png" alt="Al Noor" width={24} height={24} />
-              <span className="font-semibold">Al Noor</span>
-            </Link>
-            <div className="hidden md:flex items-center gap-4">
-              {primaryLinks.map((item) => (
-                <Link key={item.href} href={item.href} className="text-slate-700 hover:underline">
-                  {item.label}
-                </Link>
-              ))}
-              {adminLinks.map((item) => (
-                <Link key={item.href} href={item.href} className="text-slate-700 hover:underline">
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="hidden md:flex items-center gap-4">
-            <Link href="/cart" className="relative hover:underline">
-              Cart
-              <span className="ml-1 inline-flex items-center justify-center text-xs rounded-full bg-emerald-600 text-white px-2 py-0.5">
-                {formattedCount}
-              </span>
-            </Link>
-            <div className="text-sm text-slate-600">${formattedTotal}</div>
-            <Link href="/checkout" className="text-slate-700 hover:underline">
-              Checkout
-            </Link>
-            {hasToken && (
-              <button onClick={logout} className="text-slate-600 hover:underline text-sm">
-                Logout
-              </button>
-            )}
-          </div>
-          <button
-            type="button"
-            className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded border border-slate-200 text-slate-700 hover:bg-slate-100"
-            onClick={() => setMenuOpen((open) => !open)}
-            aria-expanded={menuOpen}
-            aria-label="Toggle navigation"
-          >
-            <span className="sr-only">Toggle navigation</span>
-            <svg
-              aria-hidden="true"
-              className="h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              {menuOpen ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+
+      <nav className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80">
+            <Image src="/alnoorlogo.png" alt="Al Noor" width={24} height={24} />
+            <span className="font-heading text-brand text-lg leading-none">Al Noor</span>
+          </Link>
+          <Link href="/products" className="text-brand hover:text-brand-dark hover:underline">Products</Link>
+          <Link href="/contact" className="text-brand hover:text-brand-dark hover:underline">Contact</Link>
+          <Link href="/checkout" className="text-brand hover:text-brand-dark hover:underline">Checkout</Link>
+          {hasToken ? (
+            <>
+              <Link href="/admin/dashboard" className="text-brand hover:text-brand-dark hover:underline">Dashboard</Link>
+              <Link href="/admin/products" className="text-brand hover:text-brand-dark hover:underline">Admin Products</Link>
+              <Link href="/admin/orders" className="text-brand hover:text-brand-dark hover:underline">Orders</Link>
+              <Link href="/admin/pos" className="text-brand hover:text-brand-dark hover:underline">POS</Link>
+              <Link href="/admin/messages" className="text-brand hover:text-brand-dark hover:underline">Messages</Link>
+              <Link href="/admin/settings" className="text-brand hover:text-brand-dark hover:underline">Settings</Link>
+            </>
+          ) : (
+            <Link href="/admin/login" className="text-brand hover:text-brand-dark hover:underline">Admin</Link>
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          <Link href="/cart" className="relative text-brand hover:text-brand-dark hover:underline">
+            Cart
+            <span className="ml-1 inline-flex items-center justify-center text-xs rounded-full bg-brand text-white px-2 py-0.5">
+              {count.toFixed(0)}
+            </span>
+          </Link>
+          <div className="text-sm text-brand hidden sm:block font-heading">${total.toFixed(2)}</div>
+          {hasToken && (
+            <button onClick={logout} className="text-brand hover:text-brand-dark hover:underline text-sm">Logout</button>
+          )}
         </div>
         {menuOpen && (
           <div className="md:hidden mt-4 border-t border-slate-200 pt-4 grid gap-4">
