@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { listMessages, deleteMessage, type ContactMessage } from "@/lib/api";
+import { listMessages, deleteMessage, type ContactMessage, logout as logoutSession } from "@/lib/api";
 import { useToast } from "@/components/Toast";
 import Spinner from "@/components/Spinner";
 
@@ -9,14 +9,16 @@ export default function AdminMessagesPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
-  function logoutAndRedirect(nextPath: string) {
+  async function logoutAndRedirect(nextPath: string) {
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('alnoor_token');
-        document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
+      await logoutSession();
+    } catch (err) {
+      console.error("Failed to clear session", err);
+    } finally {
+      if (typeof window !== "undefined") {
         window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
       }
-    } catch {}
+    }
   }
 
   async function load() {
@@ -28,7 +30,7 @@ export default function AdminMessagesPage() {
     } catch (e: any) {
       const msg = e?.message || "Failed to load messages";
       setError(msg);
-      if (msg.includes('401')) logoutAndRedirect('/admin/messages');
+      if (msg.includes('401')) await logoutAndRedirect('/admin/messages');
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,7 @@ export default function AdminMessagesPage() {
     } catch (e: any) {
       const msg = e?.message || "Failed to delete message";
       setError(msg);
-      if (msg.includes('401')) logoutAndRedirect('/admin/messages');
+      if (msg.includes('401')) await logoutAndRedirect('/admin/messages');
       toast.error(e.message || "Failed to delete message");
     }
   }

@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 import { useEffect, useMemo, useState } from "react";
-import { listOrders, updateOrderStatus, type Order } from "@/lib/api";
+import { listOrders, updateOrderStatus, type Order, logout as logoutSession } from "@/lib/api";
 import Spinner from "@/components/Spinner";
 import { useToast } from "@/components/Toast";
 
@@ -12,6 +12,18 @@ export default function AdminOrdersPage() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
+  async function logoutAndRedirect(nextPath: string) {
+    try {
+      await logoutSession();
+    } catch (err) {
+      console.error("Failed to clear session", err);
+    } finally {
+      if (typeof window !== "undefined") {
+        window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
+      }
+    }
+  }
+
   async function load() {
     setLoading(true);
     setError(null);
@@ -22,11 +34,7 @@ export default function AdminOrdersPage() {
       const msg = e?.message || "Failed to load orders";
       setError(msg);
       if (msg.includes('401')) {
-        try {
-          localStorage.removeItem('alnoor_token');
-          document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
-          window.location.href = `/admin/login?next=${encodeURIComponent('/admin/orders')}`;
-        } catch {}
+        await logoutAndRedirect('/admin/orders');
       }
     } finally {
       setLoading(false);
@@ -44,11 +52,7 @@ export default function AdminOrdersPage() {
       const msg = e?.message || "Failed to update order";
       setError(msg);
       if (msg.includes('401')) {
-        try {
-          localStorage.removeItem('alnoor_token');
-          document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
-          window.location.href = `/admin/login?next=${encodeURIComponent('/admin/orders')}`;
-        } catch {}
+        await logoutAndRedirect('/admin/orders');
       }
       toast.error(e.message || "Failed to update order");
     }

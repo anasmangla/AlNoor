@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState } from "react";
 import { login } from "@/lib/api";
 import { useRouter } from "next/navigation";
@@ -9,19 +9,13 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const params = null as any;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      const res = await login(username, password);
-      // Store token for future use (placeholder)
-      localStorage.setItem("alnoor_token", res.access_token);
-      // Also set a cookie so middleware can protect /admin routes
-      const maxAge = 60 * 60 * 24; // 1 day
-      document.cookie = `alnoor_token=${res.access_token}; Path=/; Max-Age=${maxAge}`;
+      await login(username, password);
       const next = (typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('next') : null) || '/admin/products';
       const safeNext = next.startsWith('/') ? next : '/admin/products';
       router.push(safeNext);
