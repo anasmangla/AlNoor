@@ -8,8 +8,10 @@ import {
   updateProduct,
 } from "@/lib/api";
 import Spinner from "@/components/Spinner";
+import { useToast } from "@/components/Toast";
 
 export default function AdminProductsPage() {
+  const toast = useToast();
   const [hasToken, setHasToken] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [name, setName] = useState("");
@@ -84,6 +86,7 @@ export default function AdminProductsPage() {
         image_url: imageUrl || undefined,
         description: desc || undefined,
       } as any);
+      toast.success("Product created");
       setName("");
       setPrice("0");
       setStock("0");
@@ -94,6 +97,7 @@ export default function AdminProductsPage() {
       await load();
     } catch (e: any) {
       setError(e.message || "Failed to create");
+      toast.error(e.message || "Failed to create product");
     }
   }
 
@@ -101,9 +105,11 @@ export default function AdminProductsPage() {
     setError(null);
     try {
       await deleteProduct(id);
+      toast.success("Product deleted");
       await load();
     } catch (e: any) {
       setError(e.message || "Failed to delete");
+      toast.error(e.message || "Failed to delete product");
     }
   }
 
@@ -136,9 +142,11 @@ export default function AdminProductsPage() {
         } as any
       );
       setEditingId(null);
+      toast.success("Product updated");
       await load();
     } catch (e: any) {
       setError(e.message || "Failed to update");
+      toast.error(e.message || "Failed to update product");
     }
   }
 

@@ -1,8 +1,12 @@
 "use client";
 import React from "react";
 import { CartProvider } from "@/context/CartContext";
+import { ToastProvider } from "@/components/Toast";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <CartProvider>{children}</CartProvider>;
+  return (
+    <ToastProvider>
+      <CartProvider>{children}</CartProvider>
+    </ToastProvider>
+  );
 }
-

@@ -2,8 +2,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { listOrders, updateOrderStatus, type Order } from "@/lib/api";
 import Spinner from "@/components/Spinner";
+import { useToast } from "@/components/Toast";
 
 export default function AdminOrdersPage() {
+  const toast = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,8 +31,10 @@ export default function AdminOrdersPage() {
     try {
       const updated = await updateOrderStatus(id, newStatus);
       setOrders((prev) => prev.map((o) => (o.id === id ? updated : o)));
+      toast.success("Order updated");
     } catch (e: any) {
       setError(e.message || "Failed to update order");
+      toast.error(e.message || "Failed to update order");
     }
   }
 

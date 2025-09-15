@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { listMessages, deleteMessage, type ContactMessage } from "@/lib/api";
+import { useToast } from "@/components/Toast";
 import Spinner from "@/components/Spinner";
 
 export default function AdminMessagesPage() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   async function load() {
     setLoading(true);
@@ -28,8 +30,10 @@ export default function AdminMessagesPage() {
     try {
       await deleteMessage(id);
       setMessages((prev) => prev.filter((m) => m.id !== id));
+      toast.success("Message deleted");
     } catch (e: any) {
       setError(e.message || "Failed to delete message");
+      toast.error(e.message || "Failed to delete message");
     }
   }
 
