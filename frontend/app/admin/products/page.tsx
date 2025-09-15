@@ -227,23 +227,23 @@ export default function AdminProductsPage() {
 
       <form onSubmit={onCreate} className="mb-6 flex gap-2 items-end flex-wrap">
         <div>
-          <label className="block text-sm text-slate-600">Name</label>
-          <input className="border rounded px-2 py-1" value={name} onChange={(e)=> setName(e.target.value)} placeholder="Product name" />
+          <label className="block text-sm text-slate-600" htmlFor="prodName">Name</label>
+          <input id="prodName" className="border rounded px-2 py-1" value={name} onChange={(e)=> setName(e.target.value)} placeholder="Product name" aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? 'errName' : undefined} />
           {fieldErrors.name && <div className="text-xs text-red-700 mt-1">{fieldErrors.name}</div>}
         </div>
         <div>
-          <label className="block text-sm text-slate-600">Price (USD)</label>
-          <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={price} onChange={(e)=> setPrice(e.target.value)} />
+          <label className="block text-sm text-slate-600" htmlFor="prodPrice">Price (USD)</label>
+          <input id="prodPrice" type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={price} onChange={(e)=> setPrice(e.target.value)} aria-invalid={!!fieldErrors.price} aria-describedby={fieldErrors.price ? 'errPrice' : undefined} />
           {fieldErrors.price && <div className="text-xs text-red-700 mt-1">{fieldErrors.price}</div>}
         </div>
         <div>
-          <label className="block text-sm text-slate-600">Stock</label>
-          <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={stock} onChange={(e)=> setStock(e.target.value)} />
+          <label className="block text-sm text-slate-600" htmlFor="prodStock">Stock</label>
+          <input id="prodStock" type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={stock} onChange={(e)=> setStock(e.target.value)} aria-invalid={!!fieldErrors.stock} aria-describedby={fieldErrors.stock ? 'errStock' : undefined} />
           {fieldErrors.stock && <div className="text-xs text-red-700 mt-1">{fieldErrors.stock}</div>}
         </div>
         <div>
-          <label className="block text-sm text-slate-600">Unit</label>
-          <input className="border rounded px-2 py-1" value={unit} onChange={(e)=> setUnit(e.target.value)} placeholder="each, lb, dozen, ..." />
+          <label className="block text-sm text-slate-600" htmlFor="prodUnit">Unit</label>
+          <input id="prodUnit" className="border rounded px-2 py-1" value={unit} onChange={(e)=> setUnit(e.target.value)} placeholder="each, lb, dozen, ..." aria-invalid={!!fieldErrors.unit} aria-describedby={fieldErrors.unit ? 'errUnit' : undefined} />
           {fieldErrors.unit && <div className="text-xs text-red-700 mt-1">{fieldErrors.unit}</div>}
         </div>
         <div className="flex items-center gap-2">

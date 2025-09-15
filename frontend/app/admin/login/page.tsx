@@ -1,7 +1,7 @@
 ﻿"use client";
 import { useState } from "react";
 import { login } from "@/lib/api";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState("");
@@ -9,6 +9,7 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const params = useSearchParams();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -21,7 +22,9 @@ export default function AdminLoginPage() {
       // Also set a cookie so middleware can protect /admin routes
       const maxAge = 60 * 60 * 24; // 1 day
       document.cookie = `alnoor_token=${res.access_token}; Path=/; Max-Age=${maxAge}`;
-      router.push("/admin/products");
+      const next = params?.get('next') || '/admin/products';
+      const safeNext = next.startsWith('/') ? next : '/admin/products';
+      router.push(safeNext);
     } catch (e: any) {
       setError(e.message || "Login failed");
     } finally {
@@ -39,22 +42,26 @@ export default function AdminLoginPage() {
       )}
       <form onSubmit={onSubmit} className="grid gap-3 max-w-sm">
         <div>
-          <label className="block text-sm text-slate-600">Username</label>
+          <label className="block text-sm text-slate-600" htmlFor="user">Username</label>
           <input
+            id="user"
             className="border rounded px-2 py-1 w-full"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Password"
+            placeholder="Username"
+            autoComplete="username"
           />
         </div>
         <div>
-          <label className="block text-sm text-slate-600">Password</label>
+          <label className="block text-sm text-slate-600" htmlFor="pass">Password</label>
           <input
+            id="pass"
             type="password"
             className="border rounded px-2 py-1 w-full"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            autoComplete="current-password"
           />
         </div>
         <button
@@ -68,4 +75,8 @@ export default function AdminLoginPage() {
     </section>
   );
 }
+
+
+
+
 

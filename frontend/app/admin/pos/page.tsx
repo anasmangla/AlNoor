@@ -15,8 +15,10 @@ export default function PosPage() {
   const [deviceId, setDeviceId] = useState<string>("");
   const [terminalStatus, setTerminalStatus] = useState<string | null>(null);
   const [terminalId, setTerminalId] = useState<string | null>(null);
+  const [hasToken, setHasToken] = useState<boolean>(false);
 
   useEffect(() => {
+    if (typeof window !== 'undefined') setHasToken(!!localStorage.getItem('alnoor_token'));
     fetchProducts().then(setProducts).catch(() => setProducts([]));
   }, []);
 
@@ -97,6 +99,11 @@ export default function PosPage() {
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">POS</h1>
+      {!hasToken && (
+        <div className="mb-3 text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded text-sm">
+          For Square Terminal checkout, please <a href="/admin/login" className="underline">log in</a>.
+        </div>
+      )}
       {message && (
         <div className="mb-3 text-emerald-700 bg-emerald-50 border border-emerald-200 p-2 rounded">
           {message}
@@ -213,4 +220,3 @@ export default function PosPage() {
     </section>
   );
 }
-

@@ -10,6 +10,19 @@ export default function ContactPage() {
   return (
     <section className="grid gap-6">
       <h1 className="text-2xl font-semibold">Contact</h1>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'Al Noor Farm',
+            url: process.env.NEXT_PUBLIC_SITE_URL || undefined,
+            address: address,
+            contactPoint: [{ '@type': 'ContactPoint', telephone: '+17165241717', contactType: 'customer service' }],
+          }),
+        }}
+      />
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="border rounded overflow-hidden">
           <iframe

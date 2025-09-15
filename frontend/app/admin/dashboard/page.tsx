@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { API_BASE } from "@/lib/api";
 
@@ -20,10 +21,16 @@ export const metadata = {
 
 export default async function AdminDashboardPage() {
   const token = cookies().get("alnoor_token")?.value;
+  if (!token) {
+    redirect(`/admin/login?next=/admin/dashboard`);
+  }
   const res = await fetch(`${API_BASE}/admin/metrics`, {
     cache: "no-store",
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
   });
+  if (res.status === 401) {
+    redirect(`/admin/login?next=/admin/dashboard`);
+  }
   const metrics: Metrics | null = res.ok ? await res.json() : null;
 
   // System status: API health and Next health

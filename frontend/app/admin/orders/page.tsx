@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useMemo, useState } from "react";
 import { listOrders, updateOrderStatus, type Order } from "@/lib/api";
 import Spinner from "@/components/Spinner";
@@ -88,22 +88,22 @@ export default function AdminOrdersPage() {
     <section>
       <h1 className="text-2xl font-semibold mb-4">Orders</h1>
       <div className="flex items-center gap-3 mb-2 flex-wrap">
-        <label className="text-sm text-slate-600">Status</label>
-        <select className="border rounded px-2 py-1 text-sm" value={statusFilter} onChange={(e)=> setStatusFilter(e.target.value)}>
+        <label className="text-sm text-slate-600" htmlFor="statusFilter">Status</label>
+        <select id="statusFilter" className="border rounded px-2 py-1 text-sm" value={statusFilter} onChange={(e)=> setStatusFilter(e.target.value)}>
           {['all','pending','paid','processing','completed','cancelled'].map(s=> (
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
-        <input
+        <input id="orderIdFilter"
           className="border rounded px-2 py-1 text-sm"
           placeholder="Order ID"
           value={idQuery}
           onChange={(e)=> setIdQuery(e.target.value)}
         />
-        <label className="text-sm text-slate-600">From</label>
-        <input type="date" className="border rounded px-2 py-1 text-sm" value={fromDate} onChange={(e)=> setFromDate(e.target.value)} />
-        <label className="text-sm text-slate-600">To</label>
-        <input type="date" className="border rounded px-2 py-1 text-sm" value={toDate} onChange={(e)=> setToDate(e.target.value)} />
+        <label className="text-sm text-slate-600" htmlFor="fromDate">From</label>
+        <input id="fromDate" type="date" className="border rounded px-2 py-1 text-sm" value={fromDate} onChange={(e)=> setFromDate(e.target.value)} />
+        <label className="text-sm text-slate-600" htmlFor="toDate">To</label>
+        <input id="toDate" type="date" className="border rounded px-2 py-1 text-sm" value={toDate} onChange={(e)=> setToDate(e.target.value)} />
         <button onClick={load} className="text-blue-700 hover:underline text-sm">Apply</button>
         <button onClick={()=>{ setFromDate(""); setToDate(""); load(); }} className="text-slate-600 hover:underline text-sm">Clear</button>
         <span className="text-xs text-slate-500">Quick:</span>
@@ -151,7 +151,7 @@ export default function AdminOrdersPage() {
           className="text-slate-700 hover:underline text-sm"
         >This Month</button>
       </div>
-      <div className="mb-2 text-sm text-slate-700">{totals.count} orders • ${totals.sum.toFixed(2)}</div>
+      <div className="mb-2 text-sm text-slate-700">{totals.count} orders â€¢ ${totals.sum.toFixed(2)}</div>
       <div className="mb-3 text-xs text-slate-600 flex items-center gap-3 flex-wrap">
         <span>CSV columns:</span>
         {(["id","created_at","status","source","total","customer_name","customer_email","items"] as const).map((k) => (
@@ -246,3 +246,4 @@ export default function AdminOrdersPage() {
     </section>
   );
 }
+
