@@ -8,11 +8,13 @@ from app.utils.security import decode_token
 
 def get_bearer_token(request: Request) -> Optional[str]:
     auth = request.headers.get("Authorization")
-    if not auth:
-        return None
-    parts = auth.split()
-    if len(parts) == 2 and parts[0].lower() == "bearer":
-        return parts[1]
+    if auth:
+        parts = auth.split()
+        if len(parts) == 2 and parts[0].lower() == "bearer":
+            return parts[1]
+    cookie_token = request.cookies.get("alnoor_token")
+    if cookie_token:
+        return cookie_token
     return None
 
 

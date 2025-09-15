@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { API_BASE } from "@/lib/api";
+import { API_BASE, fetchSession, logout as logoutSession } from "@/lib/api";
 
 export default function AdminSettingsPage() {
   const [hasToken, setHasToken] = useState(false);
@@ -8,9 +8,19 @@ export default function AdminSettingsPage() {
   const [apiStatus, setApiStatus] = useState<string>("");
 
   useEffect(() => {
-    setHasToken(!!(typeof window !== "undefined" && localStorage.getItem("alnoor_token")));
+    let active = true;
+    fetchSession()
+      .then((session) => {
+        if (active) setHasToken(Boolean(session?.authenticated));
+      })
+      .catch(() => {
+        if (active) setHasToken(false);
+      });
     const raw = typeof window !== "undefined" ? localStorage.getItem("alnoor_low_threshold") : null;
     setLow(raw || "5");
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (
@@ -72,8 +82,17 @@ export default function AdminSettingsPage() {
         {hasToken && (
           <button
             className="text-red-700 hover:underline text-sm mt-2"
-            onClick={()=>{
-              try { localStorage.removeItem('alnoor_token'); document.cookie = 'alnoor_token=; Path=/; Max-Age=0'; window.location.reload(); } catch {}
+            onClick={async () => {
+              try {
+                await logoutSession();
+              } catch (err) {
+                console.error("Failed to clear session", err);
+              } finally {
+                setHasToken(false);
+                if (typeof window !== "undefined") {
+                  window.location.reload();
+                }
+              }
             }}
           >Logout</button>
         )}

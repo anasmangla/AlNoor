@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { useEffect, useState } from "react";
 import ApiStatus from "@/components/ApiStatus";
+import { fetchSession, logout as logoutSession } from "@/lib/api";
 
 export default function Navbar() {
   const { lines, total } = useCart();
@@ -11,17 +12,30 @@ export default function Navbar() {
   const [hasToken, setHasToken] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setHasToken(!!localStorage.getItem("alnoor_token"));
-    }
+    let active = true;
+    fetchSession()
+      .then((session) => {
+        if (active) setHasToken(Boolean(session?.authenticated));
+      })
+      .catch(() => {
+        if (active) setHasToken(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
-  function logout() {
+  async function logout() {
     try {
-      localStorage.removeItem("alnoor_token");
-      document.cookie = "alnoor_token=; Path=/; Max-Age=0";
-      window.location.href = "/";
-    } catch {}
+      await logoutSession();
+    } catch (err) {
+      console.error("Failed to log out", err);
+    } finally {
+      setHasToken(false);
+      if (typeof window !== "undefined") {
+        window.location.href = "/";
+      }
+    }
   }
 
   return (

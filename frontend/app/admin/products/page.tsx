@@ -6,6 +6,8 @@ import {
   createProduct,
   deleteProduct,
   updateProduct,
+  fetchSession,
+  logout as logoutSession,
 } from "@/lib/api";
 import Spinner from "@/components/Spinner";
 import { useToast } from "@/components/Toast";
@@ -50,14 +52,17 @@ export default function AdminProductsPage() {
     }
   }, [lowThreshold]);
 
-  function logoutAndRedirect(nextPath: string) {
+  async function logoutAndRedirect(nextPath: string) {
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('alnoor_token');
-        document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
+      await logoutSession();
+    } catch (err) {
+      console.error("Failed to clear session", err);
+    } finally {
+      setHasToken(false);
+      if (typeof window !== "undefined") {
         window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
       }
-    } catch {}
+    }
   }
 
   async function load() {
@@ -69,17 +74,29 @@ export default function AdminProductsPage() {
     } catch (e: any) {
       const msg = e?.message || "Failed to load products";
       setError(msg);
-      if (msg.includes('401')) logoutAndRedirect('/admin/products');
+      if (msg.includes('401')) await logoutAndRedirect('/admin/products');
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setHasToken(!!localStorage.getItem("alnoor_token"));
-    }
-    load();
+    let active = true;
+    fetchSession()
+      .then((session) => {
+        if (active) setHasToken(Boolean(session?.authenticated));
+      })
+      .catch(() => {
+        if (active) setHasToken(false);
+      })
+      .finally(() => {
+        if (active) {
+          void load();
+        }
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function onCreate(e: React.FormEvent) {
@@ -129,7 +146,7 @@ export default function AdminProductsPage() {
     } catch (e: any) {
       const msg = e?.message || "Failed to delete";
       setError(msg);
-      if (msg.includes('401')) logoutAndRedirect('/admin/products');
+      if (msg.includes('401')) await logoutAndRedirect('/admin/products');
       toast.error(e.message || "Failed to delete product");
     }
   }
@@ -168,7 +185,7 @@ export default function AdminProductsPage() {
     } catch (e: any) {
       const msg = e?.message || "Failed to update";
       setError(msg);
-      if (msg.includes('401')) logoutAndRedirect('/admin/products');
+      if (msg.includes('401')) await logoutAndRedirect('/admin/products');
       toast.error(e.message || "Failed to update product");
     }
   }

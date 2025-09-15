@@ -1,6 +1,14 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { Product, fetchProducts, createOrder, createTerminalCheckout, pollTerminalCheckout } from "@/lib/api";
+import {
+  Product,
+  fetchProducts,
+  createOrder,
+  createTerminalCheckout,
+  pollTerminalCheckout,
+  fetchSession,
+  logout as logoutSession,
+} from "@/lib/api";
 
 type SaleItem = { product: Product; quantity: number };
 
@@ -17,19 +25,38 @@ export default function PosPage() {
   const [terminalId, setTerminalId] = useState<string | null>(null);
   const [hasToken, setHasToken] = useState<boolean>(false);
 
-  function logoutAndRedirect(nextPath: string) {
+  async function logoutAndRedirect(nextPath: string) {
     try {
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('alnoor_token');
-        document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
+      await logoutSession();
+    } catch (err) {
+      console.error("Failed to clear session", err);
+    } finally {
+      setHasToken(false);
+      if (typeof window !== "undefined") {
         window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
       }
-    } catch {}
+    }
   }
 
   useEffect(() => {
-    if (typeof window !== 'undefined') setHasToken(!!localStorage.getItem('alnoor_token'));
-    fetchProducts().then(setProducts).catch(() => setProducts([]));
+    let active = true;
+    fetchSession()
+      .then((session) => {
+        if (active) setHasToken(Boolean(session?.authenticated));
+      })
+      .catch(() => {
+        if (active) setHasToken(false);
+      });
+    fetchProducts()
+      .then((data) => {
+        if (active) setProducts(data);
+      })
+      .catch(() => {
+        if (active) setProducts([]);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   const total = useMemo(
@@ -67,7 +94,7 @@ export default function PosPage() {
     } catch (e: any) {
       const msg = e?.message || "Checkout failed";
       setError(msg);
-      if (msg.includes('401')) logoutAndRedirect('/admin/pos');
+      if (msg.includes('401')) await logoutAndRedirect('/admin/pos');
     } finally {
       setLoading(false);
     }
@@ -104,7 +131,7 @@ export default function PosPage() {
     } catch (e: any) {
       const msg = e?.message || "Terminal checkout failed";
       setError(msg);
-      if (msg.includes('401')) logoutAndRedirect('/admin/pos');
+      if (msg.includes('401')) await logoutAndRedirect('/admin/pos');
     } finally {
       setLoading(false);
     }
