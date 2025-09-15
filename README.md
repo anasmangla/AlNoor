@@ -48,6 +48,8 @@ Copy `.env.example` to `.env` and adjust:
 - POS simulates a running sale and checkout (creates order with source=pos).
 
 ### Deployment (BlueHost cPanel – manual)
+[See the detailed deployment guide for build and hosting steps.](docs/deploy.md)
+
 - Frontend (Next.js):
   - cPanel > Setup Node.js App
   - Application Root: path to `frontend`
