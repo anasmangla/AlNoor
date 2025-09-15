@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { listMessages, deleteMessage, type ContactMessage } from "@/lib/api";
+import Spinner from "@/components/Spinner";
 
 export default function AdminMessagesPage() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
@@ -39,7 +40,7 @@ export default function AdminMessagesPage() {
         <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">{error}</div>
       )}
       {loading ? (
-        <p className="text-slate-600">Loading...</p>
+        <Spinner />
       ) : messages.length === 0 ? (
         <p className="text-slate-600">No messages yet.</p>
       ) : (
@@ -64,4 +65,3 @@ export default function AdminMessagesPage() {
     </section>
   );
 }
-

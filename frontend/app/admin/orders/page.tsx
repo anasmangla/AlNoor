@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { listOrders, updateOrderStatus, type Order } from "@/lib/api";
+import Spinner from "@/components/Spinner";
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -173,7 +174,7 @@ export default function AdminOrdersPage() {
         </div>
       )}
       {loading ? (
-        <p className="text-slate-600">Loading...</p>
+        <Spinner />
       ) : filtered.length === 0 ? (
         <p className="text-slate-600">No orders yet.</p>
       ) : (
@@ -224,4 +225,3 @@ export default function AdminOrdersPage() {
     </section>
   );
 }
-

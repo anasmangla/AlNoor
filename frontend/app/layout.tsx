@@ -4,15 +4,19 @@ import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-export const metadata: Metadata = {
-  title: "Al Noor Farm",
-  description: "Storefront, Admin, and POS UI",
-  icons: {
-    icon: "/alnoorlogo.png",
-    shortcut: "/alnoorlogo.png",
-    apple: "/alnoorlogo.png",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const bp = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  const icon = `${bp}${bp ? "/" : "/"}alnoorlogo.png`;
+  return {
+    title: "Al Noor Farm",
+    description: "Storefront, Admin, and POS UI",
+    icons: {
+      icon,
+      shortcut: icon,
+      apple: icon,
+    },
+  };
+}
 
 export default function RootLayout({
   children,

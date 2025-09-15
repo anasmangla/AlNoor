@@ -7,6 +7,7 @@ import {
   deleteProduct,
   updateProduct,
 } from "@/lib/api";
+import Spinner from "@/components/Spinner";
 
 export default function AdminProductsPage() {
   const [hasToken, setHasToken] = useState<boolean>(false);
@@ -305,7 +306,7 @@ export default function AdminProductsPage() {
       </div>
 
       {loading ? (
-        <p className="text-slate-600">Loading...</p>
+        <Spinner />
       ) : filtered.length === 0 ? (
         <p className="text-slate-600">No products yet.</p>
       ) : (
@@ -372,4 +373,3 @@ export default function AdminProductsPage() {
     </section>
   );
 }
-
