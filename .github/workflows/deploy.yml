@@ -20,19 +20,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Write SSH private key
+        run: |
+          set -euo pipefail
+          printf '%s\n' "${{ secrets.SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host:         ${{ secrets.SSH_HOST }}
-          username:     ${{ secrets.SSH_USER }}
-          key:          ${{ secrets.SSH_KEY }}
-          passphrase:   ${{ secrets.SSH_PASSPHRASE }}
-          port:         ${{ secrets.SSH_PORT }}
-          password:     ${{ secrets.SSH_PASSWORD }}
-          fingerprint:  ${{ secrets.SSH_FINGERPRINT }}
-          use_insecure_cipher: true # required for cPanel servers that only offer diffie-hellman-group-exchange key exchange
-          debug: true
-          script: |
+        run: |
+          set -euo pipefail
+          ssh -i key.pem -oKexAlgorithms=+diffie-hellman-group-exchange-sha256 \
+            -p "${{ secrets.SSH_PORT }}" \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" <<'EOF'
             set -euo pipefail
 
             # Resolve deploy path: dispatch input > repo variable > required
@@ -79,4 +78,11 @@ jobs:
               mkdir -p tmp && touch tmp/restart.txt || true
               cd ..
             fi
+          EOF
+
+      - name: Clean up SSH key
+        if: always()
+        run: |
+          set -euo pipefail
+          rm -f key.pem
 
