@@ -19,7 +19,15 @@ export default function AdminOrdersPage() {
       const data = await listOrders({ startDate: fromDate || undefined, endDate: toDate || undefined });
       setOrders(data);
     } catch (e: any) {
-      setError(e.message || "Failed to load orders");
+      const msg = e?.message || "Failed to load orders";
+      setError(msg);
+      if (msg.includes('401')) {
+        try {
+          localStorage.removeItem('alnoor_token');
+          document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
+          window.location.href = `/admin/login?next=${encodeURIComponent('/admin/orders')}`;
+        } catch {}
+      }
     } finally {
       setLoading(false);
     }
@@ -33,7 +41,15 @@ export default function AdminOrdersPage() {
       setOrders((prev) => prev.map((o) => (o.id === id ? updated : o)));
       toast.success("Order updated");
     } catch (e: any) {
-      setError(e.message || "Failed to update order");
+      const msg = e?.message || "Failed to update order";
+      setError(msg);
+      if (msg.includes('401')) {
+        try {
+          localStorage.removeItem('alnoor_token');
+          document.cookie = 'alnoor_token=; Path=/; Max-Age=0';
+          window.location.href = `/admin/login?next=${encodeURIComponent('/admin/orders')}`;
+        } catch {}
+      }
       toast.error(e.message || "Failed to update order");
     }
   }
