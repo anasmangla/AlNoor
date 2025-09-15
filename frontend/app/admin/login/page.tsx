@@ -1,7 +1,7 @@
 ﻿"use client";
 import { useState } from "react";
 import { login } from "@/lib/api";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState("");
@@ -9,7 +9,7 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const params = useSearchParams();
+  const params = null as any;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
       // Also set a cookie so middleware can protect /admin routes
       const maxAge = 60 * 60 * 24; // 1 day
       document.cookie = `alnoor_token=${res.access_token}; Path=/; Max-Age=${maxAge}`;
-      const next = params?.get('next') || '/admin/products';
+      const next = (typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('next') : null) || '/admin/products';
       const safeNext = next.startsWith('/') ? next : '/admin/products';
       router.push(safeNext);
     } catch (e: any) {
