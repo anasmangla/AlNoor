@@ -25,6 +25,16 @@ async def test_get_and_update_order_flow():
         assert isinstance(products, list) and len(products) > 0
         pid = products[0]["id"]
 
+        # Ensure plentiful stock via admin update
+        token = await get_token(ac)
+        headers = {"Authorization": f"Bearer {token}"}
+        resp = await ac.put(
+            f"/products/{pid}", headers=headers, json={"stock": 999, "price": products[0]["price"]}
+        )
+        assert resp.status_code == 200
+        updated_product = resp.json()
+        assert updated_product["stock"] >= 999
+
         # Create an order (no auth required)
         resp = await ac.post(
             "/orders",
@@ -36,10 +46,6 @@ async def test_get_and_update_order_flow():
         assert resp.status_code == 201
         order = resp.json()
         order_id = order["id"]
-
-        # Admin token
-        token = await get_token(ac)
-        headers = {"Authorization": f"Bearer {token}"}
 
         # Fetch the order by id (auth required)
         resp = await ac.get(f"/orders/{order_id}", headers=headers)
