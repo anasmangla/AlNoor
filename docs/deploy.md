@@ -58,6 +58,7 @@ This guide walks through preparing and launching the Al Noor Farm frontend (Next
 - The Next.js application expects to live under `/alnoor`; update `NEXT_PUBLIC_BASE_PATH` and web server rewrites accordingly.
 - Reserve a path such as `/api` (or another prefix) for the FastAPI backend and configure your reverse proxy or .htaccess rules to forward requests there.
 - Static links on the landing page redirect `/store`, `/admin`, and `/pos` into the `/alnoor` Next.js app.
+- When the storefront base path changes, run `python scripts/build_redirect_page.py` to regenerate `index.html` and refresh the static landing links.
 
 Keep the deployment scripts and environment variable definitions in sync with any future backend database or authentication changes.
 
