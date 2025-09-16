@@ -35,6 +35,14 @@ async def init_db() -> None:
                     await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN image_url TEXT DEFAULT ''")
                 if "description" not in cols:
                     await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN description TEXT DEFAULT ''")
+                if "weight" not in cols:
+                    await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN weight REAL DEFAULT 0")
+                if "cut_type" not in cols:
+                    await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN cut_type TEXT DEFAULT ''")
+                if "price_per_unit" not in cols:
+                    await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN price_per_unit REAL DEFAULT 0")
+                if "origin" not in cols:
+                    await conn.exec_driver_sql("ALTER TABLE product ADD COLUMN origin TEXT DEFAULT ''")
                 # OrderItem table
                 res2 = await conn.exec_driver_sql("PRAGMA table_info(orderitem)")
                 cols2 = {row[1] for row in res2}
@@ -79,6 +87,18 @@ async def init_db() -> None:
                     "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS description TEXT DEFAULT ''"
                 )
                 await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS weight DOUBLE PRECISION DEFAULT 0"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS cut_type TEXT DEFAULT ''"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS price_per_unit DOUBLE PRECISION DEFAULT 0"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS product ADD COLUMN IF NOT EXISTS origin TEXT DEFAULT ''"
+                )
+                await conn.exec_driver_sql(
                     "ALTER TABLE IF NOT EXISTS orderitem ADD COLUMN IF NOT EXISTS unit TEXT DEFAULT ''"
                 )
                 await conn.exec_driver_sql(
@@ -116,9 +136,45 @@ async def seed_if_empty() -> None:
         if not has_any:
             session.add_all(
                 [
-                    Product(name="Chicken (whole)", price=12.99, stock=10, unit="each", is_weight_based=False),
-                    Product(name="Lamb", price=9.99, stock=100, unit="lb", is_weight_based=True),
-                    Product(name="Eggs", price=4.50, stock=30, unit="dozen", is_weight_based=False),
+                    Product(
+                        name="Chicken (whole)",
+                        price=12.99,
+                        stock=10,
+                        unit="each",
+                        is_weight_based=False,
+                        image_url="https://images.unsplash.com/photo-1604908811745-d763b5bb00ca?auto=format&fit=crop&w=800&q=80",
+                        description="Pasture-raised whole chicken dressed and ready for roasting.",
+                        weight=4.5,
+                        cut_type="Whole bird",
+                        price_per_unit=2.89,
+                        origin="Hudson Valley, NY",
+                    ),
+                    Product(
+                        name="Lamb",
+                        price=9.99,
+                        stock=100,
+                        unit="lb",
+                        is_weight_based=True,
+                        image_url="https://images.unsplash.com/photo-1484980972926-edee96e0960d?auto=format&fit=crop&w=800&q=80",
+                        description="Tender grass-fed lamb perfect for braising or grilling.",
+                        weight=1.0,
+                        cut_type="Butcher's selection",
+                        price_per_unit=9.99,
+                        origin="Catskills, NY",
+                    ),
+                    Product(
+                        name="Eggs",
+                        price=4.50,
+                        stock=30,
+                        unit="dozen",
+                        is_weight_based=False,
+                        image_url="https://images.unsplash.com/photo-1517957754645-7082cf4a5812?auto=format&fit=crop&w=800&q=80",
+                        description="Farm fresh brown eggs collected daily.",
+                        weight=1.5,
+                        cut_type="Grade A large",
+                        price_per_unit=4.50,
+                        origin="Albany, NY",
+                    ),
                 ]
             )
             await session.commit()

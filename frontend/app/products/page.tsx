@@ -5,21 +5,34 @@ import Link from "next/link";
 type Props = { searchParams?: { q?: string } };
 
 export const metadata = {
-  title: "Products | Al Noor Farm",
-  description: "Browse fresh products at Al Noor Farm.",
+  title: 'Products | Al Noor Farm',
+  description: 'Browse fresh products at Al Noor Farm.',
   robots: { index: true, follow: true },
 };
 
 export default async function ProductsPage({ searchParams }: Props) {
   const products = await fetchProducts();
-  const q = (searchParams?.q || "").toLowerCase().trim();
+  const q = (searchParams?.q || '').toLowerCase().trim();
+  const placeholderClass =
+    'w-full h-40 bg-slate-100 flex items-center justify-center text-slate-400';
   const filtered = q
-    ? products.filter((p) =>
-        p.name.toLowerCase().includes(q) || String((p as any).unit || "").toLowerCase().includes(q)
-      )
+    ? products.filter((p) => {
+        const detail = p as any;
+        const unit = String(detail.unit || '').toLowerCase();
+        const desc = String(detail.description || '').toLowerCase();
+        const cut = String(detail.cut_type || '').toLowerCase();
+        const origin = String(detail.origin || '').toLowerCase();
+        return (
+          p.name.toLowerCase().includes(q) ||
+          unit.includes(q) ||
+          desc.includes(q) ||
+          cut.includes(q) ||
+          origin.includes(q)
+        );
+      })
     : products;
-  const site = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const bp = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  const site = process.env.NEXT_PUBLIC_SITE_URL || '';
+  const bp = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
   return (
     <section>
@@ -60,10 +73,20 @@ export default async function ProductsPage({ searchParams }: Props) {
             return (
               <li key={p.id} className="border rounded overflow-hidden hover:shadow">
                 <Link href={`/products/${p.id}`} className="block">
-                  {(p as any).image_url ? (
-                    <img src={(p as any).image_url} alt={p.name} className="w-full h-40 object-cover" />
+                  {thumb ? (
+                    isVideo ? (
+                      <video
+                        className="w-full h-40 object-cover"
+                        src={mediaUrl}
+                        muted
+                        loop
+                        playsInline
+                      />
+                    ) : (
+                      <img src={thumb} alt={p.name} className="w-full h-40 object-cover" />
+                    )
                   ) : (
-                    <div className="w-full h-40 bg-slate-100 flex items-center justify-center text-slate-400">No Image</div>
+                    <div className={placeholderClass}>No Image</div>
                   )}
                     <div className="p-3">
                       <div className="flex items-center justify-between">

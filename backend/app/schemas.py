@@ -11,6 +11,10 @@ class ProductBase(BaseModel):
     is_weight_based: bool = False
     image_url: Optional[str] = Field(default="", max_length=500)
     description: Optional[str] = Field(default="", max_length=2000)
+    weight: float = Field(0, ge=0)
+    cut_type: Optional[str] = Field(default="", max_length=100)
+    price_per_unit: float = Field(0, ge=0)
+    origin: Optional[str] = Field(default="", max_length=100)
 
 
 class ProductCreate(ProductBase):
@@ -25,6 +29,10 @@ class ProductUpdate(BaseModel):
     is_weight_based: Optional[bool] = None
     image_url: Optional[str] = Field(default=None, max_length=500)
     description: Optional[str] = Field(default=None, max_length=2000)
+    weight: Optional[float] = Field(default=None, ge=0)
+    cut_type: Optional[str] = Field(default=None, max_length=100)
+    price_per_unit: Optional[float] = Field(default=None, ge=0)
+    origin: Optional[str] = Field(default=None, max_length=100)
 
 
 class ProductOut(ProductBase):

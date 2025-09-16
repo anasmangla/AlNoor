@@ -7,14 +7,16 @@ type Props = { params: { id: string } };
 export default async function ProductDetailPage({ params }: Props) {
   const id = Number(params.id);
   const product = await fetchProduct(id);
-  const site = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const bp = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  const detail = product as any;
+  const site = process.env.NEXT_PUBLIC_SITE_URL || '';
+  const bp = process.env.NEXT_PUBLIC_BASE_PATH || '';
   const url = `${site}${bp}/products/${id}`;
   const weight = getWeightPricing(product);
 
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-2">{product.name}</h1>
+
       {(product as any).image_url ? (
         <img
           src={(product as any).image_url}
@@ -43,14 +45,57 @@ export default async function ProductDetailPage({ params }: Props) {
             '@type': 'Product',
             name: product.name,
             description: (product as any).description || undefined,
-            image: (product as any).image_url || undefined,
+            image: mediaUrl || undefined,
             offers: {
               '@type': 'Offer',
               priceCurrency: 'USD',
               price: product.price,
               url,
               availability: 'https://schema.org/InStock',
+              ...(pricePerUnit > 0
+                ? {
+                    priceSpecification: {
+                      '@type': 'UnitPriceSpecification',
+                      price: pricePerUnit,
+                      priceCurrency: 'USD',
+                      unitText: detail.unit || undefined,
+                    },
+                  }
+                : {}),
             },
+            ...(showDetail
+              ? {
+                  additionalProperty: [
+                    ...(weight > 0
+                      ? [
+                          {
+                            '@type': 'PropertyValue',
+                            name: 'Weight',
+                            value: `${weight.toFixed(2)} ${detail.unit || ''}`.trim(),
+                          },
+                        ]
+                      : []),
+                    ...(cutType
+                      ? [
+                          {
+                            '@type': 'PropertyValue',
+                            name: 'Cut type',
+                            value: cutType,
+                          },
+                        ]
+                      : []),
+                    ...(origin
+                      ? [
+                          {
+                            '@type': 'PropertyValue',
+                            name: 'Origin',
+                            value: origin,
+                          },
+                        ]
+                      : []),
+                  ],
+                }
+              : {}),
             url,
           }),
         }}
@@ -60,4 +105,4 @@ export default async function ProductDetailPage({ params }: Props) {
       </div>
     </section>
   );
-} 
+}

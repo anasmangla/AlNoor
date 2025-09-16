@@ -7,6 +7,10 @@ export type Product = {
   is_weight_based: boolean;
   image_url?: string;
   description?: string;
+  weight?: number;
+  cut_type?: string;
+  price_per_unit?: number;
+  origin?: string;
 };
 
 export const API_BASE =

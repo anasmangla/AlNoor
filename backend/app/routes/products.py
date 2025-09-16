@@ -26,6 +26,10 @@ async def list_products(session: AsyncSession = Depends(get_session)):
             is_weight_based=p.is_weight_based,
             image_url=getattr(p, "image_url", ""),
             description=getattr(p, "description", ""),
+            weight=getattr(p, "weight", 0.0),
+            cut_type=getattr(p, "cut_type", ""),
+            price_per_unit=getattr(p, "price_per_unit", 0.0),
+            origin=getattr(p, "origin", ""),
         )
         for p in rows
     ]
@@ -46,6 +50,10 @@ async def get_product(product_id: int, session: AsyncSession = Depends(get_sessi
         is_weight_based=p.is_weight_based,
         image_url=getattr(p, "image_url", ""),
         description=getattr(p, "description", ""),
+        weight=getattr(p, "weight", 0.0),
+        cut_type=getattr(p, "cut_type", ""),
+        price_per_unit=getattr(p, "price_per_unit", 0.0),
+        origin=getattr(p, "origin", ""),
     )
 
 
@@ -63,6 +71,10 @@ async def create_product(
         is_weight_based=bool(payload.is_weight_based),
         image_url=payload.image_url or "",
         description=payload.description or "",
+        weight=payload.weight or 0.0,
+        cut_type=payload.cut_type or "",
+        price_per_unit=payload.price_per_unit or 0.0,
+        origin=payload.origin or "",
     )
     session.add(p)
     await session.commit()
@@ -76,6 +88,10 @@ async def create_product(
         is_weight_based=p.is_weight_based,
         image_url=getattr(p, "image_url", ""),
         description=getattr(p, "description", ""),
+        weight=getattr(p, "weight", 0.0),
+        cut_type=getattr(p, "cut_type", ""),
+        price_per_unit=getattr(p, "price_per_unit", 0.0),
+        origin=getattr(p, "origin", ""),
     )
 
 
@@ -104,6 +120,14 @@ async def update_product(
         p.image_url = payload.image_url or ""
     if getattr(payload, "description", None) is not None:
         p.description = payload.description or ""
+    if getattr(payload, "weight", None) is not None:
+        p.weight = payload.weight or 0.0
+    if getattr(payload, "cut_type", None) is not None:
+        p.cut_type = payload.cut_type or ""
+    if getattr(payload, "price_per_unit", None) is not None:
+        p.price_per_unit = payload.price_per_unit or 0.0
+    if getattr(payload, "origin", None) is not None:
+        p.origin = payload.origin or ""
     await session.commit()
     await session.refresh(p)
     return ProductOut(
@@ -115,6 +139,10 @@ async def update_product(
         is_weight_based=p.is_weight_based,
         image_url=getattr(p, "image_url", ""),
         description=getattr(p, "description", ""),
+        weight=getattr(p, "weight", 0.0),
+        cut_type=getattr(p, "cut_type", ""),
+        price_per_unit=getattr(p, "price_per_unit", 0.0),
+        origin=getattr(p, "origin", ""),
     )
 
 

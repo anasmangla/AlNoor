@@ -12,6 +12,10 @@ class Product(SQLModel, table=True):
     is_weight_based: bool = False
     image_url: str = ""
     description: str = ""
+    weight: float = 0.0
+    cut_type: str = ""
+    price_per_unit: float = 0.0
+    origin: str = ""
 
 
 class Order(SQLModel, table=True):
