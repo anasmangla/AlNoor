@@ -5,7 +5,7 @@ from typing import List
 
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
@@ -24,20 +24,21 @@ async def create_contact(
     # Basic rate limiting by IP and time window
     client_ip = request.client.host if request.client else ""
     window = datetime.utcnow() - timedelta(minutes=10)
+    filters = [ContactMessage.ip == client_ip]
+    email = str(payload.email) if payload.email else None
+    phone = str(payload.phone) if payload.phone else None
+    if email:
+        filters.append(ContactMessage.email == email)
+    if phone:
+        filters.append(ContactMessage.phone == phone)
+
     result = await session.execute(
         select(ContactMessage).where(
             ContactMessage.created_at >= window,
+            or_(*filters),
         )
     )
-    recent = [
-        m
-        for m in result.scalars().all()
-        if (
-            m.ip == client_ip
-            or (payload.email and m.email == str(payload.email))
-            or (payload.phone and m.phone == str(payload.phone))
-        )
-    ]
+    recent = result.scalars().all()
     if len(recent) >= 3:
         raise HTTPException(status_code=429, detail="Too many messages, please try later")
     msg = ContactMessage(
