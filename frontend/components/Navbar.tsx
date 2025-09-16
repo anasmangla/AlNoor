@@ -90,7 +90,6 @@ export default function Navbar() {
             <Image src="/alnoorlogo.png" alt="Al Noor" width={24} height={24} />
             <span className="font-heading text-brand text-lg leading-none">Al Noor</span>
           </Link>
-
           <Link href="/products" className="text-brand hover:text-brand-dark hover:underline">Products</Link>
           <Link href="/contact" className="text-brand hover:text-brand-dark hover:underline">Contact</Link>
           <Link href="/checkout" className="text-brand hover:text-brand-dark hover:underline">Checkout</Link>
