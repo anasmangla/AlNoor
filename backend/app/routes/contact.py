@@ -21,24 +21,24 @@ router = APIRouter()
 async def create_contact(
     payload: ContactCreate, request: Request, session: AsyncSession = Depends(get_session)
 ):
-    # Basic rate limiting by IP and time window
+    # Basic rate limiting by IP, email, and phone within a rolling 10 minute window
     client_ip = request.client.host if request.client else ""
     window = datetime.utcnow() - timedelta(minutes=10)
-    filters = [ContactMessage.ip == client_ip]
     email = str(payload.email) if payload.email else None
     phone = str(payload.phone) if payload.phone else None
-    if email:
-        filters.append(ContactMessage.email == email)
-    if phone:
-        filters.append(ContactMessage.phone == phone)
 
-    result = await session.execute(
-        select(ContactMessage).where(
-            ContactMessage.created_at >= window,
-            or_(*filters),
-        )
+    match_clauses = [ContactMessage.ip == client_ip]
+    if email:
+        match_clauses.append(ContactMessage.email == email)
+    if phone:
+        match_clauses.append(ContactMessage.phone == phone)
+
+    rate_limit_query = (
+        select(ContactMessage)
+        .where(ContactMessage.created_at >= window)
+        .where(or_(*match_clauses))
     )
-    recent = result.scalars().all()
+    recent = (await session.execute(rate_limit_query)).scalars().all()
     if len(recent) >= 3:
         raise HTTPException(status_code=429, detail="Too many messages, please try later")
     msg = ContactMessage(

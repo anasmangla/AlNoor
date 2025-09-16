@@ -45,3 +45,20 @@ async def test_review_rejects_blank_message(client):
     resp = await client.post("/reviews", json=payload)
     assert resp.status_code == 400
     assert resp.json()["detail"] == "Review message cannot be empty."
+
+
+@pytest.mark.asyncio
+async def test_review_rate_limiting(client):
+    payload = {
+        "name": "Repeat Reviewer",
+        "rating": 4,
+        "message": "Great experience",
+    }
+
+    for _ in range(5):
+        resp = await client.post("/reviews", json=payload)
+        assert resp.status_code == 201
+
+    resp = await client.post("/reviews", json=payload)
+    assert resp.status_code == 429
+    assert "Too many reviews" in resp.json()["detail"]
