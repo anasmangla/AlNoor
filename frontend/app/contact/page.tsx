@@ -1,7 +1,11 @@
+import CommunityHighlights from "@/components/contact/CommunityHighlights";
+import ContactForm from "@/components/contact/ContactForm";
+import ReviewsSection from "@/components/contact/ReviewsSection";
+
 export const metadata = {
-  title: "Contact | Al Noor Farm",
-  description: "Contact Al Noor Farm: address, phone, WhatsApp, and contact form.",
-  robots: { index: true, follow: true },
+    title: "Contact | Al Noor Farm",
+    description: "Contact Al Noor Farm: address, phone, WhatsApp, and contact form.",
+    robots: { index: true, follow: true },
 };
 
 export default function ContactPage() {
@@ -61,6 +65,10 @@ export default function ContactPage() {
     </section>
   );
 }
-
-// Client form component
-import ContactForm from "@/components/contact/ContactForm";
+            <div className="grid gap-4 lg:grid-cols-[2fr,1fr]">
+                <ReviewsSection />
+                <CommunityHighlights />
+            </div>
+        </section>
+    );
+}

@@ -43,3 +43,14 @@ class ContactMessage(SQLModel, table=True):
     message: str = ""
     created_at: datetime = Field(default_factory=datetime.utcnow)
     ip: str = ""
+
+
+class Review(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = ""
+    location: str = ""
+    rating: Optional[int] = Field(default=None)
+    message: str = ""
+    photo_url: str = ""
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    ip: str = ""

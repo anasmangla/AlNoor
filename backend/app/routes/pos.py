@@ -1,8 +1,11 @@
+import inspect
 import os
 import uuid
 from typing import Optional
 
 import httpx
+from sqlalchemy import select
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 import inspect
@@ -12,6 +15,7 @@ from app.schemas import OrderCreate, OrderOut
 from .orders import create_order
 from app.deps import get_current_user
 from app.database import get_session
+from app.models import Order as OrderModel
 
 
 router = APIRouter()
@@ -25,11 +29,11 @@ async def pos_checkout(
 ):
     # Force source to 'pos' and reuse order creation logic
     payload.source = "pos"
+
     params = inspect.signature(create_order).parameters
     if len(params) <= 1:
         return await create_order(payload)
     return await create_order(payload, session)
-
 
 class TerminalCheckoutRequest(BaseModel):
     amount_cents: int = Field(..., ge=1)
