@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-app-base="/">
+<html lang="en" data-app-base="/alnoor">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -81,11 +81,11 @@
             <a href="#contact">Contact</a>
           </nav>
           <nav class="nav-app">
-            <a href="/products">Store</a>
-            <a href="/admin/login">Admin</a>
-            <a href="/admin/pos">POS</a>
+            <a href="/alnoor/products">Store</a>
+            <a href="/alnoor/admin/login">Admin</a>
+            <a href="/alnoor/admin/pos">POS</a>
           </nav>
-          <a class="btn" href="/products">Shop Now</a>
+          <a class="btn" href="/alnoor/products">Shop Now</a>
         </div>
       </div>
     </header>
@@ -116,7 +116,7 @@
             <p class="muted">
               See current halal poultry, eggs, and seasonal bundles ready for pickup or delivery.
             </p>
-            <a class="btn" href="/products">Go to Store</a>
+            <a class="btn" href="/alnoor/products">Go to Store</a>
           </div>
         </div>
       </section>
@@ -129,7 +129,7 @@
             <p class="muted">
               Manage inventory, pricing, messages, and delivery routes in one dashboard.
             </p>
-            <a class="btn" href="/admin/login">Admin Panel</a>
+            <a class="btn" href="/alnoor/admin/login">Admin Panel</a>
           </div>
         </div>
       </section>
@@ -142,7 +142,7 @@
             <p class="muted">
               Ring up in-person orders, accept multiple payment types, and email receipts instantly.
             </p>
-            <a class="btn" href="/admin/pos">Open POS</a>
+            <a class="btn" href="/alnoor/admin/pos">Open POS</a>
           </div>
         </div>
       </section>
@@ -268,11 +268,11 @@
       <div class="wrap">
         <div>© <span id="year"></span> Al Noor Farm</div>
         <div>
-          <a href="/products">Store</a>
+          <a href="/alnoor/products">Store</a>
           •
-          <a href="/admin/login">Admin</a>
+          <a href="/alnoor/admin/login">Admin</a>
           •
-          <a href="/admin/pos">POS</a>
+          <a href="/alnoor/admin/pos">POS</a>
         </div>
       </div>
     </footer>
@@ -283,7 +283,7 @@
         window.dataLayer = window.dataLayer || [];
         window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
         window.__alnoorAnalyticsReady = window.__alnoorAnalyticsReady || false;
-        var baseAttr = document.documentElement.getAttribute('data-app-base') || '/';
+        var baseAttr = document.documentElement.getAttribute('data-app-base') || '/alnoor';
         var trimmedBase = baseAttr.replace(/\/$/, '');
         var analyticsEndpoint = (trimmedBase === '' || trimmedBase === '/') ? '/api/public/config' : trimmedBase + '/api/public/config';
 
