@@ -51,6 +51,7 @@ export default function ContactForm() {
         <textarea id="cmsg" className="border rounded px-2 py-1 w-full" rows={4} value={message} onChange={(e)=> setMessage(e.target.value)} placeholder="How can we help?" required />
       </div>
       <button type="submit" className="bg-brand text-white px-3 py-1 rounded hover:bg-brand-dark disabled:opacity-60" disabled={loading} aria-busy={loading}>
+
         {loading ? "Sending..." : "Send"}
       </button>
       {status && (<div className="text-sm text-brand">{status}</div>)}

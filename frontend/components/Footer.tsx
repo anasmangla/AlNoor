@@ -4,7 +4,6 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&out
 export default function Footer() {
   return (
     <footer className="border-t mt-8">
-
       <div className="max-w-5xl mx-auto px-6 py-10 text-sm text-slate-600">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

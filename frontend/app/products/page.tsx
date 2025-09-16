@@ -36,15 +36,17 @@ export default async function ProductsPage({ searchParams }: Props) {
           }),
         }}
       />
-      <form method="get" className="mb-4 flex items-center gap-2">
+      <form method="get" className="mb-4 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
         <input
-          className="border rounded px-2 py-1"
+          className="border rounded px-2 py-1 w-full sm:w-auto sm:flex-1"
           type="search"
           name="q"
           placeholder="Search products..."
           defaultValue={q}
         />
-        <button className="px-3 py-1 rounded bg-slate-700 text-white">Search</button>
+        <button className="w-full rounded bg-slate-700 px-3 py-1 text-white sm:w-auto" type="submit">
+          Search
+        </button>
       </form>
       {filtered.length === 0 ? (
         <p className="text-slate-600">No products available yet.</p>

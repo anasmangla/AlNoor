@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import ApiStatus from "@/components/ApiStatus";
 import { useCart } from "@/context/CartContext";
 import { fetchSession, logout as logoutSession } from "@/lib/api";
+import { usePathname } from "next/navigation";
 
 const primaryLinks = [
   { href: "/", label: "Home" },
@@ -24,7 +25,6 @@ export default function Navbar() {
   const [hasToken, setHasToken] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-
 
   useEffect(() => {
     let active = true;
@@ -77,8 +77,13 @@ export default function Navbar() {
     }
   }
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
   return (
     <header className="border-b bg-white/80 backdrop-blur sticky top-0 z-10">
+
       <nav className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80">

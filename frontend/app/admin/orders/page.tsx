@@ -91,23 +91,23 @@ export default function AdminOrdersPage() {
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-4">Orders</h1>
-      <div className="flex items-center gap-3 mb-2 flex-wrap">
+      <div className="mb-2 grid gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
         <label className="text-sm text-slate-600" htmlFor="statusFilter">Status</label>
-        <select id="statusFilter" className="border rounded px-2 py-1 text-sm" value={statusFilter} onChange={(e)=> setStatusFilter(e.target.value)}>
+        <select id="statusFilter" className="w-full rounded border px-2 py-1 text-sm sm:w-auto" value={statusFilter} onChange={(e)=> setStatusFilter(e.target.value)}>
           {['all','pending','paid','processing','completed','cancelled'].map(s=> (
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
         <input id="orderIdFilter"
-          className="border rounded px-2 py-1 text-sm"
+          className="w-full rounded border px-2 py-1 text-sm sm:w-auto"
           placeholder="Order ID"
           value={idQuery}
           onChange={(e)=> setIdQuery(e.target.value)}
         />
         <label className="text-sm text-slate-600" htmlFor="fromDate">From</label>
-        <input id="fromDate" type="date" className="border rounded px-2 py-1 text-sm" value={fromDate} onChange={(e)=> setFromDate(e.target.value)} />
+        <input id="fromDate" type="date" className="w-full rounded border px-2 py-1 text-sm sm:w-auto" value={fromDate} onChange={(e)=> setFromDate(e.target.value)} />
         <label className="text-sm text-slate-600" htmlFor="toDate">To</label>
-        <input id="toDate" type="date" className="border rounded px-2 py-1 text-sm" value={toDate} onChange={(e)=> setToDate(e.target.value)} />
+        <input id="toDate" type="date" className="w-full rounded border px-2 py-1 text-sm sm:w-auto" value={toDate} onChange={(e)=> setToDate(e.target.value)} />
         <button onClick={load} className="text-blue-700 hover:underline text-sm">Apply</button>
         <button onClick={()=>{ setFromDate(""); setToDate(""); load(); }} className="text-slate-600 hover:underline text-sm">Clear</button>
         <span className="text-xs text-slate-500">Quick:</span>
@@ -193,7 +193,7 @@ export default function AdminOrdersPage() {
         >Export CSV</button>
       </div>
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded flex items-center justify-between" role="alert">
+        <div className="mb-3 flex flex-col gap-2 rounded border border-red-200 bg-red-50 p-2 text-red-700 sm:flex-row sm:items-center sm:justify-between" role="alert">
           <span>{error}</span>
           <button onClick={load} className="text-red-800 underline text-sm">Retry</button>
         </div>
@@ -206,7 +206,7 @@ export default function AdminOrdersPage() {
         <ul className="grid gap-3">
           {filtered.map((o) => (
             <li key={o.id} className="border rounded p-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="font-medium flex items-center gap-2">
                   <a className="hover:underline" href={`/admin/orders/${o.id}`}>Order #{o.id}</a>
                   <button

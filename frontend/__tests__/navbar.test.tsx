@@ -23,6 +23,7 @@ describe('Navbar', () => {
     );
     expect(screen.getByText('Al Noor')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /al noor/i })).toHaveAttribute('src', '/alnoorlogo.png');
+
     const primaryLinks = [
       { name: 'Home', href: '/' },
       { name: 'Shop', href: '/products' },
