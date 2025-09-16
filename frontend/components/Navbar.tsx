@@ -25,6 +25,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
+
   useEffect(() => {
     let active = true;
     fetchSession()
@@ -62,6 +63,7 @@ export default function Navbar() {
   const formattedTotal = total.toFixed(2);
 
   async function logout() {
+    setMenuOpen(false);
     try {
       await logoutSession();
     } catch (error) {
@@ -77,13 +79,13 @@ export default function Navbar() {
 
   return (
     <header className="border-b bg-white/80 backdrop-blur sticky top-0 z-10">
-
       <nav className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80">
             <Image src="/alnoorlogo.png" alt="Al Noor" width={24} height={24} />
             <span className="font-heading text-brand text-lg leading-none">Al Noor</span>
           </Link>
+
           <Link href="/products" className="text-brand hover:text-brand-dark hover:underline">Products</Link>
           <Link href="/contact" className="text-brand hover:text-brand-dark hover:underline">Contact</Link>
           <Link href="/checkout" className="text-brand hover:text-brand-dark hover:underline">Checkout</Link>
@@ -112,6 +114,7 @@ export default function Navbar() {
             <button onClick={logout} className="text-brand hover:text-brand-dark hover:underline text-sm">Logout</button>
           )}
         </div>
+
         {menuOpen && (
           <div className="md:hidden mt-4 border-t border-slate-200 pt-4 grid gap-4">
             <div className="grid gap-2">
@@ -148,7 +151,6 @@ export default function Navbar() {
               </Link>
             </div>
           </div>
-        )}
       </nav>
       <ApiStatus />
     </header>
