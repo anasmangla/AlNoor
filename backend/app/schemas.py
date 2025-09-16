@@ -84,3 +84,21 @@ class ContactOut(BaseModel):
 
 class OrderUpdate(BaseModel):
     status: str = Field(..., description="Order status, e.g., pending|paid|processing|completed|cancelled")
+
+
+class ReviewCreate(BaseModel):
+    name: Optional[str] = Field(default=None, max_length=100)
+    location: Optional[str] = Field(default=None, max_length=100)
+    rating: Optional[int] = Field(default=None, ge=1, le=5)
+    message: str = Field(..., max_length=2000, min_length=10)
+    photo_url: Optional[str] = Field(default=None, max_length=500)
+
+
+class ReviewOut(BaseModel):
+    id: int
+    name: str
+    location: Optional[str] = None
+    rating: Optional[int] = None
+    message: str
+    photo_url: Optional[str] = None
+    created_at: datetime
