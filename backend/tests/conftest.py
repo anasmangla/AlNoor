@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
 
 from app.main import app
 from app.database import init_db, seed_if_empty, get_session
-from app.models import ContactMessage, VisitorFeedback
+from app.models import ContactMessage, Review
 
 
 @pytest.fixture
@@ -29,5 +29,6 @@ async def clear_contact_messages():
     async for session in get_session():
         await session.execute(delete(VisitorFeedback))
         await session.execute(delete(ContactMessage))
+        await session.execute(delete(Review))
         await session.commit()
         break

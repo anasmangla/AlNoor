@@ -1,23 +1,25 @@
+import inspect
 import os
 import uuid
 from typing import Optional
 
 import httpx
-import os
-import uuid
-from typing import Optional
+from sqlalchemy import select
 
-import httpx
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, Field
-from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
+import inspect
+from pydantic import BaseModel, Field
+import inspect
 
 from app.database import get_session
 from app.deps import get_current_user
 from app.models import Order as OrderModel
 from app.schemas import OrderCreate, OrderOut
 from .orders import create_order
+from app.deps import get_current_user
+from app.database import get_session
+from app.models import Order as OrderModel
 
 
 router = APIRouter()
@@ -31,25 +33,11 @@ async def pos_checkout(
 ):
     # Force source to 'pos' and reuse order creation logic
     payload.source = "pos"
-    try:
-        order = await create_order(payload, session=session)
-    except TypeError:
-        # Support monkeypatched helpers that only accept the payload argument
-        order = await create_order(payload)
 
-    if order.status == "pending":
-        try:
-            await session.execute(
-                update(OrderModel).where(OrderModel.id == order.id).values(status="processing")
-            )
-            await session.commit()
-            order = order.model_copy(update={"status": "processing"})
-        except Exception:
-            # Best effort; if update fails we still return the original order object
-            pass
-
-    return order
-
+    params = inspect.signature(create_order).parameters
+    if len(params) <= 1:
+        return await create_order(payload)
+    return await create_order(payload, session)
 
 class TerminalCheckoutRequest(BaseModel):
     amount_cents: int = Field(..., ge=1)

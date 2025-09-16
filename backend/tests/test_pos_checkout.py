@@ -41,3 +41,4 @@ async def test_pos_checkout_succeeds():
         assert body["total_amount"] > 0
         assert isinstance(body["items"], list) and len(body["items"]) == 1
         assert body["items"][0]["product_id"] == product_id
+        assert body["fulfillment_method"] == "pickup"

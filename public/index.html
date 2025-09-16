@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app-base="/alnoor">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -14,6 +14,51 @@
       nav a:hover{color:var(--link);text-decoration:underline}
       .hero{padding:48px 20px;text-align:center}
       .hero img{max-height:90px}
+      .hero-title{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:12px;
+        flex-wrap:wrap;
+        margin:16px 0 12px;
+      }
+      .hero-badge{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        background:#dcfce7;
+        color:#047857;
+        border-radius:999px;
+        padding:6px 12px;
+        font-size:14px;
+        font-weight:600;
+        text-transform:uppercase;
+        letter-spacing:0.08em;
+      }
+      .hero-subtitle{
+        max-width:540px;
+        margin:0 auto 16px;
+        color:var(--muted);
+        font-size:18px;
+        line-height:1.5;
+      }
+      .hero-points{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:12px;
+        list-style:none;
+        padding:0;
+        margin:0;
+      }
+      .hero-points li{
+        background:#f8fafc;
+        border:1px solid #e2e8f0;
+        border-radius:999px;
+        padding:8px 16px;
+        color:var(--fg);
+        font-weight:500;
+      }
       .grid{display:grid;gap:12px}
       .card{border:1px solid #e2e8f0;border-radius:8px;padding:16px}
       footer{margin-top:40px;border-top:1px solid #e2e8f0}
@@ -25,32 +70,52 @@
   </head>
   <body>
     <header>
-      <div class="wrap" style="display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <a href="/" class="muted">Al Noor</a>
-          <nav style="display:inline-block;margin-left:12px">
+      <div class="wrap header-bar">
+        <a href="/" class="brand">Al Noor Farm</a>
+        <div class="header-group">
+          <nav class="nav-info">
+            <a href="#history">History</a>
+            <a href="#mission">Mission</a>
+            <a href="#team">Team</a>
+            <a href="#gallery">Photos</a>
+            <a href="#contact">Contact</a>
+          </nav>
+          <nav class="nav-app">
             <a href="/alnoor/products">Store</a>
             <a href="/alnoor/admin/login">Admin</a>
             <a href="/alnoor/admin/pos">POS</a>
           </nav>
+          <a class="btn" href="/alnoor/products">Shop Now</a>
         </div>
-        <a class="btn" href="/alnoor/products">Shop Now</a>
       </div>
     </header>
 
     <main class="wrap">
       <section id="home" class="hero">
+
         <img src="/assets/alnoorlogo.png" alt="Al Noor Farm" style="height:90px;width:90px" />
-        <h1>Welcome to Al Noor Farm</h1>
-        <p class="muted">Fresh products, simple checkout, and an admin POS.</p>
+        <div class="hero-title">
+          <h1>Fresh Zabiha Halal Meat</h1>
+          <span class="hero-badge">Certified Halal</span>
+        </div>
+        <p class="hero-subtitle">
+          Experience farm-to-table quality with hand-slaughtered selections prepared for your family.
+        </p>
+        <ul class="hero-points">
+          <li>Locally raised, humanely processed meats</li>
+          <li>Custom cuts and same-day pickup</li>
+          <li>Trusted halal standards for every order</li>
+        </ul>
       </section>
 
       <section id="store">
-        <h2>Store</h2>
+        <h2>Farm Store</h2>
         <div class="grid">
           <div class="card">
             <strong>Browse Products</strong>
-            <p class="muted">Visit the store to see what's available.</p>
+            <p class="muted">
+              See current halal poultry, eggs, and seasonal bundles ready for pickup or delivery.
+            </p>
             <a class="btn" href="/alnoor/products">Go to Store</a>
           </div>
         </div>
@@ -61,7 +126,9 @@
         <div class="grid">
           <div class="card">
             <strong>Admin Login</strong>
-            <p class="muted">Manage products, inventory, and orders.</p>
+            <p class="muted">
+              Manage inventory, pricing, messages, and delivery routes in one dashboard.
+            </p>
             <a class="btn" href="/alnoor/admin/login">Admin Panel</a>
           </div>
         </div>
@@ -72,7 +139,9 @@
         <div class="grid">
           <div class="card">
             <strong>Point of Sale</strong>
-            <p class="muted">Ring up in-person orders and charge customers.</p>
+            <p class="muted">
+              Ring up in-person orders, accept multiple payment types, and email receipts instantly.
+            </p>
             <a class="btn" href="/alnoor/admin/pos">Open POS</a>
           </div>
         </div>
@@ -89,10 +158,31 @@
               <li>• Clear pricing per unit or per pound</li>
               <li>• Simple online checkout and receipts</li>
             </ul>
+            <p class="muted">Review our halal documentation before you order:</p>
+            <div class="grid" style="margin-top:8px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+              <a class="btn" href="/assets/certificates/halal-certificate.pdf" target="_blank" rel="noopener">Download Halal Certificate</a>
+              <a class="btn" href="/assets/certificates/halal-badge.svg" target="_blank" rel="noopener">View Processing Badge</a>
+            </div>
           </div>
         </div>
       </section>
 
+      <section id="zabiha">
+        <h2>Zabiha Standards</h2>
+        <div class="grid">
+          <div class="card">
+            <strong>Hand-Slaughtered the Traditional Way</strong>
+            <p class="muted">Our team follows a documented process that keeps every step halal-compliant and transparent for your family or business.</p>
+            <ol class="muted" style="padding-left:18px">
+              <li>Birds are health-checked, calmed with water, and positioned toward the qibla.</li>
+              <li>A trained Muslim slaughterer recites the tasmiya and swiftly performs the cut with a sharpened knife.</li>
+              <li>Carcasses are bled, cleaned, and chilled in dedicated equipment with tracked batch numbers.</li>
+              <li>Logs record the slaughterer, inspection checks, and packaging time for complete traceability.</li>
+            </ol>
+            <p class="muted">Need proof for your event or institution? Download the <a href="/assets/certificates/halal-certificate.pdf" target="_blank" rel="noopener">halal certificate</a> or show the <a href="/assets/certificates/halal-badge.svg" target="_blank" rel="noopener">processing badge</a> on site.</p>
+          </div>
+        </div>
+      </section>
       <section id="contact">
         <h2>Contact</h2>
         <div class="grid">
@@ -100,20 +190,71 @@
             <strong>Get in touch</strong>
             <p class="muted">
               Address: <span id="addr">4028 Dickersonville Rd, Ransomville NY 14131</span><br />
-              Phone: <a href="tel:+17165241717">716-524-1717</a> (calls or <a href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>)<br />
-              Facebook: <a href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Follow us on Facebook</a><br />
-              Email: <a href="mailto:info@alnoorfarm716.com">info@alnoorfarm716.com</a>
+              Phone:
+              <a
+                href="tel:+17165241717"
+              >
+                716-524-1717
+              </a>
+              (calls or
+              <a
+                href="https://wa.me/17165241717"
+                target="_blank"
+                rel="noopener"
+              >
+                WhatsApp
+              </a>
+              )<br />
+              Facebook:
+              <a
+                href="https://www.facebook.com/profile.php?id=100093040494987"
+                target="_blank"
+                rel="noopener"
+              >
+                Follow us on Facebook
+              </a><br />
+              Email:
+              <a href="mailto:info@alnoorfarm716.com">info@alnoorfarm716.com</a>
             </p>
             <p class="muted">Hours: Mon-Sat 9:00am-6:00pm</p>
-            <div style="margin:10px 0; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden">
-              <iframe title="Al Noor Farm Location" width="100%" height="240" style="border:0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=4028%20Dickersonville%20Rd%2C%20Ransomville%20NY%2014131&output=embed"></iframe>
+            <div class="map-frame">
+              <iframe
+                title="Al Noor Farm Location"
+                width="100%"
+                height="240"
+                style="border:0"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://maps.google.com/maps?q=4028+Dickersonville+Rd+14131&output=embed"
+              ></iframe>
             </div>
-            <form id="contactForm" style="margin-top:8px" novalidate>
-              <div style="display:grid;gap:8px;max-width:480px">
-                <input id="cName" type="text" placeholder="Your name" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
-                <input id="cEmail" type="email" placeholder="you@example.com" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
-                <input id="cPhone" type="text" placeholder="Phone (optional)" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
-                <textarea id="cMsg" rows="4" placeholder="Your message" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px"></textarea>
+            <form id="contactForm" class="contact-form-wrapper" novalidate>
+              <div class="contact-form">
+                <input
+                  id="cName"
+                  type="text"
+                  placeholder="Your name"
+                  class="contact-input"
+                />
+                <input
+                  id="cEmail"
+                  type="email"
+                  placeholder="you@example.com"
+                  class="contact-input"
+                />
+                <input
+                  id="cPhone"
+                  type="text"
+                  placeholder="Phone (optional)"
+                  class="contact-input"
+                />
+                <textarea
+                  id="cMsg"
+                  rows="4"
+                  placeholder="Your message"
+                  class="contact-input"
+                ></textarea>
                 <button class="btn" type="submit">Send</button>
                 <div id="cStatus" class="muted"></div>
               </div>
@@ -124,7 +265,7 @@
     </main>
 
     <footer>
-      <div class="wrap muted" style="display:flex;align-items:center;justify-content:space-between">
+      <div class="wrap">
         <div>© <span id="year"></span> Al Noor Farm</div>
         <div>
           <a href="/alnoor/products">Store</a>
@@ -139,6 +280,55 @@
     <script>
       (function(){
         document.getElementById('year').textContent = new Date().getFullYear();
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+        window.__alnoorAnalyticsReady = window.__alnoorAnalyticsReady || false;
+        var baseAttr = document.documentElement.getAttribute('data-app-base') || '/alnoor';
+        var trimmedBase = baseAttr.replace(/\/$/, '');
+        var analyticsEndpoint = (trimmedBase === '' || trimmedBase === '/') ? '/api/public/config' : trimmedBase + '/api/public/config';
+
+        async function loadMarketingConfig(){
+          try{
+            var response = await fetch(analyticsEndpoint, { credentials: 'omit' });
+            if(!response.ok){ return; }
+            var config = await response.json();
+            if(config && config.googleSiteVerification){
+              var verification = document.querySelector('meta[name="google-site-verification"]');
+              if(!verification){
+                verification = document.createElement('meta');
+                verification.name = 'google-site-verification';
+                document.head.appendChild(verification);
+              }
+              verification.content = config.googleSiteVerification;
+            }
+            if(config && config.googleAnalyticsId){
+              var gaId = config.googleAnalyticsId;
+              var loader = document.createElement('script');
+              loader.async = true;
+              loader.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+              document.head.appendChild(loader);
+
+              var inline = document.createElement('script');
+              inline.innerHTML = [
+                "window.dataLayer = window.dataLayer || [];",
+                "function gtag(){dataLayer.push(arguments);}",
+                "gtag('js', new Date());",
+                "gtag('config', '" + gaId + "', { send_page_view: false });",
+                "window.__alnoorAnalyticsReady = true;"
+              ].join('\n');
+              document.head.appendChild(inline);
+
+              window.gtag('event', 'page_view', {
+                page_path: window.location.pathname + window.location.search
+              });
+            }
+          }catch(err){
+            console.error('Failed to load analytics configuration', err);
+          }
+        }
+
+        loadMarketingConfig();
+
         var form = document.getElementById('contactForm');
         if (form) {
           form.addEventListener('submit', async function(e){
@@ -151,17 +341,29 @@
             statusEl.textContent='';
             if(!message.trim()){ statusEl.textContent='Please enter a message.'; return; }
             try{
-              var resp = await fetch('/api/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name:name, email:email, phone:phone, message:message }) });
+              var resp = await fetch('/api/contact', {
+                method:'POST',
+                headers:{ 'Content-Type':'application/json' },
+                body: JSON.stringify({
+                  name:name,
+                  email:email,
+                  phone:phone,
+                  message:message
+                })
+              });
               if(!resp.ok){ throw new Error('Failed: '+resp.status); }
               statusEl.textContent='Thanks! We will get back to you soon.';
               (document.getElementById('cName')||{}).value='';
               (document.getElementById('cEmail')||{}).value='';
               (document.getElementById('cMsg')||{}).value='';
               (document.getElementById('cPhone')||{}).value='';
+              if(typeof window.gtag === 'function'){
+                window.gtag('event', 'generate_lead', { form_id: 'landing-contact' });
+              }
             }catch(err){ statusEl.textContent='Could not send. Please try again later.'; }
           });
         }
       })();
     </script>
   </body>
-  </html>
+</html>
