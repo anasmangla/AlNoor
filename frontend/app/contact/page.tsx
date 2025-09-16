@@ -1,7 +1,11 @@
+import CommunityHighlights from "@/components/contact/CommunityHighlights";
+import ContactForm from "@/components/contact/ContactForm";
+import ReviewsSection from "@/components/contact/ReviewsSection";
+
 export const metadata = {
-  title: "Contact | Al Noor Farm",
-  description: "Contact Al Noor Farm: address, phone, WhatsApp, and contact form.",
-  robots: { index: true, follow: true },
+    title: "Contact | Al Noor Farm",
+    description: "Contact Al Noor Farm: address, phone, WhatsApp, and contact form.",
+    robots: { index: true, follow: true },
 };
 
 export default function ContactPage() {
@@ -9,7 +13,7 @@ export default function ContactPage() {
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
   return (
     <section className="grid gap-6">
-      <h1 className="text-2xl font-semibold">Contact</h1>
+      <h1 className="heading text-3xl sm:text-4xl">Contact</h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -36,20 +40,20 @@ export default function ContactPage() {
         </div>
         <div className="grid gap-3">
           <div className="border rounded p-4">
-            <h2 className="font-medium mb-2">Address</h2>
-            <p className="text-slate-700">{address}</p>
-            <a className="text-blue-700 hover:underline text-sm" href={`https://maps.google.com/?q=${encodeURIComponent(address)}`} target="_blank" rel="noopener">Open in Google Maps</a>
+            <h2 className="font-heading text-brand text-xl mb-2">Address</h2>
+            <p className="text-brand/80">{address}</p>
+            <a className="text-brand hover:text-brand-dark hover:underline text-sm" href={`https://maps.google.com/?q=${encodeURIComponent(address)}`} target="_blank" rel="noopener">Open in Google Maps</a>
           </div>
           <div className="border rounded p-4">
-            <h2 className="font-medium mb-2">Phone</h2>
-            <p className="text-slate-700">
-              <a className="hover:underline" href="tel:+17165241717">716-524-1717</a> (calls) •
-              <a className="hover:underline ml-1" href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>
+            <h2 className="font-heading text-brand text-xl mb-2">Phone</h2>
+            <p className="text-brand/80">
+              <a className="text-brand hover:text-brand-dark hover:underline" href="tel:+17165241717">716-524-1717</a> (calls) •
+              <a className="text-brand hover:text-brand-dark hover:underline ml-1" href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>
             </p>
           </div>
           <div className="border rounded p-4">
-            <h2 className="font-medium mb-2">Facebook</h2>
-            <a className="text-blue-700 hover:underline" href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Follow us on Facebook</a>
+            <h2 className="font-heading text-brand text-xl mb-2">Facebook</h2>
+            <a className="text-brand hover:text-brand-dark hover:underline" href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Follow us on Facebook</a>
           </div>
         </div>
       </div>
@@ -57,13 +61,17 @@ export default function ContactPage() {
       <FAQSection />
 
       <div className="border rounded p-4 max-w-xl">
-        <h2 className="font-medium mb-3">Send a message</h2>
+        <h2 className="font-heading text-brand text-xl mb-3">Send a message</h2>
         <ContactForm />
       </div>
     </section>
   );
 }
 
-// Client components
-import ContactForm from "@/components/contact/ContactForm";
-import FAQSection from "@/components/faq/FAQSection";
+            <div className="grid gap-4 lg:grid-cols-[2fr,1fr]">
+                <ReviewsSection />
+                <CommunityHighlights />
+            </div>
+        </section>
+    );
+}

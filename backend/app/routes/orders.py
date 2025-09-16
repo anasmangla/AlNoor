@@ -53,7 +53,14 @@ async def create_order(
             )
         )
 
+    method = (getattr(payload, "fulfillment_method", None) or "pickup").lower()
+    if method not in {"pickup", "delivery"}:
+        raise HTTPException(status_code=400, detail="Invalid fulfillment method")
+
+    source_val = (payload.source or "web").lower()
     status_val = "pending"
+    if source_val == "pos":
+        status_val = "processing"
 
     # Optional Square payment (sandbox/production) if token and env configured
     token = getattr(payload, "payment_token", None)
@@ -101,9 +108,10 @@ async def create_order(
     order_row = OrderModel(
         total_amount=round(total, 2),
         status=status_val,
-        source=(payload.source or "web"),
+        source=source_val,
         customer_name=payload.customer_name or "",
         customer_email=str(payload.customer_email or ""),
+        fulfillment_method=method,
     )
     session.add(order_row)
     await session.flush()  # get order id
@@ -139,6 +147,7 @@ async def create_order(
         customer_name=(getattr(order_row, "customer_name", None) or None),
         customer_email=(getattr(order_row, "customer_email", None) or None),
         created_at=getattr(order_row, "created_at", None),
+        fulfillment_method=(getattr(order_row, "fulfillment_method", None) or method),
     )
 
 
@@ -194,6 +203,7 @@ async def list_orders(
             customer_name=(getattr(o, "customer_name", None) or None),
             customer_email=(getattr(o, "customer_email", None) or None),
             created_at=getattr(o, "created_at", None),
+            fulfillment_method=(getattr(o, "fulfillment_method", None) or "pickup"),
         )
         for o in orders
     ]
@@ -233,6 +243,7 @@ async def get_order(
         customer_name=(getattr(order, "customer_name", None) or None),
         customer_email=(getattr(order, "customer_email", None) or None),
         created_at=getattr(order, "created_at", None),
+        fulfillment_method=(getattr(order, "fulfillment_method", None) or "pickup"),
     )
 
 
@@ -277,4 +288,5 @@ async def update_order(
         customer_name=(getattr(order, "customer_name", None) or None),
         customer_email=(getattr(order, "customer_email", None) or None),
         created_at=getattr(order, "created_at", None),
+        fulfillment_method=(getattr(order, "fulfillment_method", None) or "pickup"),
     )

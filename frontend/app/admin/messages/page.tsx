@@ -56,7 +56,7 @@ export default function AdminMessagesPage() {
     <section>
       <h1 className="text-2xl font-semibold mb-4">Contact Messages</h1>
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded flex items-center justify-between" role="alert">
+        <div className="mb-3 flex flex-col gap-2 rounded border border-red-200 bg-red-50 p-2 text-red-700 sm:flex-row sm:items-center sm:justify-between" role="alert">
           <span>{error}</span>
           <button onClick={load} className="text-red-800 underline text-sm">Retry</button>
         </div>
@@ -69,7 +69,7 @@ export default function AdminMessagesPage() {
         <ul className="grid gap-2">
           {messages.map((m) => (
             <li key={m.id} className="border rounded p-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div className="font-medium">{m.name || "(No name)"}</div>
                 <div className="text-xs text-slate-500">{new Date(m.created_at).toLocaleString()}</div>
               </div>
