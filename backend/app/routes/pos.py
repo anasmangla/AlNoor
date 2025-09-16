@@ -8,6 +8,7 @@ from sqlalchemy import select
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+import inspect
 from pydantic import BaseModel, Field
 
 from app.schemas import OrderCreate, OrderOut
@@ -28,29 +29,11 @@ async def pos_checkout(
 ):
     # Force source to 'pos' and reuse order creation logic
     payload.source = "pos"
-    create_order_callable = create_order
-    try:
-        parameters = inspect.signature(create_order_callable).parameters
-    except (TypeError, ValueError):
-        parameters = {}
 
-    if len(parameters) <= 1:
-        created = await create_order_callable(payload)  # type: ignore[misc]
-    else:
-        created = await create_order_callable(payload, session)
-
-    if created.status == "pending":
-        result = await session.execute(
-            select(OrderModel).where(OrderModel.id == created.id)
-        )
-        order_row = result.scalars().first()
-        if order_row:
-            order_row.status = "processing"
-            session.add(order_row)
-            await session.commit()
-            created.status = "processing"
-    return created
-
+    params = inspect.signature(create_order).parameters
+    if len(params) <= 1:
+        return await create_order(payload)
+    return await create_order(payload, session)
 
 class TerminalCheckoutRequest(BaseModel):
     amount_cents: int = Field(..., ge=1)
