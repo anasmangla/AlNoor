@@ -120,6 +120,31 @@ export default function CheckoutPage() {
         </button>
       </form>
       <p className="text-xs text-slate-500 mt-2">If Square is configured (sandbox), payment will be processed; otherwise, the order is simulated.</p>
+      <div className="mt-8 grid gap-4 md:grid-cols-2">
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-800">Return &amp; Refund Policy</h2>
+          <p className="mt-2 text-sm text-slate-600">
+            We stand behind every delivery. If an item arrives damaged or below our freshness standards,
+            contact us within 48 hours for a no-hassle replacement or refund.
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-600">
+            <li>Keep your receipt or confirmation email for quick support.</li>
+            <li>Unopened pantry goods can be returned within 7 days of purchase.</li>
+            <li>Refunds are issued to the original payment method within 3–5 business days.</li>
+          </ul>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-800">Farm-Fresh Hygiene Practices</h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Our team follows strict hygiene protocols from pasture to packaging so your order arrives safe and wholesome.
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-600">
+            <li>Daily sanitation of equipment, cold storage, and delivery crates.</li>
+            <li>Milk and dairy sealed immediately after pasteurization with tamper-evident caps.</li>
+            <li>Delivery coolers are temperature checked before every route.</li>
+          </ul>
+        </div>
+      </div>
     </section>
   );
 }
