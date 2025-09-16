@@ -40,7 +40,7 @@ def _compute_stock_meta(stock: float) -> Tuple[str, str, bool]:
 def _serialize_product(product: ProductModel) -> ProductOut:
     status, label, backorder = _compute_stock_meta(product.stock)
     return ProductOut(
-        id=product.id,
+        id=int(product.id),
         name=product.name,
         price=product.price,
         stock=product.stock,

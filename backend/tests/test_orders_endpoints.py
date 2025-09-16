@@ -1,3 +1,6 @@
+import uuid
+
+import httpx
 import pytest
 from fastapi import HTTPException
 from httpx import AsyncClient, ASGITransport
@@ -17,7 +20,6 @@ async def get_token(ac: AsyncClient) -> str:
     assert resp.status_code == 200
     return resp.json()["access_token"]
 
-
 async def _ensure_seed_product(session):
     result = await session.execute(select(ProductModel))
     product = result.scalars().first()
@@ -27,8 +29,6 @@ async def _ensure_seed_product(session):
     await session.commit()
     await session.refresh(product)
     return product
-
-
 @pytest.mark.asyncio
 async def test_get_and_update_order_flow():
     await init_db()
@@ -66,6 +66,7 @@ async def test_get_and_update_order_flow():
         order_id = order["id"]
         assert order["status"] == "pending"
         assert order["fulfillment_method"] == "pickup"
+        assert order["total_amount"] == pytest.approx(updated_product["price"])
 
         # Fetch the order by id (auth required)
         resp = await ac.get(f"/orders/{order_id}", headers=headers)
@@ -76,6 +77,8 @@ async def test_get_and_update_order_flow():
         assert isinstance(body["items"], list) and len(body["items"]) == 1
         assert body["status"] == "pending"
         assert body["fulfillment_method"] == "pickup"
+        assert body["items"][0]["subtotal"] == pytest.approx(order["total_amount"])
+        created_at = body.get("created_at")
 
         # Update status
         resp = await ac.put(
@@ -87,6 +90,36 @@ async def test_get_and_update_order_flow():
         updated = resp.json()
         assert updated["status"] == "processing"
         assert updated["fulfillment_method"] == "pickup"
+
+        # List orders for admin
+        resp = await ac.get("/orders", headers=headers)
+        assert resp.status_code == 200
+        listed = resp.json()
+        assert isinstance(listed, list) and len(listed) >= 1
+        listed_order = next(o for o in listed if o["id"] == order_id)
+        assert listed_order["status"] == "processing"
+        assert listed_order["items"][0]["product_id"] == pid
+        assert listed_order["items"][0]["quantity"] == pytest.approx(1)
+
+        # Product stock should decrease after order creation
+        resp = await ac.get(f"/products/{pid}")
+        assert resp.status_code == 200
+        after = resp.json()
+        assert after["stock"] == pytest.approx(updated_product["stock"] - 1)
+
+        # Listing with date filters
+        resp = await ac.get("/orders", headers=headers, params={"start_date": "invalid", "end_date": "invalid"})
+        assert resp.status_code == 200
+
+        if created_at:
+            resp = await ac.get(
+                "/orders",
+                headers=headers,
+                params={"start_date": created_at, "end_date": created_at},
+            )
+            assert resp.status_code == 200
+            filtered = resp.json()
+            assert any(o["id"] == order_id for o in filtered)
 
 
 @pytest.mark.asyncio
@@ -100,6 +133,7 @@ async def test_get_order_404():
 
 
 @pytest.mark.asyncio
+
 async def test_create_order_requires_items(client: AsyncClient):
     resp = await client.post("/orders", json={"items": []})
     assert resp.status_code == 400
@@ -245,6 +279,7 @@ async def test_create_order_square_payment_failure_direct(monkeypatch):
             async def __aexit__(self, exc_type, exc, tb):
                 return False
 
+
             async def post(self, *args, **kwargs):
                 class Resp:
                     status_code = 400
@@ -333,6 +368,7 @@ async def test_create_order_square_payment_exception_direct(monkeypatch):
             async def __aexit__(self, exc_type, exc, tb):
                 return False
 
+
             async def post(self, *args, **kwargs):
                 raise RuntimeError("boom")
 
@@ -415,4 +451,3 @@ async def test_update_order_direct_success():
         assert updated.status == "completed"
         assert updated.source == "pos"
         break
-
