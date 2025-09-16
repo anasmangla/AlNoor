@@ -9,6 +9,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: p('/'), lastModified: now },
     { url: p('/products'), lastModified: now },
     { url: p('/contact'), lastModified: now },
+    { url: p('/blog'), lastModified: now },
+    { url: p('/faq'), lastModified: now },
     { url: p('/cart'), lastModified: now },
     { url: p('/checkout'), lastModified: now },
     { url: p('/admin/login'), lastModified: now },

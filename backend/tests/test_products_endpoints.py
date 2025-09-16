@@ -1,5 +1,7 @@
 import uuid
 
+import uuid
+
 import pytest
 
 
@@ -23,6 +25,10 @@ async def test_product_crud_flow(client):
         "is_weight_based": False,
         "image_url": "",
         "description": "Created during integration test",
+        "weight": 5.25,
+        "cut_type": "Whole bird",
+        "price_per_unit": 3.81,
+        "origin": "Test Farm",
     }
 
     # Unauthorized create should fail
@@ -40,6 +46,11 @@ async def test_product_crud_flow(client):
     assert created["name"] == payload["name"]
     assert created["price"] == pytest.approx(payload["price"])
     assert created["stock"] == pytest.approx(payload["stock"])
+    assert created["weight"] == pytest.approx(payload["weight"])
+    assert created["cut_type"] == payload["cut_type"]
+    assert created["price_per_unit"] == pytest.approx(payload["price_per_unit"])
+    assert created["origin"] == payload["origin"]
+
 
     # Validation error on update
     resp = await client.put(
@@ -52,19 +63,31 @@ async def test_product_crud_flow(client):
     # Successful update
     resp = await client.put(
         f"/products/{product_id}",
-        json={"price": 21.5, "stock": 8},
+        json={
+            "price": 21.5,
+            "stock": 8,
+            "weight": 6.0,
+            "cut_type": "Halved",
+            "price_per_unit": 3.58,
+            "origin": "Updated Farm",
+        },
         headers=headers,
     )
     assert resp.status_code == 200
     updated = resp.json()
     assert updated["price"] == pytest.approx(21.5)
     assert updated["stock"] == pytest.approx(8)
+    assert updated["weight"] == pytest.approx(6.0)
+    assert updated["cut_type"] == "Halved"
+    assert updated["price_per_unit"] == pytest.approx(3.58)
+    assert updated["origin"] == "Updated Farm"
 
     # Fetch by id
     resp = await client.get(f"/products/{product_id}")
     assert resp.status_code == 200
     fetched = resp.json()
     assert fetched["id"] == product_id
+    assert fetched["stock_status"] in {"in_stock", "low_stock", "out_of_stock"}
 
     # Delete and verify removal
     resp = await client.delete(f"/products/{product_id}", headers=headers)

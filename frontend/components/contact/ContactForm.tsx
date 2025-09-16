@@ -35,54 +35,29 @@ export default function ContactForm() {
   return (
     <form onSubmit={onSubmit} className="grid gap-3" aria-live="polite">
       <div>
-        <label className="block text-sm text-slate-600" htmlFor="cname">{t("contactForm.nameLabel")}</label>
-        <input
-          id="cname"
-          className="border rounded px-2 py-1 w-full"
-          value={name}
-          onChange={(e)=> setName(e.target.value)}
-          placeholder={t("contactForm.namePlaceholder")}
-        />
+
+        <label className="block text-sm font-heading text-brand" htmlFor="cname">Name</label>
+        <input id="cname" className="border rounded px-2 py-1 w-full" value={name} onChange={(e)=> setName(e.target.value)} placeholder="Your name" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm text-slate-600" htmlFor="cemail">{t("contactForm.emailLabel")}</label>
-          <input
-            id="cemail"
-            type="email"
-            className="border rounded px-2 py-1 w-full"
-            value={email}
-            onChange={(e)=> setEmail(e.target.value)}
-            placeholder={t("contactForm.emailPlaceholder")}
-          />
+          <label className="block text-sm font-heading text-brand" htmlFor="cemail">Email</label>
+          <input id="cemail" type="email" className="border rounded px-2 py-1 w-full" value={email} onChange={(e)=> setEmail(e.target.value)} placeholder="you@example.com" />
         </div>
         <div>
-          <label className="block text-sm text-slate-600" htmlFor="cphone">{t("contactForm.phoneLabel")}</label>
-          <input
-            id="cphone"
-            className="border rounded px-2 py-1 w-full"
-            value={phone}
-            onChange={(e)=> setPhone(e.target.value)}
-            placeholder={t("contactForm.phonePlaceholder")}
-          />
+          <label className="block text-sm font-heading text-brand" htmlFor="cphone">Phone</label>
+          <input id="cphone" className="border rounded px-2 py-1 w-full" value={phone} onChange={(e)=> setPhone(e.target.value)} placeholder="(optional)" />
         </div>
       </div>
       <div>
-        <label className="block text-sm text-slate-600" htmlFor="cmsg">{t("contactForm.messageLabel")}</label>
-        <textarea
-          id="cmsg"
-          className="border rounded px-2 py-1 w-full"
-          rows={4}
-          value={message}
-          onChange={(e)=> setMessage(e.target.value)}
-          placeholder={t("contactForm.messagePlaceholder")}
-          required
-        />
+        <label className="block text-sm font-heading text-brand" htmlFor="cmsg">Message</label>
+        <textarea id="cmsg" className="border rounded px-2 py-1 w-full" rows={4} value={message} onChange={(e)=> setMessage(e.target.value)} placeholder="How can we help?" required />
       </div>
-      <button type="submit" className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 disabled:opacity-60" disabled={loading} aria-busy={loading}>
-        {loading ? t("contactForm.sending") : t("contactForm.send")}
+      <button type="submit" className="bg-brand text-white px-3 py-1 rounded hover:bg-brand-dark disabled:opacity-60" disabled={loading} aria-busy={loading}>
+
+        {loading ? "Sending..." : "Send"}
       </button>
-      {statusKey && (<div className="text-sm text-slate-700">{t(statusKey)}</div>)}
+      {status && (<div className="text-sm text-brand">{status}</div>)}
     </form>
   );
 }
