@@ -50,7 +50,7 @@ export default function ContactForm() {
         <label className="block text-sm text-slate-600" htmlFor="cmsg">Message</label>
         <textarea id="cmsg" className="border rounded px-2 py-1 w-full" rows={4} value={message} onChange={(e)=> setMessage(e.target.value)} placeholder="How can we help?" required />
       </div>
-      <button type="submit" className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 disabled:opacity-60" disabled={loading} aria-busy={loading}>
+      <button type="submit" className="w-full rounded bg-emerald-600 px-3 py-1 text-white hover:bg-emerald-700 disabled:opacity-60 sm:w-auto" disabled={loading} aria-busy={loading}>
         {loading ? "Sending..." : "Send"}
       </button>
       {status && (<div className="text-sm text-slate-700">{status}</div>)}

@@ -93,7 +93,7 @@ export default function CheckoutPage() {
         ) : null}
         <button
           type="submit"
-          className="bg-slate-700 text-white px-3 py-1 rounded hover:bg-slate-800"
+          className="w-full rounded bg-slate-700 px-3 py-1 text-white hover:bg-slate-800 sm:w-auto"
           disabled={loading}
         >
           {loading ? "Placing order..." : "Place Order (simulate)"}

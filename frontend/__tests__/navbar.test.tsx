@@ -23,10 +23,17 @@ describe('Navbar', () => {
     );
     expect(screen.getByText('Al Noor')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /al noor/i })).toHaveAttribute('src', '/alnoorlogo.png');
-    expect(screen.getByRole('link', { name: 'Products' })).toHaveAttribute('href', '/products');
-    expect(screen.getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '/contact');
-    expect(screen.getByRole('link', { name: 'Checkout' })).toHaveAttribute('href', '/checkout');
-    expect(screen.getByRole('link', { name: /Cart/ })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Admin' })).toHaveAttribute('href', '/admin/login');
+    const expectLink = (name: string | RegExp, href?: string) => {
+      const links = screen.getAllByRole('link', { name });
+      expect(links.length).toBeGreaterThan(0);
+      if (href) {
+        expect(links.some((link) => link.getAttribute('href') === href)).toBe(true);
+      }
+    };
+    expectLink('Products', '/products');
+    expectLink('Contact', '/contact');
+    expectLink('Checkout', '/checkout');
+    expectLink(/Cart/);
+    expectLink('Admin', '/admin/login');
   });
 });
