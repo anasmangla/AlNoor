@@ -1,5 +1,6 @@
-import { fetchProduct } from '@/lib/api';
-import AddToCart from './widgets/AddToCart';
+import { fetchProduct } from "@/lib/api";
+import { getWeightPricing } from "@/lib/weight";
+import AddToCart from "./widgets/AddToCart";
 
 type Props = { params: { id: string } };
 
@@ -10,84 +11,29 @@ export default async function ProductDetailPage({ params }: Props) {
   const site = process.env.NEXT_PUBLIC_SITE_URL || '';
   const bp = process.env.NEXT_PUBLIC_BASE_PATH || '';
   const url = `${site}${bp}/products/${id}`;
-  const weight = Number(detail.weight ?? 0);
-  const pricePerUnit = Number(detail.price_per_unit ?? 0);
-  const cutType = String(detail.cut_type || '');
-  const origin = String(detail.origin || '');
-  const showDetail = weight > 0 || pricePerUnit > 0 || cutType || origin;
-  const mediaUrl = String(detail.image_url || '');
-  const isVideo = /\.(mp4|webm)$/i.test(mediaUrl);
-  const isYouTube = mediaUrl.includes('youtube.com/watch') || mediaUrl.includes('youtu.be/');
-  const iframeAllow =
-    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-  const embedUrl = isYouTube
-    ? mediaUrl.includes('watch?v=')
-      ? mediaUrl.replace('watch?v=', 'embed/')
-      : mediaUrl.replace('youtu.be/', 'www.youtube.com/embed/')
-    : '';
+  const weight = getWeightPricing(product);
 
   return (
     <section>
       <h1 className="text-2xl font-semibold mb-2">{product.name}</h1>
-      {mediaUrl ? (
-        isVideo ? (
-          <video
-            className="mb-3 max-h-64 rounded border"
-            controls
-            src={mediaUrl}
-            preload="metadata"
-          />
-        ) : isYouTube ? (
-          <div className="mb-3 aspect-video w-full max-w-3xl">
-            <iframe
-              className="h-full w-full rounded border"
-              src={embedUrl}
-              title={product.name}
-              allow={iframeAllow}
-              allowFullScreen
-            />
-          </div>
-        ) : (
-          <img
-            src={mediaUrl}
-            alt={product.name}
-            className="mb-3 max-h-64 w-full max-w-3xl rounded border object-cover"
-          />
-        )
+
+      {(product as any).image_url ? (
+        <img
+          src={(product as any).image_url}
+          alt={product.name}
+          className="mb-3 h-auto w-full max-h-64 rounded border object-cover"
+        />
       ) : null}
-      <p className="text-slate-700 mb-4">
-        ${product.price.toFixed(2)} / {detail.unit || 'unit'}
-      </p>
-      {showDetail && (
-        <dl className="mb-4 grid gap-2 max-w-md text-sm text-slate-600">
-          {weight > 0 && (
-            <div className="flex justify-between">
-              <dt className="font-medium">Weight</dt>
-              <dd>
-                {weight.toFixed(2)} {detail.unit || ''}
-              </dd>
-            </div>
-          )}
-          {pricePerUnit > 0 && (
-            <div className="flex justify-between">
-              <dt className="font-medium">Price per unit</dt>
-              <dd>${pricePerUnit.toFixed(2)}</dd>
-            </div>
-          )}
-          {cutType && (
-            <div className="flex justify-between">
-              <dt className="font-medium">Cut</dt>
-              <dd>{cutType}</dd>
-            </div>
-          )}
-          {origin && (
-            <div className="flex justify-between">
-              <dt className="font-medium">Origin</dt>
-              <dd>{origin}</dd>
-            </div>
-          )}
-        </dl>
-      )}
+      <div className="text-slate-700 mb-4">
+        <div className="text-lg font-semibold">
+          ${product.price.toFixed(2)} / {(product as any).unit || "unit"}
+        </div>
+        {weight && (
+          <div className="text-sm text-slate-500">
+            ${weight.perLb.toFixed(2)}/lb · ${weight.perKg.toFixed(2)}/kg
+          </div>
+        )}
+      </div>
       {(product as any).description && (
         <p className="text-slate-600 mb-4 whitespace-pre-line">{(product as any).description}</p>
       )}

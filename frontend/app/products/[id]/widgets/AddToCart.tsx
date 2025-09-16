@@ -48,7 +48,7 @@ export default function AddToCart({ product }: { product: Product }) {
       </div>
       <button
         onClick={onAdd}
-        className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700"
+        className="w-full rounded bg-emerald-600 px-3 py-1 text-white hover:bg-emerald-700 sm:w-auto"
       >
         Add to Cart
       </button>

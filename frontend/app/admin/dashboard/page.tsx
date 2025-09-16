@@ -58,7 +58,7 @@ export default async function AdminDashboardPage() {
         <>
           <div className="border rounded p-3">
             <div className="text-xs text-slate-600">System Status</div>
-            <div className="text-sm text-slate-700 flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-slate-700">
               <span>API: <strong className={apiHealth==='ok' ? 'text-emerald-700' : 'text-red-700'}>{apiHealth||'unknown'}</strong></span>
               <span>App: <strong className={appHealth==='ok' ? 'text-emerald-700' : 'text-red-700'}>{appHealth||'unknown'}</strong></span>
             </div>
@@ -100,7 +100,10 @@ export default async function AdminDashboardPage() {
             ) : (
               <ul className="grid gap-2">
                 {metrics.low_stock.map((p) => (
-                  <li key={p.id} className="border rounded p-2 flex items-center justify-between">
+                  <li
+                    key={p.id}
+                    className="border rounded p-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+                  >
                     <div>{p.name}</div>
                     <div className="text-sm text-slate-700">{p.stock} {p.unit || ""}</div>
                   </li>

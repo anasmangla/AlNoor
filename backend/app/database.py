@@ -57,6 +57,10 @@ async def init_db() -> None:
                     await conn.exec_driver_sql("ALTER TABLE [order] ADD COLUMN customer_email TEXT DEFAULT ''")
                 if "created_at" not in cols3:
                     await conn.exec_driver_sql("ALTER TABLE [order] ADD COLUMN created_at TIMESTAMP")
+                if "fulfillment_method" not in cols3:
+                    await conn.exec_driver_sql(
+                        "ALTER TABLE [order] ADD COLUMN fulfillment_method TEXT DEFAULT 'pickup'"
+                    )
                 # ContactMessage table
                 res4 = await conn.exec_driver_sql("PRAGMA table_info(contactmessage)")
                 cols4 = {row[1] for row in res4}
@@ -105,6 +109,9 @@ async def init_db() -> None:
                 )
                 await conn.exec_driver_sql(
                     "ALTER TABLE IF NOT EXISTS \"order\" ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW()"
+                )
+                await conn.exec_driver_sql(
+                    "ALTER TABLE IF NOT EXISTS \"order\" ADD COLUMN IF NOT EXISTS fulfillment_method TEXT DEFAULT 'pickup'"
                 )
                 await conn.exec_driver_sql(
                     "ALTER TABLE IF NOT EXISTS contactmessage ADD COLUMN IF NOT EXISTS ip TEXT DEFAULT ''"

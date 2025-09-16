@@ -298,7 +298,8 @@ export default function AdminProductsPage() {
         </div>
       )}
       {error && (
-        <div className={errorAlertClass} role="alert">
+        <div className="mb-3 flex flex-col gap-2 rounded border border-red-200 bg-red-50 p-2 text-red-700 sm:flex-row sm:items-center sm:justify-between" role="alert">
+
           <span>{error}</span>
           <button onClick={load} className="text-red-800 underline text-sm">
             Retry
@@ -306,178 +307,87 @@ export default function AdminProductsPage() {
         </div>
       )}
 
-      <form onSubmit={onCreate} className="mb-6 flex gap-2 items-end flex-wrap">
-        <div>
-          <label className="block text-sm text-slate-600" htmlFor="prodName">
-            Name
-          </label>
+      <form onSubmit={onCreate} className="mb-6 grid gap-3 sm:flex sm:flex-wrap sm:items-end">
+        <div className="w-full sm:min-w-[200px]">
+          <label className="block text-sm text-slate-600" htmlFor="prodName">Name</label>
           <input
             id="prodName"
-            className="border rounded px-2 py-1"
+            className="w-full rounded border px-2 py-1"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e)=> setName(e.target.value)}
             placeholder="Product name"
             aria-invalid={!!fieldErrors.name}
             aria-describedby={fieldErrors.name ? 'errName' : undefined}
           />
-          {fieldErrors.name && <div className="text-xs text-red-700 mt-1">{fieldErrors.name}</div>}
+          {fieldErrors.name && (
+            <div id="errName" className="mt-1 text-xs text-red-700">{fieldErrors.name}</div>
+          )}
         </div>
-        <div>
-          <label className="block text-sm text-slate-600" htmlFor="prodPrice">
-            Price (USD)
-          </label>
+        <div className="w-full sm:min-w-[140px] sm:w-auto">
+          <label className="block text-sm text-slate-600" htmlFor="prodPrice">Price (USD)</label>
           <input
             id="prodPrice"
             type="number"
             step="0.01"
             min="0"
-            className="border rounded px-2 py-1"
+            className="w-full rounded border px-2 py-1 sm:w-32"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e)=> setPrice(e.target.value)}
             aria-invalid={!!fieldErrors.price}
             aria-describedby={fieldErrors.price ? 'errPrice' : undefined}
           />
           {fieldErrors.price && (
-            <div className="text-xs text-red-700 mt-1">{fieldErrors.price}</div>
+<
+            <div id="errPrice" className="mt-1 text-xs text-red-700">{fieldErrors.price}</div>
           )}
         </div>
-        <div>
-          <label className="block text-sm text-slate-600" htmlFor="prodStock">
-            Stock
-          </label>
+        <div className="w-full sm:min-w-[140px] sm:w-auto">
+          <label className="block text-sm text-slate-600" htmlFor="prodStock">Stock</label>
           <input
             id="prodStock"
             type="number"
             step="0.01"
             min="0"
-            className="border rounded px-2 py-1"
+            className="w-full rounded border px-2 py-1 sm:w-32"
             value={stock}
-            onChange={(e) => setStock(e.target.value)}
+            onChange={(e)=> setStock(e.target.value)}
             aria-invalid={!!fieldErrors.stock}
             aria-describedby={fieldErrors.stock ? 'errStock' : undefined}
           />
           {fieldErrors.stock && (
-            <div className="text-xs text-red-700 mt-1">{fieldErrors.stock}</div>
+            <div id="errStock" className="mt-1 text-xs text-red-700">{fieldErrors.stock}</div>
           )}
         </div>
-        <div>
-          <label className="block text-sm text-slate-600" htmlFor="prodWeight">
-            Weight
-          </label>
-          <input
-            id="prodWeight"
-            type="number"
-            step="0.01"
-            min="0"
-            className="border rounded px-2 py-1"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-            aria-invalid={!!fieldErrors.weight}
-            aria-describedby={fieldErrors.weight ? 'errWeight' : undefined}
-            placeholder="e.g. 5.25"
-          />
-          {fieldErrors.weight && (
-            <div id="errWeight" className="text-xs text-red-700 mt-1">
-              {fieldErrors.weight}
-            </div>
-          )}
-        </div>
-        <div>
-          <label className="block text-sm text-slate-600" htmlFor="prodUnit">
-            Unit
-          </label>
+        <div className="w-full sm:min-w-[160px] sm:w-auto">
+          <label className="block text-sm text-slate-600" htmlFor="prodUnit">Unit</label>
           <input
             id="prodUnit"
-            className="border rounded px-2 py-1"
+            className="w-full rounded border px-2 py-1"
             value={unit}
-            onChange={(e) => setUnit(e.target.value)}
+            onChange={(e)=> setUnit(e.target.value)}
             placeholder="each, lb, dozen, ..."
             aria-invalid={!!fieldErrors.unit}
             aria-describedby={fieldErrors.unit ? 'errUnit' : undefined}
           />
-          {fieldErrors.unit && <div className="text-xs text-red-700 mt-1">{fieldErrors.unit}</div>}
-        </div>
-        <div>
-          <label className="block text-sm text-slate-600" htmlFor="prodPricePerUnit">
-            Price / unit
-          </label>
-          <input
-            id="prodPricePerUnit"
-            type="number"
-            step="0.01"
-            min="0"
-            className="border rounded px-2 py-1"
-            value={pricePerUnit}
-            onChange={(e) => setPricePerUnit(e.target.value)}
-            aria-invalid={!!fieldErrors.pricePerUnit}
-            aria-describedby={fieldErrors.pricePerUnit ? 'errPricePerUnit' : undefined}
-            placeholder="e.g. 3.99"
-          />
-          {fieldErrors.pricePerUnit && (
-            <div id="errPricePerUnit" className="text-xs text-red-700 mt-1">
-              {fieldErrors.pricePerUnit}
-            </div>
+
+          {fieldErrors.unit && (
+            <div id="errUnit" className="mt-1 text-xs text-red-700">{fieldErrors.unit}</div>
           )}
         </div>
-        <div>
-          <label className="block text-sm text-slate-600" htmlFor="prodCutType">
-            Cut type
-          </label>
-          <input
-            id="prodCutType"
-            className="border rounded px-2 py-1"
-            value={cutType}
-            onChange={(e) => setCutType(e.target.value)}
-            aria-invalid={!!fieldErrors.cutType}
-            aria-describedby={fieldErrors.cutType ? 'errCutType' : undefined}
-            placeholder="Ribeye, whole bird, ..."
-          />
-          {fieldErrors.cutType && (
-            <div id="errCutType" className="text-xs text-red-700 mt-1">
-              {fieldErrors.cutType}
-            </div>
-          )}
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <input id="isWeightBased" type="checkbox" checked={isWeightBased} onChange={(e)=> setIsWeightBased(e.target.checked)} />
+          <label htmlFor="isWeightBased" className="text-sm text-slate-600">Weight-based</label>
         </div>
-        <div>
-          <label className="block text-sm text-slate-600" htmlFor="prodOrigin">
-            Origin
-          </label>
-          <input
-            id="prodOrigin"
-            className="border rounded px-2 py-1"
-            value={origin}
-            onChange={(e) => setOrigin(e.target.value)}
-            aria-invalid={!!fieldErrors.origin}
-            aria-describedby={fieldErrors.origin ? 'errOrigin' : undefined}
-            placeholder="Farm or source"
-          />
-          {fieldErrors.origin && (
-            <div id="errOrigin" className="text-xs text-red-700 mt-1">
-              {fieldErrors.origin}
-            </div>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <input
-            id="isWeightBased"
-            type="checkbox"
-            checked={isWeightBased}
-            onChange={(e) => setIsWeightBased(e.target.checked)}
-          />
-          <label htmlFor="isWeightBased" className="text-sm text-slate-600">
-            Weight-based
-          </label>
-        </div>
-        <div>
+        <div className="w-full sm:min-w-[260px]">
           <label className="block text-sm text-slate-600">Image URL</label>
           <input
-            className="border rounded px-2 py-1 min-w-[280px]"
+            className="w-full rounded border px-2 py-1"
             value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
+            onChange={(e)=> setImageUrl(e.target.value)}
             placeholder="https://..."
           />
         </div>
-        <div className="w-full max-w-xl">
+        <div className="w-full sm:max-w-xl">
           <label className="block text-sm text-slate-600">Description</label>
           <textarea
             className="border rounded px-2 py-1 w-full"
@@ -487,36 +397,26 @@ export default function AdminProductsPage() {
             placeholder="Short description..."
           />
         </div>
-        <button
-          type="submit"
-          className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700"
-        >
-          Add
-        </button>
+        <button type="submit" className="w-full rounded bg-emerald-600 px-3 py-1 text-white hover:bg-emerald-700 sm:w-auto">Add</button>
       </form>
 
-      <div className="mb-4 flex items-center gap-3 flex-wrap">
+      <div className="mb-4 grid gap-2 sm:flex sm:flex-wrap sm:items-center">
         <input
-          className="border rounded px-2 py-1"
-          placeholder="Filter by name, unit, cut, origin, or description..."
+          className="w-full rounded border px-2 py-1 sm:flex-1 sm:w-auto"
+          placeholder="Filter by name, unit, or description..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <label className="text-sm text-slate-600">Sort</label>
-        <select
-          className="border rounded px-2 py-1 text-sm"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
-        >
+
+        <select className="w-full rounded border px-2 py-1 text-sm sm:w-auto" value={sortBy} onChange={(e)=> setSortBy(e.target.value as any)}>
+
           <option value="name">Name</option>
           <option value="price">Price</option>
           <option value="stock">Stock</option>
         </select>
-        <select
-          className="border rounded px-2 py-1 text-sm"
-          value={sortDir}
-          onChange={(e) => setSortDir(e.target.value as any)}
-        >
+
+        <select className="w-full rounded border px-2 py-1 text-sm sm:w-auto" value={sortDir} onChange={(e)=> setSortDir(e.target.value as any)}>
           <option value="asc">Asc</option>
           <option value="desc">Desc</option>
         </select>
@@ -525,7 +425,7 @@ export default function AdminProductsPage() {
           type="number"
           step="0.1"
           min="0"
-          className="border rounded px-2 py-1 w-24 text-sm"
+          className="w-full rounded border px-2 py-1 text-sm sm:w-24"
           value={lowThreshold}
           onChange={(e) => setLowThreshold(parseFloat(e.target.value) || 0)}
         />
@@ -588,10 +488,10 @@ export default function AdminProductsPage() {
           type="file"
           accept=".csv,text/csv"
           aria-label="Import products from CSV"
-          onChange={async (e) => {
-            const file = e.target.files?.[0];
-            if (!file) return;
-            try {
+          className="w-full sm:w-auto"
+          onChange={async (e)=>{
+            const file = e.target.files?.[0]; if(!file) return;
+            try{
               const text = await file.text();
               const lines = text.split(/\r?\n/).filter(Boolean);
               const header = lines.shift() || '';
@@ -652,19 +552,54 @@ export default function AdminProductsPage() {
         <p className="text-slate-600">No products yet.</p>
       ) : (
         <ul className="grid gap-2">
-          {sorted.map((p) => {
-            const detail = p as any;
-            const weightVal = Number(detail.weight ?? 0);
-            const pricePerUnitVal = Number(detail.price_per_unit ?? 0);
-            const cut = String(detail.cut_type || '');
-            const origin = String(detail.origin || '');
-            const lowStock = (detail.stock || 0) <= lowThreshold;
-            const showDetail = weightVal > 0 || pricePerUnitVal > 0 || cut || origin;
-            return (
-              <li
-                key={p.id}
-                className={`${listItemBaseClass} ${lowStock ? 'border-red-300 bg-red-50' : ''}`}
-              >
+          {sorted.map((p) => (
+            <li
+              key={p.id}
+              className={`border rounded p-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between ${((p as any).stock||0) <= lowThreshold ? 'border-red-300 bg-red-50' : ''}`}
+            >
+              {editingId === p.id ? (
+                <div className="flex-1 grid gap-2 sm:flex sm:flex-wrap sm:items-end">
+                  <div className="w-full sm:w-auto">
+                    <label className="block text-xs text-slate-600">Name</label>
+                    <input className="w-full rounded border px-2 py-1" value={editName} onChange={(e)=> setEditName(e.target.value)} />
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    <label className="block text-xs text-slate-600">Price</label>
+                    <input type="number" step="0.01" min="0" className="w-full rounded border px-2 py-1 sm:w-32" value={editPrice} onChange={(e)=> setEditPrice(e.target.value)} />
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    <label className="block text-xs text-slate-600">Stock</label>
+                    <input type="number" step="0.01" min="0" className="w-full rounded border px-2 py-1 sm:w-32" value={editStock} onChange={(e)=> setEditStock(e.target.value)} />
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    <label className="block text-xs text-slate-600">Unit</label>
+                    <input className="w-full rounded border px-2 py-1" value={editUnit} onChange={(e)=> setEditUnit(e.target.value)} />
+                  </div>
+                  <div className="flex items-center gap-2 pt-2 sm:pt-5">
+                    <input id="editIsWeightBased" type="checkbox" checked={editIsWeightBased} onChange={(e)=> setEditIsWeightBased(e.target.checked)} />
+                    <label htmlFor="editIsWeightBased" className="text-xs text-slate-600">Weight-based</label>
+                  </div>
+                  <div className="w-full sm:w-auto">
+                    <label className="block text-xs text-slate-600">Image URL</label>
+                    <input className="w-full rounded border px-2 py-1 sm:min-w-[260px]" value={editImageUrl} onChange={(e)=> setEditImageUrl(e.target.value)} />
+                  </div>
+                  <div className="w-full sm:max-w-xl">
+                    <label className="block text-xs text-slate-600">Description</label>
+                    <textarea className="border rounded px-2 py-1 w-full" rows={2} value={editDesc} onChange={(e)=> setEditDesc(e.target.value)} />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-1">
+                  <div className="font-medium">{p.name}</div>
+                  <div className="text-slate-600 text-sm">
+                    ${p.price.toFixed(2)} / {(p as any).unit || "unit"} - Stock: {(p as any).stock ?? 0}
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-3">
+                {(p as any).image_url ? (
+                  <img src={(p as any).image_url} alt={p.name} className="h-12 w-12 rounded border object-cover" />
+                ) : null}
                 {editingId === p.id ? (
                   <div className="flex-1 flex items-end gap-2 flex-wrap">
                     <div>
