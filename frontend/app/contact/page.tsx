@@ -10,7 +10,13 @@ export const metadata = {
 
 export default function ContactPage() {
   const address = "4028 Dickersonville Rd, Ransomville NY 14131";
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+  const email = "info@alnoorfarm716.com";
+  const phone = "716-524-1717";
+  const phoneHref = "tel:+17165241717";
+  const whatsappLink = "https://wa.me/17165241717";
+  const hours = "Mon-Sat 9:00am-6:00pm";
+  const googleMapsLink = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+  const mapSrc = `${googleMapsLink}&output=embed`;
   return (
     <section className="grid gap-6">
       <h1 className="heading text-3xl sm:text-4xl">Contact</h1>
@@ -23,7 +29,17 @@ export default function ContactPage() {
             name: 'Al Noor Farm',
             url: process.env.NEXT_PUBLIC_SITE_URL || undefined,
             address: address,
-            contactPoint: [{ '@type': 'ContactPoint', telephone: '+17165241717', contactType: 'customer service' }],
+            contactPoint: [
+              {
+                '@type': 'ContactPoint',
+                telephone: '+17165241717',
+                contactType: 'customer service',
+                email,
+                areaServed: 'US',
+                availableLanguage: ['English'],
+              },
+            ],
+            openingHours: ['Mo-Sa 09:00-18:00'],
           }),
         }}
       />
@@ -40,6 +56,7 @@ export default function ContactPage() {
         </div>
         <div className="grid gap-3">
           <div className="border rounded p-4">
+
             <h2 className="font-heading text-brand text-xl mb-2">Address</h2>
             <p className="text-brand/80">{address}</p>
             <a className="text-brand hover:text-brand-dark hover:underline text-sm" href={`https://maps.google.com/?q=${encodeURIComponent(address)}`} target="_blank" rel="noopener">Open in Google Maps</a>

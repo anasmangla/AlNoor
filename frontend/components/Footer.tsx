@@ -12,10 +12,12 @@ export default function Footer() {
               <p className="leading-relaxed">{address}</p>
               <a
                 className="mt-2 inline-flex text-blue-700 hover:underline"
+
                 href={`https://maps.google.com/?q=${encodeURIComponent(address)}`}
                 target="_blank"
                 rel="noopener"
               >
+
                 Get directions
               </a>
             </div>
@@ -74,7 +76,6 @@ export default function Footer() {
               •
             </span>
             <a className="hover:underline" href="/admin/login">
-              Admin
             </a>
           </div>
         </div>
