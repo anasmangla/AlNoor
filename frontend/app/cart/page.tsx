@@ -1,14 +1,16 @@
 "use client";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CartPage() {
   const { lines, update, remove, total } = useCart();
+  const { t } = useLanguage();
   return (
     <section>
-      <h1 className="text-2xl font-semibold mb-4">Cart</h1>
+      <h1 className="text-2xl font-semibold mb-4">{t("cart.title")}</h1>
       {lines.length === 0 ? (
-        <p className="text-slate-600">Your cart is empty.</p>
+        <p className="text-slate-600">{t("cart.empty")}</p>
       ) : (
         <>
           <ul className="grid gap-2 mb-4">
@@ -17,7 +19,7 @@ export default function CartPage() {
                 <div>
                   <div className="font-medium">{l.product.name}</div>
                   <div className="text-sm text-slate-600">
-                    ${l.product.price.toFixed(2)} / {(l.product as any).unit || "unit"}
+                    ${l.product.price.toFixed(2)} / {(l.product as any).unit || t("products.unitName")}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -30,16 +32,18 @@ export default function CartPage() {
                     onChange={(e) => update(l.product.id, parseFloat(e.target.value))}
                   />
                   <button onClick={() => remove(l.product.id)} className="text-red-700 hover:underline">
-                    Remove
+                    {t("cart.remove")}
                   </button>
                 </div>
               </li>
             ))}
           </ul>
           <div className="flex items-center justify-between">
-            <div className="text-lg font-semibold">Total: ${total.toFixed(2)}</div>
+            <div className="text-lg font-semibold">
+              {t("cart.total")}: ${total.toFixed(2)}
+            </div>
             <Link href="/checkout" className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700">
-              Checkout
+              {t("cart.checkout")}
             </Link>
           </div>
         </>

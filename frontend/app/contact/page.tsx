@@ -1,3 +1,5 @@
+import LocalizedText from "@/components/LocalizedText";
+
 export const metadata = {
   title: "Contact | Al Noor Farm",
   description: "Contact Al Noor Farm: address, phone, WhatsApp, and contact form.",
@@ -9,7 +11,9 @@ export default function ContactPage() {
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
   return (
     <section className="grid gap-6">
-      <h1 className="text-2xl font-semibold">Contact</h1>
+      <h1 className="text-2xl font-semibold">
+        <LocalizedText id="contact.title" />
+      </h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -36,26 +40,51 @@ export default function ContactPage() {
         </div>
         <div className="grid gap-3">
           <div className="border rounded p-4">
-            <h2 className="font-medium mb-2">Address</h2>
+            <h2 className="font-medium mb-2">
+              <LocalizedText id="contact.address" />
+            </h2>
             <p className="text-slate-700">{address}</p>
-            <a className="text-blue-700 hover:underline text-sm" href={`https://maps.google.com/?q=${encodeURIComponent(address)}`} target="_blank" rel="noopener">Open in Google Maps</a>
+            <a
+              className="text-blue-700 hover:underline text-sm"
+              href={`https://maps.google.com/?q=${encodeURIComponent(address)}`}
+              target="_blank"
+              rel="noopener"
+            >
+              <LocalizedText id="contact.mapLink" />
+            </a>
           </div>
           <div className="border rounded p-4">
-            <h2 className="font-medium mb-2">Phone</h2>
+            <h2 className="font-medium mb-2">
+              <LocalizedText id="contact.phone" />
+            </h2>
             <p className="text-slate-700">
-              <a className="hover:underline" href="tel:+17165241717">716-524-1717</a> (calls) •
-              <a className="hover:underline ml-1" href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>
+              <a className="hover:underline" href="tel:+17165241717">716-524-1717</a> (
+              <LocalizedText id="contact.callsOnly" />) •
+              <a className="hover:underline ml-1" href="https://wa.me/17165241717" target="_blank" rel="noopener">
+                <LocalizedText id="contact.whatsapp" />
+              </a>
             </p>
           </div>
           <div className="border rounded p-4">
-            <h2 className="font-medium mb-2">Facebook</h2>
-            <a className="text-blue-700 hover:underline" href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Follow us on Facebook</a>
+            <h2 className="font-medium mb-2">
+              <LocalizedText id="contact.facebook" />
+            </h2>
+            <a
+              className="text-blue-700 hover:underline"
+              href="https://www.facebook.com/profile.php?id=100093040494987"
+              target="_blank"
+              rel="noopener"
+            >
+              <LocalizedText id="contact.facebookLink" />
+            </a>
           </div>
         </div>
       </div>
 
       <div className="border rounded p-4 max-w-xl">
-        <h2 className="font-medium mb-3">Send a message</h2>
+        <h2 className="font-medium mb-3">
+          <LocalizedText id="contact.messageTitle" />
+        </h2>
         <ContactForm />
       </div>
     </section>
