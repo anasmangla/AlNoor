@@ -88,6 +88,7 @@ export default function PosPage() {
       const order = await createOrder({
         items: sale.map((s) => ({ product_id: s.product.id, quantity: s.quantity })),
         source: "pos",
+        fulfillment_method: "pickup",
       });
       setMessage(`Payment successful. Order #${order.id}`);
       setSale([]);
@@ -125,6 +126,7 @@ export default function PosPage() {
       const order = await createOrder({
         items: sale.map((s) => ({ product_id: s.product.id, quantity: s.quantity })),
         source: "pos",
+        fulfillment_method: "pickup",
       });
       setMessage(`Terminal payment complete. Order #${order.id}`);
       setSale([]);

@@ -47,6 +47,7 @@ async def test_get_and_update_order_flow():
         order = resp.json()
         order_id = order["id"]
         assert order["status"] == "pending"
+        assert order["fulfillment_method"] == "pickup"
 
         # Fetch the order by id (auth required)
         resp = await ac.get(f"/orders/{order_id}", headers=headers)
@@ -56,6 +57,7 @@ async def test_get_and_update_order_flow():
         assert body["total_amount"] >= 0
         assert isinstance(body["items"], list) and len(body["items"]) == 1
         assert body["status"] == "pending"
+        assert body["fulfillment_method"] == "pickup"
 
         # Update status
         resp = await ac.put(
@@ -66,6 +68,7 @@ async def test_get_and_update_order_flow():
         assert resp.status_code == 200
         updated = resp.json()
         assert updated["status"] == "processing"
+        assert updated["fulfillment_method"] == "pickup"
 
 
 @pytest.mark.asyncio

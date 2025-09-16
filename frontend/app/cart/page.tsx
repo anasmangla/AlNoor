@@ -1,5 +1,6 @@
 "use client";
 import { useCart } from "@/context/CartContext";
+import { getWeightPricing } from "@/lib/weight";
 import Link from "next/link";
 
 export default function CartPage() {
@@ -12,14 +13,21 @@ export default function CartPage() {
       ) : (
         <>
           <ul className="grid gap-2 mb-4">
-            {lines.map((l) => (
-              <li key={l.product.id} className="border rounded p-3 flex items-center justify-between gap-4">
-                <div>
-                  <div className="font-medium">{l.product.name}</div>
-                  <div className="text-sm text-slate-600">
-                    ${l.product.price.toFixed(2)} / {(l.product as any).unit || "unit"}
+            {lines.map((l) => {
+              const weight = getWeightPricing(l.product);
+              return (
+                <li key={l.product.id} className="border rounded p-3 flex items-center justify-between gap-4">
+                  <div>
+                    <div className="font-medium">{l.product.name}</div>
+                    <div className="text-sm text-slate-600">
+                      ${l.product.price.toFixed(2)} / {(l.product as any).unit || "unit"}
+                    </div>
+                    {weight && (
+                      <div className="text-xs text-slate-500">
+                        ${weight.perLb.toFixed(2)}/lb · ${weight.perKg.toFixed(2)}/kg
+                      </div>
+                    )}
                   </div>
-                </div>
                 <div className="flex items-center gap-2">
                   <input
                     className="border rounded px-2 py-1 w-24"
@@ -32,9 +40,10 @@ export default function CartPage() {
                   <button onClick={() => remove(l.product.id)} className="text-red-700 hover:underline">
                     Remove
                   </button>
-                </div>
-              </li>
-            ))}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
           <div className="flex items-center justify-between">
             <div className="text-lg font-semibold">Total: ${total.toFixed(2)}</div>

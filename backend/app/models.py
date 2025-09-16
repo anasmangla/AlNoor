@@ -21,6 +21,7 @@ class Order(SQLModel, table=True):
     source: str
     customer_name: Optional[str] = ""
     customer_email: Optional[str] = ""
+    fulfillment_method: str = "pickup"
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
