@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Product,
+  ProductInput,
   fetchProducts,
   createProduct,
   deleteProduct,
@@ -129,6 +130,7 @@ export default function AdminProductsPage() {
       const n = name.trim();
       const p = parseFloat(price);
       const s = parseFloat(stock);
+
       const w = parseFloat(weight);
       const ppu = parseFloat(pricePerUnit);
       const u = unit.trim();
@@ -155,6 +157,7 @@ export default function AdminProductsPage() {
         is_weight_based: isWeightBased,
         image_url: imageUrl || undefined,
         description: desc || undefined,
+
         weight: isNaN(w) ? 0 : w,
         cut_type: cut || undefined,
         price_per_unit: isNaN(ppu) ? 0 : ppu,
@@ -213,6 +216,7 @@ export default function AdminProductsPage() {
     try {
       const p = parseFloat(editPrice);
       const s = parseFloat(editStock);
+
       const w = parseFloat(editWeight);
       const ppu = parseFloat(editPricePerUnit);
       const u = editUnit.trim();

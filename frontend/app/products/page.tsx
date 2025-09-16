@@ -105,6 +105,7 @@ export default async function ProductsPage({ searchParams }: Props) {
                           )}
                         </div>
                       </div>
+
                     {short && (
                       <div className="text-xs text-slate-600 mt-2">{short}</div>
                     )}

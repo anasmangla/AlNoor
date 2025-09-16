@@ -1,7 +1,8 @@
+
 'use client';
 import { useState } from 'react';
 import type { Product } from '@/lib/api';
-import { useCart } from '@/context/CartContext';
+
 
 export default function AddToCart({ product }: { product: Product }) {
   const { add } = useCart();
@@ -12,6 +13,17 @@ export default function AddToCart({ product }: { product: Product }) {
   const weight = Number(detail.weight ?? 0);
   const cut = String(detail.cut_type || '');
   const origin = String(detail.origin || '');
+
+  if (product.backorder_available) {
+    return (
+      <div className="grid gap-3">
+        <div className="text-sm text-amber-700">
+          This item is on backorder. Reserve it now and we'll email you when it's ready.
+        </div>
+        <BackorderForm product={product} />
+      </div>
+    );
+  }
 
   function onAdd() {
     const q = parseFloat(qty);

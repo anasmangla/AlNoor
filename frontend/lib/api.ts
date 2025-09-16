@@ -1,3 +1,5 @@
+export type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
+
 export type Product = {
   id: number;
   name: string;
@@ -7,6 +9,7 @@ export type Product = {
   is_weight_based: boolean;
   image_url?: string;
   description?: string;
+
   weight?: number;
   cut_type?: string;
   price_per_unit?: number;
@@ -64,7 +67,7 @@ export async function fetchProduct(id: number): Promise<Product> {
   return res.json();
 }
 
-export async function createProduct(input: Omit<Product, "id">): Promise<Product> {
+export async function createProduct(input: ProductInput): Promise<Product> {
   const res = await fetch(`${API_BASE}/products`, {
     method: "POST",
     headers: {
@@ -300,7 +303,7 @@ export async function deleteProduct(id: number): Promise<void> {
 
 export async function updateProduct(
   id: number,
-  input: Partial<Omit<Product, "id">>
+  input: Partial<ProductInput>
 ): Promise<Product> {
   const res = await fetch(`${API_BASE}/products/${id}`, {
     method: "PUT",
@@ -311,5 +314,23 @@ export async function updateProduct(
     body: JSON.stringify(input),
   });
   if (!res.ok) throw await buildError(res, "Failed to update product");
+  return res.json();
+}
+
+export async function createBackorderRequest(
+  productId: number,
+  input: {
+    email: string;
+    name?: string;
+    quantity?: number;
+    note?: string;
+  }
+): Promise<BackorderRequest> {
+  const res = await fetch(`${API_BASE}/products/${productId}/backorder`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) throw await buildError(res, "Failed to create backorder request");
   return res.json();
 }

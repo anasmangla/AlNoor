@@ -1,5 +1,7 @@
 import uuid
 
+import uuid
+
 import pytest
 
 
@@ -49,6 +51,7 @@ async def test_product_crud_flow(client):
     assert created["price_per_unit"] == pytest.approx(payload["price_per_unit"])
     assert created["origin"] == payload["origin"]
 
+
     # Validation error on update
     resp = await client.put(
         f"/products/{product_id}",
@@ -84,6 +87,7 @@ async def test_product_crud_flow(client):
     assert resp.status_code == 200
     fetched = resp.json()
     assert fetched["id"] == product_id
+    assert fetched["stock_status"] in {"in_stock", "low_stock", "out_of_stock"}
 
     # Delete and verify removal
     resp = await client.delete(f"/products/{product_id}", headers=headers)
