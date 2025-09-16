@@ -138,6 +138,7 @@ async def test_get_missing_product(client):
 @pytest.mark.asyncio
 async def test_product_stock_status_transitions(client):
     token = await login_admin(client)
+    headers = {"Authorization": f"Bearer {token}"}
 
     base_name = f"Status Product {uuid.uuid4().hex[:6]}"
 
