@@ -1,7 +1,11 @@
-import os
-from fastapi import APIRouter, HTTPException
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from app.utils.security import create_access_token
+
+from app.database import get_session
+from app.models import User
+from app.utils.security import create_access_token, verify_password
 
 
 router = APIRouter()
@@ -18,12 +22,13 @@ class LoginResponse(BaseModel):
 
 
 @router.post("/auth/login", response_model=LoginResponse)
-def login(payload: LoginRequest):
-    expected_user = os.getenv("ADMIN_USERNAME", "admin")
-    expected_pass = os.getenv("ADMIN_PASSWORD", "admin123")
+async def login(payload: LoginRequest, session: AsyncSession = Depends(get_session)):
+    result = await session.execute(select(User).where(User.username == payload.username))
+    user = result.scalar_one_or_none()
 
-    if payload.username != expected_user or payload.password != expected_pass:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+    if not user or not verify_password(payload.password, user.password_hash):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
-    token = create_access_token(subject=payload.username)
+    subject = str(user.id) if getattr(user, "id", None) is not None else user.username
+    token = create_access_token(subject=subject)
     return LoginResponse(access_token=token)

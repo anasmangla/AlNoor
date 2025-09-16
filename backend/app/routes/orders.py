@@ -7,7 +7,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas import OrderCreate, OrderOut, OrderItemOut, OrderUpdate
 from app.deps import get_current_user
 from app.database import get_session
-from app.models import Product as ProductModel, Order as OrderModel, OrderItem as OrderItemModel
+from app.models import (
+    Order as OrderModel,
+    OrderItem as OrderItemModel,
+    Product as ProductModel,
+    User,
+)
 
 
 router = APIRouter()
@@ -153,7 +158,7 @@ async def create_order(
 
 @router.get("/orders", response_model=List[OrderOut])
 async def list_orders(
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
@@ -212,7 +217,7 @@ async def list_orders(
 @router.get("/orders/{order_id}", response_model=OrderOut)
 async def get_order(
     order_id: int,
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
     result = await session.execute(select(OrderModel).where(OrderModel.id == order_id))
@@ -251,7 +256,7 @@ async def get_order(
 async def update_order(
     order_id: int,
     payload: OrderUpdate,
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
     # Find order

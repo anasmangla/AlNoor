@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
 from app.deps import get_current_user
-from app.models import ContactMessage
+from app.models import ContactMessage, User
 from app.schemas import ContactCreate, ContactOut
 
 
@@ -90,7 +90,7 @@ async def create_contact(
 
 @router.get("/admin/messages", response_model=List[ContactOut])
 async def list_messages(
-    user: str = Depends(get_current_user), session: AsyncSession = Depends(get_session)
+    user: User = Depends(get_current_user), session: AsyncSession = Depends(get_session)
 ):
     result = await session.execute(select(ContactMessage))
     msgs = result.scalars().all()
@@ -110,7 +110,7 @@ async def list_messages(
 @router.delete("/admin/messages/{message_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_message(
     message_id: int,
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
     result = await session.execute(select(ContactMessage).where(ContactMessage.id == message_id))

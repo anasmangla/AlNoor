@@ -5,7 +5,8 @@ from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlmodel import SQLModel
 from sqlalchemy import select
-from app.models import Product
+from app.models import Product, User
+from app.utils.security import hash_password
 
 
 load_dotenv()
@@ -122,6 +123,20 @@ async def init_db() -> None:
     except Exception:
         # Best-effort; ignore if cannot alter (e.g., permissions)
         pass
+
+    admin_username = os.getenv("ADMIN_USERNAME", "admin")
+    admin_password = os.getenv("ADMIN_PASSWORD", "admin123")
+    async with SessionLocal() as session:
+        result = await session.execute(select(User).where(User.username == admin_username))
+        user = result.scalar_one_or_none()
+        if not user:
+            session.add(
+                User(
+                    username=admin_username,
+                    password_hash=hash_password(admin_password),
+                )
+            )
+            await session.commit()
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:

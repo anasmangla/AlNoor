@@ -4,22 +4,15 @@ import uuid
 from typing import Optional
 
 import httpx
-from sqlalchemy import select
-
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-import inspect
 from pydantic import BaseModel, Field
-import inspect
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
 from app.deps import get_current_user
-from app.models import Order as OrderModel
+from app.models import Order as OrderModel, User
 from app.schemas import OrderCreate, OrderOut
 from .orders import create_order
-from app.deps import get_current_user
-from app.database import get_session
-from app.models import Order as OrderModel
 
 
 router = APIRouter()
@@ -29,7 +22,7 @@ router = APIRouter()
 async def pos_checkout(
     payload: OrderCreate,
     session: AsyncSession = Depends(get_session),
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
 ):
     # Force source to 'pos' and reuse order creation logic
     payload.source = "pos"
@@ -52,7 +45,9 @@ class TerminalCheckoutResponse(BaseModel):
 
 
 @router.post("/pos/terminal/checkout", response_model=TerminalCheckoutResponse)
-async def create_terminal_checkout(payload: TerminalCheckoutRequest, user: str = Depends(get_current_user)):
+async def create_terminal_checkout(
+    payload: TerminalCheckoutRequest, user: User = Depends(get_current_user)
+):
     access_token = os.getenv("SQUARE_ACCESS_TOKEN")
     location_id = os.getenv("SQUARE_LOCATION_ID")
     env = (os.getenv("SQUARE_ENV") or "sandbox").lower()
@@ -114,7 +109,9 @@ async def create_terminal_checkout(payload: TerminalCheckoutRequest, user: str =
 
 
 @router.get("/pos/terminal/checkout/{checkout_id}", response_model=TerminalCheckoutResponse)
-async def poll_terminal_checkout(checkout_id: str, user: str = Depends(get_current_user)):
+async def poll_terminal_checkout(
+    checkout_id: str, user: User = Depends(get_current_user)
+):
     access_token = os.getenv("SQUARE_ACCESS_TOKEN")
     env = (os.getenv("SQUARE_ENV") or "sandbox").lower()
     base = (

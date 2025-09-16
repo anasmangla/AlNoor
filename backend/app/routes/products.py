@@ -10,10 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
 from app.deps import get_current_user
-from app.models import (
-    BackorderRequest as BackorderRequestModel,
-    Product as ProductModel,
-)
+from app.models import Product as ProductModel, User
 from app.schemas import (
     BackorderRequestCreate,
     BackorderRequestOut,
@@ -106,7 +103,7 @@ async def get_product(product_id: int, session: AsyncSession = Depends(get_sessi
 async def create_product(
     payload: ProductCreate,
     session: AsyncSession = Depends(get_session),
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
 ):
     p = ProductModel(
         name=payload.name,
@@ -145,7 +142,7 @@ async def update_product(
     product_id: int,
     payload: ProductUpdate,
     session: AsyncSession = Depends(get_session),
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
 ):
     result = await session.execute(select(ProductModel).where(ProductModel.id == product_id))
     p = result.scalars().first()
@@ -196,7 +193,7 @@ async def update_product(
 async def delete_product(
     product_id: int,
     session: AsyncSession = Depends(get_session),
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
 ):
     result = await session.execute(select(ProductModel).where(ProductModel.id == product_id))
     p = result.scalars().first()

@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
 from app.deps import get_current_user
-from app.models import VisitorFeedback
+from app.models import User, VisitorFeedback
 from app.schemas import (
     FeedbackCreate,
     FeedbackInterestCount,
@@ -69,7 +69,7 @@ async def create_feedback(
 
 @router.get("/admin/feedback", response_model=List[FeedbackOut])
 async def list_feedback(
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ) -> List[FeedbackOut]:
     result = await session.execute(
@@ -93,7 +93,7 @@ async def list_feedback(
 @router.delete("/admin/feedback/{feedback_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_feedback(
     feedback_id: int,
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ) -> None:
     result = await session.execute(
@@ -117,7 +117,7 @@ def _next_quarter_start(dt: datetime) -> datetime:
 
 @router.get("/admin/feedback/summary", response_model=FeedbackSummary)
 async def feedback_summary(
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ) -> FeedbackSummary:
     result = await session.execute(select(VisitorFeedback))
