@@ -70,21 +70,29 @@
   </head>
   <body>
     <header>
-      <div class="wrap" style="display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <a href="/" class="muted">Al Noor</a>
-          <nav style="display:inline-block;margin-left:12px">
+      <div class="wrap header-bar">
+        <a href="/" class="brand">Al Noor Farm</a>
+        <div class="header-group">
+          <nav class="nav-info">
+            <a href="#history">History</a>
+            <a href="#mission">Mission</a>
+            <a href="#team">Team</a>
+            <a href="#gallery">Photos</a>
+            <a href="#contact">Contact</a>
+          </nav>
+          <nav class="nav-app">
             <a href="/alnoor/products">Store</a>
             <a href="/alnoor/admin/login">Admin</a>
             <a href="/alnoor/admin/pos">POS</a>
           </nav>
+          <a class="btn" href="/alnoor/products">Shop Now</a>
         </div>
-        <a class="btn" href="/alnoor/products">Shop Now</a>
       </div>
     </header>
 
     <main class="wrap">
       <section id="home" class="hero">
+
         <img src="/assets/alnoorlogo.png" alt="Al Noor Farm" style="height:90px;width:90px" />
         <div class="hero-title">
           <h1>Fresh Zabiha Halal Meat</h1>
@@ -101,11 +109,13 @@
       </section>
 
       <section id="store">
-        <h2>Store</h2>
+        <h2>Farm Store</h2>
         <div class="grid">
           <div class="card">
             <strong>Browse Products</strong>
-            <p class="muted">Visit the store to see what's available.</p>
+            <p class="muted">
+              See current halal poultry, eggs, and seasonal bundles ready for pickup or delivery.
+            </p>
             <a class="btn" href="/alnoor/products">Go to Store</a>
           </div>
         </div>
@@ -116,7 +126,9 @@
         <div class="grid">
           <div class="card">
             <strong>Admin Login</strong>
-            <p class="muted">Manage products, inventory, and orders.</p>
+            <p class="muted">
+              Manage inventory, pricing, messages, and delivery routes in one dashboard.
+            </p>
             <a class="btn" href="/alnoor/admin/login">Admin Panel</a>
           </div>
         </div>
@@ -127,7 +139,9 @@
         <div class="grid">
           <div class="card">
             <strong>Point of Sale</strong>
-            <p class="muted">Ring up in-person orders and charge customers.</p>
+            <p class="muted">
+              Ring up in-person orders, accept multiple payment types, and email receipts instantly.
+            </p>
             <a class="btn" href="/alnoor/admin/pos">Open POS</a>
           </div>
         </div>
@@ -169,7 +183,6 @@
           </div>
         </div>
       </section>
-
       <section id="contact">
         <h2>Contact</h2>
         <div class="grid">
@@ -177,20 +190,71 @@
             <strong>Get in touch</strong>
             <p class="muted">
               Address: <span id="addr">4028 Dickersonville Rd, Ransomville NY 14131</span><br />
-              Phone: <a href="tel:+17165241717">716-524-1717</a> (calls or <a href="https://wa.me/17165241717" target="_blank" rel="noopener">WhatsApp</a>)<br />
-              Facebook: <a href="https://www.facebook.com/profile.php?id=100093040494987" target="_blank" rel="noopener">Follow us on Facebook</a><br />
-              Email: <a href="mailto:info@alnoorfarm716.com">info@alnoorfarm716.com</a>
+              Phone:
+              <a
+                href="tel:+17165241717"
+              >
+                716-524-1717
+              </a>
+              (calls or
+              <a
+                href="https://wa.me/17165241717"
+                target="_blank"
+                rel="noopener"
+              >
+                WhatsApp
+              </a>
+              )<br />
+              Facebook:
+              <a
+                href="https://www.facebook.com/profile.php?id=100093040494987"
+                target="_blank"
+                rel="noopener"
+              >
+                Follow us on Facebook
+              </a><br />
+              Email:
+              <a href="mailto:info@alnoorfarm716.com">info@alnoorfarm716.com</a>
             </p>
             <p class="muted">Hours: Mon-Sat 9:00am-6:00pm</p>
-            <div style="margin:10px 0; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden">
-              <iframe title="Al Noor Farm Location" width="100%" height="240" style="border:0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=4028%20Dickersonville%20Rd%2C%20Ransomville%20NY%2014131&output=embed"></iframe>
+            <div class="map-frame">
+              <iframe
+                title="Al Noor Farm Location"
+                width="100%"
+                height="240"
+                style="border:0"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://maps.google.com/maps?q=4028+Dickersonville+Rd+14131&output=embed"
+              ></iframe>
             </div>
-            <form id="contactForm" style="margin-top:8px" novalidate>
-              <div style="display:grid;gap:8px;max-width:480px">
-                <input id="cName" type="text" placeholder="Your name" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
-                <input id="cEmail" type="email" placeholder="you@example.com" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
-                <input id="cPhone" type="text" placeholder="Phone (optional)" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px" />
-                <textarea id="cMsg" rows="4" placeholder="Your message" style="padding:8px;border:1px solid #e2e8f0;border-radius:6px"></textarea>
+            <form id="contactForm" class="contact-form-wrapper" novalidate>
+              <div class="contact-form">
+                <input
+                  id="cName"
+                  type="text"
+                  placeholder="Your name"
+                  class="contact-input"
+                />
+                <input
+                  id="cEmail"
+                  type="email"
+                  placeholder="you@example.com"
+                  class="contact-input"
+                />
+                <input
+                  id="cPhone"
+                  type="text"
+                  placeholder="Phone (optional)"
+                  class="contact-input"
+                />
+                <textarea
+                  id="cMsg"
+                  rows="4"
+                  placeholder="Your message"
+                  class="contact-input"
+                ></textarea>
                 <button class="btn" type="submit">Send</button>
                 <div id="cStatus" class="muted"></div>
               </div>
@@ -201,7 +265,7 @@
     </main>
 
     <footer>
-      <div class="wrap muted" style="display:flex;align-items:center;justify-content:space-between">
+      <div class="wrap">
         <div>© <span id="year"></span> Al Noor Farm</div>
         <div>
           <a href="/alnoor/products">Store</a>
@@ -228,7 +292,16 @@
             statusEl.textContent='';
             if(!message.trim()){ statusEl.textContent='Please enter a message.'; return; }
             try{
-              var resp = await fetch('/api/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name:name, email:email, phone:phone, message:message }) });
+              var resp = await fetch('/api/contact', {
+                method:'POST',
+                headers:{ 'Content-Type':'application/json' },
+                body: JSON.stringify({
+                  name:name,
+                  email:email,
+                  phone:phone,
+                  message:message
+                })
+              });
               if(!resp.ok){ throw new Error('Failed: '+resp.status); }
               statusEl.textContent='Thanks! We will get back to you soon.';
               (document.getElementById('cName')||{}).value='';
@@ -241,4 +314,4 @@
       })();
     </script>
   </body>
-  </html>
+</html>
