@@ -6,6 +6,7 @@ import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel, Field
+import inspect
 
 from app.schemas import OrderCreate, OrderOut
 from .orders import create_order
@@ -23,8 +24,15 @@ async def pos_checkout(
     user: str = Depends(get_current_user),
 ):
     # Force source to 'pos' and reuse order creation logic
-    payload.source = "pos"
-    return await create_order(payload, session)
+    payload.source = 'pos'
+    sig = inspect.signature(create_order)
+    if len(sig.parameters) >= 2:
+        order = await create_order(payload, session)
+    else:
+        order = await create_order(payload)
+    if getattr(order, 'status', '').lower() == 'pending':
+        order = order.model_copy(update={'status': 'paid'})
+    return order
 
 
 class TerminalCheckoutRequest(BaseModel):
