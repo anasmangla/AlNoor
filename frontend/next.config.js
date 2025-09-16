@@ -9,6 +9,14 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+  },
   async rewrites() {
     const bp = process.env.NEXT_PUBLIC_BASE_PATH || '';
     const rules = [

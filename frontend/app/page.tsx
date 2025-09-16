@@ -19,6 +19,39 @@ const featuredItems = [
   },
 ];
 
+const facilityShowcase = [
+  {
+    title: "Processing Floor",
+    description:
+      "Stainless-steel prep stations and color-coded utensils keep produce moving without cross-contamination.",
+    imageSrc:
+      "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80",
+    alt: "Food safety specialists preparing vegetables on a stainless steel processing table.",
+  },
+  {
+    title: "Cold Chain Corridor",
+    description:
+      "Chilled packing lines with continuous temperature monitoring protect freshness from harvest to delivery.",
+    imageSrc:
+      "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1200&q=80",
+    alt: "Sanitized cold storage area with neatly organized dairy products.",
+  },
+  {
+    title: "Sanitation Command Center",
+    description:
+      "UV-sterilized wash bays and documented clean-in-place cycles uphold rigorous sanitation benchmarks.",
+    imageSrc:
+      "https://images.unsplash.com/photo-1523475472560-d2df97ec485c?auto=format&fit=crop&w=1200&q=80",
+    alt: "Technician reviewing sanitation logs beside industrial wash equipment.",
+  },
+];
+
+const cleaningProtocols = [
+  "Production surfaces are sanitized every hour with eco-certified, food-safe disinfectants.",
+  "Tooling is rotated through a clean-in-place cycle between product batches to eliminate cross-contact risks.",
+  "Air and water quality sensors trigger immediate alerts for any variance outside our safety thresholds.",
+];
+
 export default function Home() {
   return (
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col gap-16 px-6 py-16 lg:px-8">
@@ -96,6 +129,73 @@ export default function Home() {
               </span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="space-y-10 rounded-3xl border border-emerald-100 bg-emerald-50/40 p-8 shadow-sm sm:p-12">
+        <div className="space-y-4 text-center sm:text-left">
+          <span className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">
+            Processing transparency
+          </span>
+          <h2 className="text-3xl font-semibold text-slate-900 sm:text-4xl">
+            See how we keep every harvest spotless
+          </h2>
+          <p className="mx-auto max-w-3xl text-base text-slate-700 sm:mx-0">
+            Peek inside our processing suites to explore the safeguards that protect your food—from meticulously
+            scrubbed equipment to constant monitoring of sanitation benchmarks. A quick facility tour and our cleaning
+            commitments are always available for your review.
+          </p>
+        </div>
+
+        <div className="grid gap-8 lg:grid-cols-5">
+          <div className="lg:col-span-3">
+            <div className="grid gap-6 sm:grid-cols-2">
+              {facilityShowcase.map((facility) => (
+                <figure
+                  key={facility.title}
+                  className="overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-emerald-100/80 transition duration-200 hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="relative h-56 w-full sm:h-52">
+                    <Image
+                      src={facility.imageSrc}
+                      alt={facility.alt}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1024px) 50vw, (min-width: 640px) 45vw, 90vw"
+                    />
+                  </div>
+                  <figcaption className="space-y-2 px-6 py-5">
+                    <h3 className="text-lg font-semibold text-slate-900">{facility.title}</h3>
+                    <p className="text-sm text-slate-600">{facility.description}</p>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6 lg:col-span-2">
+            <div className="aspect-video overflow-hidden rounded-3xl bg-slate-900 shadow-lg">
+              <iframe
+                src="https://www.youtube.com/embed/TiQ6LZlS0Ds"
+                title="Al Noor processing walkthrough"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+                className="h-full w-full"
+              />
+            </div>
+            <div className="rounded-3xl bg-white p-6 shadow-lg ring-1 ring-emerald-100/80">
+              <h3 className="text-lg font-semibold text-slate-900">Cleaning protocols at a glance</h3>
+              <ul className="mt-4 space-y-3 text-sm text-slate-600">
+                {cleaningProtocols.map((protocol) => (
+                  <li key={protocol} className="flex items-start gap-3">
+                    <span className="mt-1 inline-flex h-2.5 w-2.5 flex-none rounded-full bg-emerald-500" aria-hidden />
+                    <span>{protocol}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
     </main>
