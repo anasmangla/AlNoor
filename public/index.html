@@ -6,248 +6,66 @@
     <title>Al Noor Farm</title>
     <link rel="icon" type="image/png" href="/assets/alnoorlogo.png" />
     <style>
-      :root {
-        --fg: #0f172a;
-        --muted: #475569;
-        --accent: #047857;
-        --link: #2563eb;
+      :root { --fg: #0f172a; --muted:#475569; --accent:#047857; --link:#2563eb; }
+      *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu; color:var(--fg);} 
+      header{position:sticky;top:0;backdrop-filter:saturate(180%) blur(8px); background:#fff8; border-bottom:1px solid #e2e8f0}
+      .wrap{max-width:960px;margin:0 auto;padding:12px 20px}
+      nav a{margin-right:16px;color:var(--muted);text-decoration:none}
+      nav a:hover{color:var(--link);text-decoration:underline}
+      .hero{padding:48px 20px;text-align:center}
+      .hero img{max-height:90px}
+      .hero-title{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:12px;
+        flex-wrap:wrap;
+        margin:16px 0 12px;
       }
-      * {
-        box-sizing: border-box;
+      .hero-badge{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        background:#dcfce7;
+        color:#047857;
+        border-radius:999px;
+        padding:6px 12px;
+        font-size:14px;
+        font-weight:600;
+        text-transform:uppercase;
+        letter-spacing:0.08em;
       }
-      body {
-        margin: 0;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu;
-        background: #f8fafc;
-        color: var(--fg);
-        line-height: 1.6;
+      .hero-subtitle{
+        max-width:540px;
+        margin:0 auto 16px;
+        color:var(--muted);
+        font-size:18px;
+        line-height:1.5;
       }
-      a {
-        color: var(--link);
+      .hero-points{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:12px;
+        list-style:none;
+        padding:0;
+        margin:0;
       }
-      header {
-        position: sticky;
-        top: 0;
-        backdrop-filter: saturate(180%) blur(8px);
-        background: #fffb;
-        border-bottom: 1px solid #e2e8f0;
-        z-index: 10;
+      .hero-points li{
+        background:#f8fafc;
+        border:1px solid #e2e8f0;
+        border-radius:999px;
+        padding:8px 16px;
+        color:var(--fg);
+        font-weight:500;
       }
-      .wrap {
-        max-width: 1080px;
-        margin: 0 auto;
-        padding: 12px 20px;
-      }
-      .header-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-      .brand {
-        font-weight: 600;
-        font-size: 18px;
-        text-decoration: none;
-        color: var(--fg);
-      }
-      .brand:hover {
-        color: var(--link);
-      }
-      .header-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        align-items: center;
-        justify-content: flex-end;
-      }
-      nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-      }
-      nav a {
-        color: var(--muted);
-        text-decoration: none;
-        font-weight: 500;
-        padding: 4px 0;
-      }
-      nav a:hover {
-        color: var(--link);
-        text-decoration: underline;
-      }
-      .hero {
-        padding: 56px 20px 40px;
-        text-align: center;
-      }
-      .hero img {
-        height: 90px;
-        width: 90px;
-      }
-      .hero h1 {
-        margin: 18px 0 12px;
-        font-size: 2rem;
-      }
-      .hero p {
-        margin: 0 auto;
-        max-width: 640px;
-        color: var(--muted);
-      }
-      .hero-actions {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-      .btn {
-        background: var(--accent);
-        color: #fff;
-        border-radius: 6px;
-        padding: 10px 16px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: filter 0.2s ease;
-      }
-      .btn:hover {
-        filter: brightness(0.95);
-      }
-      .btn-outline {
-        border: 1px solid var(--accent);
-        color: var(--accent);
-        background: transparent;
-      }
-      .btn-outline:hover {
-        color: #fff;
-        background: var(--accent);
-        filter: none;
-      }
-      main.wrap {
-        padding-bottom: 56px;
-      }
-      section {
-        margin-bottom: 48px;
-        scroll-margin-top: 84px;
-      }
-      h2 {
-        margin-bottom: 16px;
-        font-size: 1.75rem;
-      }
-      h3 {
-        margin-top: 0;
-      }
-      .card {
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 18px;
-        background: #fff;
-        box-shadow: 0 6px 12px rgba(15, 23, 42, 0.04);
-      }
-      .grid {
-        display: grid;
-        gap: 16px;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      }
-      .feature-grid {
-        display: grid;
-        gap: 16px;
-      }
-      .feature-grid.align-start {
-        align-items: flex-start;
-      }
-      @media (min-width: 768px) {
-        .feature-grid {
-          grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-        }
-      }
-      figure {
-        margin: 0;
-      }
-      figure img {
-        display: block;
-        width: 100%;
-        border-radius: 10px;
-      }
-      figcaption {
-        margin-top: 8px;
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-      ul {
-        padding-left: 18px;
-      }
-      .timeline {
-        color: var(--muted);
-      }
-      .timeline li {
-        margin-bottom: 8px;
-      }
-      .timeline li strong {
-        color: var(--fg);
-      }
-      .team-grid {
-        display: grid;
-        gap: 16px;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      }
-      .profile-role {
-        font-weight: 600;
-        color: var(--link);
-        margin-bottom: 8px;
-      }
-      .gallery-grid {
-        display: grid;
-        gap: 16px;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      }
-      .map-frame {
-        margin: 10px 0;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        overflow: hidden;
-      }
-      .contact-form-wrapper {
-        margin-top: 8px;
-      }
-      .contact-form {
-        display: grid;
-        gap: 8px;
-        max-width: 480px;
-      }
-      .contact-input {
-        padding: 8px;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        font: inherit;
-      }
-      textarea.contact-input {
-        resize: vertical;
-      }
-      footer {
-        margin-top: 40px;
-        border-top: 1px solid #e2e8f0;
-        background: #fff;
-      }
-      footer .wrap {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        flex-wrap: wrap;
-        color: var(--muted);
-      }
-      @media (max-width: 640px) {
-        .header-bar {
-          justify-content: center;
-        }
-        .header-group {
-          justify-content: center;
-        }
-        .hero h1 {
-          font-size: 1.75rem;
-        }
-      }
+      .grid{display:grid;gap:12px}
+      .card{border:1px solid #e2e8f0;border-radius:8px;padding:16px}
+      footer{margin-top:40px;border-top:1px solid #e2e8f0}
+      .muted{color:var(--muted)}
+      .btn{background:var(--accent);color:#fff;border-radius:6px;padding:8px 12px;text-decoration:none}
+      .btn:hover{filter:brightness(0.95)}
+      section{scroll-margin-top:72px}
     </style>
   </head>
   <body>
@@ -274,214 +92,20 @@
 
     <main class="wrap">
       <section id="home" class="hero">
-        <img
-          src="/assets/alnoorlogo.png"
-          alt="Al Noor Farm"
-        />
-        <h1>Rooted in Family, Growing for Western New York</h1>
-        <p>
-          Since 2010 our family has cared for flocks and fields in Ransomville, NY, raising
-          halal poultry, fresh eggs, and seasonal produce with respect for animals, land, and
-          the people we serve.
+
+        <img src="/assets/alnoorlogo.png" alt="Al Noor Farm" style="height:90px;width:90px" />
+        <div class="hero-title">
+          <h1>Fresh Zabiha Halal Meat</h1>
+          <span class="hero-badge">Certified Halal</span>
+        </div>
+        <p class="hero-subtitle">
+          Experience farm-to-table quality with hand-slaughtered selections prepared for your family.
         </p>
-        <div class="hero-actions">
-          <a class="btn" href="/alnoor/products">Browse the Farm Store</a>
-          <a class="btn btn-outline" href="#history">Read Our Story</a>
-        </div>
-      </section>
-
-      <section id="history">
-        <h2>Farm History</h2>
-        <div class="feature-grid align-start">
-          <div class="card">
-            <p>
-              Al Noor Farm began when Amina and Yusuf Ahmed purchased a small pasture in 2010 to
-              provide halal meat and eggs for family and friends. The demand for carefully raised,
-              transparently sourced food grew quickly, and within two years the Ahmeds relocated to
-              our current 18-acre home on Dickersonville Road.
-            </p>
-            <p>
-              The farm has expanded steadily ever since. We renovated a historic barn into a
-              year-round brooder, installed a licensed processing kitchen, and added covered
-              paddocks that let birds enjoy sunshine while staying protected from Western New York
-              weather.
-            </p>
-            <p>
-              Today the farm combines traditional husbandry with modern record-keeping. Rotational
-              grazing keeps our pastures healthy, rainwater catchment supplies our wash stations,
-              and the online store connects customers from Buffalo to Niagara Falls with the same
-              freshness neighbors enjoy at the farm gate.
-            </p>
-          </div>
-          <figure class="card">
-            <img
-              src="/assets/farm-landscape.svg"
-              alt="Sunrise over the pastures at Al Noor Farm"
-            />
-            <figcaption>
-              Early morning light over the pasture where our flocks rotate through fresh grass.
-            </figcaption>
-          </figure>
-        </div>
-        <div class="card" style="margin-top: 16px;">
-          <h3>Milestones</h3>
-          <ul class="timeline">
-            <li>
-              <strong>2010</strong> — Purchased the first laying hens and began weekend
-              farm-gate sales.
-            </li>
-            <li>
-              <strong>2012</strong> — Moved to Ransomville and opened the original on-site
-              farm store.
-            </li>
-            <li>
-              <strong>2016</strong> — Added mobile range coops and halal-certified processing
-              equipment.
-            </li>
-            <li>
-              <strong>2019</strong> — Expanded into CSA shares and weekly deliveries around
-              Buffalo.
-            </li>
-            <li>
-              <strong>2023</strong> — Launched the online storefront and POS to streamline
-              ordering.
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <section id="mission">
-        <h2>Mission &amp; Values</h2>
-        <div class="feature-grid align-start">
-          <div class="card">
-            <p>
-              Our mission is to nourish our community with halal, humanely raised food that honors
-              faith, family, and the environment. Every flock is cared for by hand, every order is
-              prepared to spec, and every visitor leaves knowing exactly how their food was raised.
-            </p>
-            <p>
-              Transparency is woven through everything we do—from ingredient lists and weight-based
-              pricing to opening our gates for tours and workshops. When customers shop the farm
-              store or meet us at market, they join the extended Al Noor family.
-            </p>
-          </div>
-          <div class="card">
-            <h3>What guides every decision</h3>
-            <ul class="muted">
-              <li>
-                <strong>Stewardship.</strong> Rotational grazing, composting, and native plantings
-                protect our soil.
-              </li>
-              <li>
-                <strong>Nourishment.</strong> Birds enjoy non-GMO feed, clean water, and space to
-                roam every day.
-              </li>
-              <li>
-                <strong>Access.</strong> Online ordering, delivery routes, and EBT-friendly pricing
-                welcome every household.
-              </li>
-              <li>
-                <strong>Community.</strong> Farm tours, cooking demos, and donations support
-                neighbors in need.
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section id="team">
-        <h2>Meet the Ahmed Family</h2>
-        <div class="feature-grid align-start">
-          <div class="card">
-            <p>
-              Al Noor Farm is run by three generations working side by side. The Ahmed family lives
-              on-site, walks the fields before sunrise, and knows each flock by name. Whether
-              hosting school visits or preparing weekend orders, the farm is an extension of our
-              home.
-            </p>
-            <p>
-              We believe customers deserve to meet the people who care for their food. That is why
-              you will find us answering questions on social media, greeting visitors at the farm
-              store, and personally loading every delivery van.
-            </p>
-          </div>
-          <figure class="card">
-            <img
-              src="/assets/family-portrait.svg"
-              alt="The Ahmed family standing outside the farm store"
-            />
-            <figcaption>
-              Three generations pitch in—from gathering eggs to labeling orders for
-              pickup and delivery.
-            </figcaption>
-          </figure>
-        </div>
-        <div class="team-grid" style="margin-top: 16px;">
-          <article class="card">
-            <h3>Amina Ahmed</h3>
-            <p class="profile-role">Founder &amp; Farm Steward</p>
-            <p>
-              Amina oversees the laying hens and broilers, schedules processing days, and keeps the
-              farm compliant with halal, state, and federal requirements. Her background in food
-              science ensures every batch meets exacting standards.
-            </p>
-          </article>
-          <article class="card">
-            <h3>Yusuf Ahmed</h3>
-            <p class="profile-role">Livestock &amp; Pasture Manager</p>
-            <p>
-              Yusuf designs the rotational grazing plan, repairs infrastructure, and leads weekend
-              farm tours. He coordinates deliveries across Niagara County so every order arrives
-              chilled and on time.
-            </p>
-          </article>
-          <article class="card">
-            <h3>Layla Ahmed</h3>
-            <p class="profile-role">Market &amp; Community Lead</p>
-            <p>
-              Layla runs the online store, organizes CSA communications, and develops recipes that
-              help customers cook confidently. She also partners with local mosques and shelters for
-              donation drives.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section id="gallery">
-        <h2>Farm Life in Photos</h2>
-        <p class="muted" style="margin-bottom: 16px;">
-          A glimpse into the spaces we steward—fields, family moments, and the facilities that keep
-          everything running smoothly.
-        </p>
-        <div class="gallery-grid">
-          <figure class="card">
-            <img
-              src="/assets/farm-landscape.svg"
-              alt="Green pastures at sunrise"
-            />
-            <figcaption>
-              Rotational pastures after the morning move to fresh grass.
-            </figcaption>
-          </figure>
-          <figure class="card">
-            <img
-              src="/assets/family-portrait.svg"
-              alt="Family gathered together at the farm entrance"
-            />
-            <figcaption>
-              The Ahmed family greeting visitors during a Saturday open farm day.
-            </figcaption>
-          </figure>
-          <figure class="card">
-            <img
-              src="/assets/facility-barn.svg"
-              alt="Red barn and processing shed at Al Noor Farm"
-            />
-            <figcaption>
-              The processing kitchen and packing barn where online orders are fulfilled.
-            </figcaption>
-          </figure>
-        </div>
+        <ul class="hero-points">
+          <li>Locally raised, humanely processed meats</li>
+          <li>Custom cuts and same-day pickup</li>
+          <li>Trusted halal standards for every order</li>
+        </ul>
       </section>
 
       <section id="store">
@@ -523,6 +147,42 @@
         </div>
       </section>
 
+      <section id="about">
+        <h2>About Us</h2>
+        <div class="grid">
+          <div class="card">
+            <strong>Our Mission</strong>
+            <p class="muted">We provide fresh, local products with transparent sourcing and fair pricing. Our storefront and POS make it easy to buy online or in person.</p>
+            <ul class="muted">
+              <li>• Fresh eggs, poultry, and seasonal items</li>
+              <li>• Clear pricing per unit or per pound</li>
+              <li>• Simple online checkout and receipts</li>
+            </ul>
+            <p class="muted">Review our halal documentation before you order:</p>
+            <div class="grid" style="margin-top:8px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+              <a class="btn" href="/assets/certificates/halal-certificate.pdf" target="_blank" rel="noopener">Download Halal Certificate</a>
+              <a class="btn" href="/assets/certificates/halal-badge.svg" target="_blank" rel="noopener">View Processing Badge</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="zabiha">
+        <h2>Zabiha Standards</h2>
+        <div class="grid">
+          <div class="card">
+            <strong>Hand-Slaughtered the Traditional Way</strong>
+            <p class="muted">Our team follows a documented process that keeps every step halal-compliant and transparent for your family or business.</p>
+            <ol class="muted" style="padding-left:18px">
+              <li>Birds are health-checked, calmed with water, and positioned toward the qibla.</li>
+              <li>A trained Muslim slaughterer recites the tasmiya and swiftly performs the cut with a sharpened knife.</li>
+              <li>Carcasses are bled, cleaned, and chilled in dedicated equipment with tracked batch numbers.</li>
+              <li>Logs record the slaughterer, inspection checks, and packaging time for complete traceability.</li>
+            </ol>
+            <p class="muted">Need proof for your event or institution? Download the <a href="/assets/certificates/halal-certificate.pdf" target="_blank" rel="noopener">halal certificate</a> or show the <a href="/assets/certificates/halal-badge.svg" target="_blank" rel="noopener">processing badge</a> on site.</p>
+          </div>
+        </div>
+      </section>
       <section id="contact">
         <h2>Contact</h2>
         <div class="grid">
