@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.deps import get_current_user
 from app.database import get_session
-from app.models import Order as OrderModel, Product as ProductModel
+from app.models import Order as OrderModel, Product as ProductModel, User
 
 
 router = APIRouter()
@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.get("/admin/metrics")
 async def admin_metrics(
-    user: str = Depends(get_current_user),
+    user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
     low_stock_threshold: float = 5,
     low_stock_limit: int = 5,
