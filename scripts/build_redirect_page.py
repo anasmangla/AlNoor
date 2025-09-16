@@ -38,9 +38,15 @@ def render_redirect_page(base_path: str) -> str:
     template = Template(TEMPLATE_PATH.read_text(encoding="utf-8"))
     prefix = "" if base_path == "/" else base_path
     redirect_target = base_with_trailing_slash(base_path)
+    meta_refresh_tag = ""
+    if base_path != "/":
+        meta_refresh_tag = (
+            "        "
+            f'<meta http-equiv="refresh" content="0; url={redirect_target}" />\n'
+        )
     substitutions = {
         "redirect_target": redirect_target,
-        "meta_refresh": f"0; url={redirect_target}",
+        "meta_refresh_tag": meta_refresh_tag,
         "store_href": f"{prefix}/products",
         "admin_href": f"{prefix}/admin/login",
         "pos_href": f"{prefix}/admin/pos",
