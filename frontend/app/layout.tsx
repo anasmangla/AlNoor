@@ -47,7 +47,7 @@ export default function RootLayout({
       <body className="min-h-screen antialiased text-slate-800">
         <Providers>
           <Navbar />
-          <main className="max-w-5xl mx-auto p-6">{children}</main>
+          <main className="max-w-5xl mx-auto px-4 py-6 sm:px-6">{children}</main>
           <Footer />
         </Providers>
       </body>

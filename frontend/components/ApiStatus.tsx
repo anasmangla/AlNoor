@@ -28,7 +28,7 @@ export default function ApiStatus() {
   if (!down) return null;
   return (
     <div className="bg-red-50 border-t border-red-200 text-red-700 text-sm">
-      <div className="max-w-5xl mx-auto px-6 py-2">API seems unreachable: {msg}</div>
+      <div className="max-w-5xl mx-auto px-4 py-2 sm:px-6">API seems unreachable: {msg}</div>
     </div>
   );
 }
