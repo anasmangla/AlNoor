@@ -74,3 +74,32 @@ async def test_delete_feedback(client):
     list_resp = await client.get("/admin/feedback", headers=headers)
     assert list_resp.status_code == 200
     assert list_resp.json() == []
+
+
+@pytest.mark.asyncio
+async def test_feedback_rate_limit(client):
+    payload = {
+        "name": "Repeat Visitor",
+        "email": "repeat@example.com",
+        "rating": 3,
+        "interest": "Sampling",
+        "comments": "Trying again",
+    }
+
+    for _ in range(3):
+        resp = await client.post("/feedback", json=payload)
+        assert resp.status_code == 201
+
+    resp = await client.post("/feedback", json=payload)
+    assert resp.status_code == 429
+    assert "Too many submissions" in resp.json()["detail"]
+
+
+@pytest.mark.asyncio
+async def test_delete_feedback_missing_entry(client):
+    token = await login_admin(client)
+    headers = {"Authorization": f"Bearer {token}"}
+
+    resp = await client.delete("/admin/feedback/999999", headers=headers)
+    assert resp.status_code == 404
+    assert resp.json()["detail"] == "Feedback not found"
