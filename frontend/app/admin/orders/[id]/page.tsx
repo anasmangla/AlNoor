@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { API_BASE, type Order } from "@/lib/api";
+import { toAppPath } from "@/lib/routing";
 import UpdateStatus from "./widgets/UpdateStatus";
 
 type Props = { params: { id: string } };
@@ -17,7 +18,7 @@ export default async function AdminOrderDetail({ params }: Props) {
   });
   if (!res.ok) {
     if (res.status === 401) {
-      redirect(`/admin/login?next=/admin/orders/${id}`);
+      redirect(`${toAppPath("/admin/login")}?next=${encodeURIComponent(`/admin/orders/${id}`)}`);
     }
     return (
       <section>

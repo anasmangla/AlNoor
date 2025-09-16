@@ -10,6 +10,7 @@ import {
   logout as logoutSession,
 } from "@/lib/api";
 import { trackPurchase } from "@/lib/analytics";
+import { toAppPath } from "@/lib/routing";
 
 type SaleItem = { product: Product; quantity: number };
 
@@ -34,7 +35,8 @@ export default function PosPage() {
     } finally {
       setHasToken(false);
       if (typeof window !== "undefined") {
-        window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
+        const loginUrl = `${toAppPath("/admin/login")}?next=${encodeURIComponent(nextPath)}`;
+        window.location.href = loginUrl;
       }
     }
   }
@@ -147,7 +149,11 @@ export default function PosPage() {
       <h1 className="text-2xl font-semibold mb-4">POS</h1>
       {!hasToken && (
         <div className="mb-3 text-amber-800 bg-amber-50 border border-amber-200 p-2 rounded text-sm">
-          For Square Terminal checkout, please <a href="/admin/login" className="underline">log in</a>.
+          For Square Terminal checkout, please{" "}
+          <a href={toAppPath("/admin/login")} className="underline">
+            log in
+          </a>
+          .
         </div>
       )}
       {message && (

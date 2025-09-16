@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { listMessages, deleteMessage, type ContactMessage, logout as logoutSession } from "@/lib/api";
 import { useToast } from "@/components/Toast";
 import Spinner from "@/components/Spinner";
+import { toAppPath } from "@/lib/routing";
 
 export default function AdminMessagesPage() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
@@ -16,7 +17,8 @@ export default function AdminMessagesPage() {
       console.error("Failed to clear session", err);
     } finally {
       if (typeof window !== "undefined") {
-        window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
+        const loginUrl = `${toAppPath("/admin/login")}?next=${encodeURIComponent(nextPath)}`;
+        window.location.href = loginUrl;
       }
     }
   }

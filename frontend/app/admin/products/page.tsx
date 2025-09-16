@@ -12,6 +12,7 @@ import {
 } from '@/lib/api';
 import Spinner from '@/components/Spinner';
 import { useToast } from '@/components/Toast';
+import { toAppPath } from '@/lib/routing';
 
 export default function AdminProductsPage() {
   const toast = useToast();
@@ -83,7 +84,8 @@ export default function AdminProductsPage() {
     } finally {
       setHasToken(false);
       if (typeof window !== 'undefined') {
-        window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
+        const loginUrl = `${toAppPath('/admin/login')}?next=${encodeURIComponent(nextPath)}`;
+        window.location.href = loginUrl;
       }
     }
   }

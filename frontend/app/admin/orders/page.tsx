@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { listOrders, updateOrderStatus, type Order, logout as logoutSession } from "@/lib/api";
 import Spinner from "@/components/Spinner";
 import { useToast } from "@/components/Toast";
+import { toAppPath } from "@/lib/routing";
 
 export default function AdminOrdersPage() {
   const toast = useToast();
@@ -19,7 +20,8 @@ export default function AdminOrdersPage() {
       console.error("Failed to clear session", err);
     } finally {
       if (typeof window !== "undefined") {
-        window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
+        const loginUrl = `${toAppPath("/admin/login")}?next=${encodeURIComponent(nextPath)}`;
+        window.location.href = loginUrl;
       }
     }
   }

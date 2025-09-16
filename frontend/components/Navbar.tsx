@@ -1,14 +1,14 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import ApiStatus from "@/components/ApiStatus";
 import { useCart } from "@/context/CartContext";
 import { fetchSession, logout as logoutSession } from "@/lib/api";
-import { usePathname } from "next/navigation";
+import { toAppPath } from "@/lib/routing";
 
 const primaryLinks = [
   { href: "/", label: "Home" },
@@ -22,6 +22,8 @@ const primaryLinks = [
 export default function Navbar() {
   const { lines, total } = useCart();
   const count = lines.reduce((acc, line) => acc + line.quantity, 0);
+  const formattedCount = count.toFixed(0);
+  const formattedTotal = total.toFixed(2);
   const [hasToken, setHasToken] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -59,9 +61,6 @@ export default function Navbar() {
     [hasToken],
   );
 
-  const formattedCount = count.toFixed(0);
-  const formattedTotal = total.toFixed(2);
-
   async function logout() {
     setMenuOpen(false);
     try {
@@ -70,79 +69,110 @@ export default function Navbar() {
       console.error("Failed to log out", error);
     } finally {
       setHasToken(false);
-      setMenuOpen(false);
       if (typeof window !== "undefined") {
-        window.location.href = "/";
+        window.location.href = toAppPath("/");
       }
     }
   }
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
-
   return (
     <header className="border-b bg-white/80 backdrop-blur sticky top-0 z-10">
-
-      <nav className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <nav className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80">
             <Image src="/alnoorlogo.png" alt="Al Noor" width={24} height={24} />
             <span className="font-heading text-brand text-lg leading-none">Al Noor</span>
           </Link>
-<
-          <Link href="/products" className="text-brand hover:text-brand-dark hover:underline">Products</Link>
-          <Link href="/contact" className="text-brand hover:text-brand-dark hover:underline">Contact</Link>
-          <Link href="/checkout" className="text-brand hover:text-brand-dark hover:underline">Checkout</Link>
-          {hasToken ? (
-            <>
-              <Link href="/admin/dashboard" className="text-brand hover:text-brand-dark hover:underline">Dashboard</Link>
-              <Link href="/admin/products" className="text-brand hover:text-brand-dark hover:underline">Admin Products</Link>
-              <Link href="/admin/orders" className="text-brand hover:text-brand-dark hover:underline">Orders</Link>
-              <Link href="/admin/pos" className="text-brand hover:text-brand-dark hover:underline">POS</Link>
-              <Link href="/admin/messages" className="text-brand hover:text-brand-dark hover:underline">Messages</Link>
-              <Link href="/admin/settings" className="text-brand hover:text-brand-dark hover:underline">Settings</Link>
-            </>
-          ) : (
-            <Link href="/admin/login" className="text-brand hover:text-brand-dark hover:underline">Admin</Link>
-          )}
+          <div className="hidden md:flex items-center gap-3 text-sm">
+            {primaryLinks.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-brand hover:text-brand-dark hover:underline"
+              >
+                {item.label}
+              </Link>
+            ))}
+            {adminLinks.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-brand hover:text-brand-dark hover:underline"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </div>
         <div className="flex items-center gap-4">
           <Link href="/cart" className="relative text-brand hover:text-brand-dark hover:underline">
             Cart
             <span className="ml-1 inline-flex items-center justify-center text-xs rounded-full bg-brand text-white px-2 py-0.5">
-              {count.toFixed(0)}
+              {formattedCount}
             </span>
           </Link>
-          <div className="text-sm text-brand hidden sm:block font-heading">${total.toFixed(2)}</div>
+          <div className="hidden sm:block text-sm text-brand font-heading">
+            ${formattedTotal}
+          </div>
           {hasToken && (
-            <button onClick={logout} className="text-brand hover:text-brand-dark hover:underline text-sm">Logout</button>
+            <button
+              type="button"
+              onClick={logout}
+              className="text-brand hover:text-brand-dark hover:underline text-sm"
+            >
+              Logout
+            </button>
           )}
+          <button
+            type="button"
+            className="md:hidden text-sm text-brand hover:text-brand-dark"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+          >
+            {menuOpen ? "Close" : "Menu"}
+          </button>
         </div>
-
-        {menuOpen && (
-          <div className="md:hidden mt-4 border-t border-slate-200 pt-4 grid gap-4">
+      </nav>
+      {menuOpen && (
+        <div id="mobile-nav" className="md:hidden border-t border-slate-200 bg-white">
+          <div className="max-w-5xl mx-auto px-4 py-4 grid gap-4">
             <div className="grid gap-2">
               {primaryLinks.map((item) => (
-                <Link key={item.href} href={item.href} className="text-slate-700 hover:underline">
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-slate-700 hover:underline"
+                >
                   {item.label}
                 </Link>
               ))}
             </div>
             <div className="grid gap-2">
               {adminLinks.map((item) => (
-                <Link key={item.href} href={item.href} className="text-slate-700 hover:underline">
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-slate-700 hover:underline"
+                >
                   {item.label}
                 </Link>
               ))}
               {hasToken && (
-                <button onClick={logout} className="text-left text-sm text-slate-600 hover:underline">
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="text-left text-sm text-slate-600 hover:underline"
+                >
                   Logout
                 </button>
               )}
             </div>
             <div className="grid gap-2">
-              <Link href="/cart" className="flex items-center justify-between text-slate-700 hover:underline">
+              <Link
+                href="/cart"
+                className="flex items-center justify-between text-slate-700 hover:underline"
+              >
                 <span>
                   Cart
                   <span className="ml-2 inline-flex items-center justify-center rounded-full bg-emerald-600 px-2 py-0.5 text-xs font-medium text-white">
@@ -156,7 +186,8 @@ export default function Navbar() {
               </Link>
             </div>
           </div>
-      </nav>
+        </div>
+      )}
       <ApiStatus />
     </header>
   );
