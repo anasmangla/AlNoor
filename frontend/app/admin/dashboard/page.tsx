@@ -111,7 +111,7 @@ export default async function AdminDashboardPage() {
 
           <div>
             <h2 className="font-medium mb-2">Quick Actions</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               <Link href="/admin/products" className="border rounded p-3 hover:bg-slate-50">
                 <div className="font-medium">Add / Edit Products</div>
                 <div className="text-sm text-slate-600">Manage inventory and pricing</div>
@@ -127,6 +127,10 @@ export default async function AdminDashboardPage() {
               <Link href="/admin/messages" className="border rounded p-3 hover:bg-slate-50">
                 <div className="font-medium">Messages</div>
                 <div className="text-sm text-slate-600">Customer inquiries</div>
+              </Link>
+              <Link href="/admin/feedback" className="border rounded p-3 hover:bg-slate-50">
+                <div className="font-medium">Visitor Feedback</div>
+                <div className="text-sm text-slate-600">Survey insights & quarterly priorities</div>
               </Link>
             </div>
           </div>

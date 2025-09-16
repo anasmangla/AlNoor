@@ -84,3 +84,34 @@ class ContactOut(BaseModel):
 
 class OrderUpdate(BaseModel):
     status: str = Field(..., description="Order status, e.g., pending|paid|processing|completed|cancelled")
+
+
+class FeedbackCreate(BaseModel):
+    name: Optional[str] = Field(default="", max_length=100)
+    email: Optional[EmailStr] = None
+    rating: int = Field(..., ge=1, le=5)
+    interest: Optional[str] = Field(default="", max_length=120)
+    comments: Optional[str] = Field(default="", max_length=1000)
+
+
+class FeedbackOut(BaseModel):
+    id: int
+    name: str
+    email: Optional[EmailStr] = None
+    rating: int
+    interest: Optional[str] = None
+    comments: Optional[str] = None
+    created_at: datetime
+
+
+class FeedbackInterestCount(BaseModel):
+    interest: str
+    count: int
+
+
+class FeedbackSummary(BaseModel):
+    total_submissions: int
+    average_rating: Optional[float] = None
+    interest_breakdown: List[FeedbackInterestCount]
+    last_submission: Optional[datetime] = None
+    next_quarterly_review: datetime

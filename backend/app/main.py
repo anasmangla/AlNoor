@@ -2,7 +2,7 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import products, orders, auth, pos, contact, admin
+from app.routes import products, orders, auth, pos, contact, admin, feedback
 from app.database import init_db, seed_if_empty
 
 app = FastAPI(title="Al Noor Farm API", version="0.1.0")
@@ -30,6 +30,7 @@ app.include_router(auth.router, prefix="")
 app.include_router(pos.router, prefix="")
 app.include_router(contact.router, prefix="")
 app.include_router(admin.router, prefix="")
+app.include_router(feedback.router, prefix="")
 
 
 @app.get("/")

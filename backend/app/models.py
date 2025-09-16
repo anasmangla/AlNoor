@@ -42,3 +42,14 @@ class ContactMessage(SQLModel, table=True):
     message: str = ""
     created_at: datetime = Field(default_factory=datetime.utcnow)
     ip: str = ""
+
+
+class VisitorFeedback(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str = ""
+    email: str = ""
+    rating: int = 0
+    interest: str = ""
+    comments: str = ""
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    ip: str = ""
