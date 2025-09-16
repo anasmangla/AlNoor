@@ -42,3 +42,15 @@ class ContactMessage(SQLModel, table=True):
     message: str = ""
     created_at: datetime = Field(default_factory=datetime.utcnow)
     ip: str = ""
+
+
+class BackorderRequest(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    product_id: int = Field(foreign_key="product.id")
+    email: str
+    name: str = ""
+    quantity: Optional[float] = None
+    note: str = ""
+    status: str = "pending"
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    ip: str = ""

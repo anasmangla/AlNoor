@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Product,
+  ProductInput,
   fetchProducts,
   createProduct,
   deleteProduct,
@@ -107,7 +108,7 @@ export default function AdminProductsPage() {
       const n = name.trim();
       const p = parseFloat(price);
       const s = parseFloat(stock);
-      const fe: any = {};
+      const fe: { name?: string; price?: string; stock?: string; unit?: string } = {};
       if (!n) fe.name = "Name is required";
       if (isNaN(p) || p < 0) fe.price = "Price must be a non-negative number";
       if (isNaN(s) || s < 0) fe.stock = "Stock must be a non-negative number";
@@ -121,7 +122,7 @@ export default function AdminProductsPage() {
         is_weight_based: isWeightBased,
         image_url: imageUrl || undefined,
         description: desc || undefined,
-      } as any);
+      });
       toast.success("Product created");
       setName("");
       setPrice("0");
@@ -167,18 +168,15 @@ export default function AdminProductsPage() {
     try {
       const p = parseFloat(editPrice);
       const s = parseFloat(editStock);
-      await updateProduct(
-        editingId,
-        {
-          name: editName,
-          price: p,
-          stock: s,
-          unit: editUnit,
-          is_weight_based: editIsWeightBased,
-          image_url: editImageUrl || undefined,
-          description: editDesc || undefined,
-        } as any
-      );
+      await updateProduct(editingId, {
+        name: editName,
+        price: p,
+        stock: s,
+        unit: editUnit,
+        is_weight_based: editIsWeightBased,
+        image_url: editImageUrl || undefined,
+        description: editDesc || undefined,
+      });
       setEditingId(null);
       toast.success("Product updated");
       await load();
@@ -343,14 +341,14 @@ export default function AdminProductsPage() {
               let created = 0; let failed = 0;
               for(const line of lines){
                 const vals = line.match(/\"([^\"]|\"\")*\"|[^,]+/g)?.map(s=> s.replace(/^\"|\"$/g,'').replace(/\"\"/g,'"').trim()) || [];
-                const rec: any = {
+                const rec: ProductInput = {
                   name: vals[idx('name')] || '',
                   price: parseFloat(vals[idx('price')] || '0') || 0,
                   stock: parseFloat(vals[idx('stock')] || '0') || 0,
                   unit: vals[idx('unit')] || '',
                   is_weight_based: ((vals[idx('is_weight_based')] || '').toLowerCase() === 'true'),
-                  image_url: vals[idx('image_url')] || '',
-                  description: vals[idx('description')] || '',
+                  image_url: vals[idx('image_url')] || undefined,
+                  description: vals[idx('description')] || undefined,
                 };
                 try { await createProduct(rec); created++; } catch { failed++; }
               }

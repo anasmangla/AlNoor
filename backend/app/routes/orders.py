@@ -54,6 +54,8 @@ async def create_order(
         )
 
     status_val = "pending"
+    if (payload.source or "").lower() == "pos":
+        status_val = "processing"
 
     # Optional Square payment (sandbox/production) if token and env configured
     token = getattr(payload, "payment_token", None)

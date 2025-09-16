@@ -1,5 +1,7 @@
 import uuid
 
+import uuid
+
 import pytest
 
 
@@ -40,6 +42,8 @@ async def test_product_crud_flow(client):
     assert created["name"] == payload["name"]
     assert created["price"] == pytest.approx(payload["price"])
     assert created["stock"] == pytest.approx(payload["stock"])
+    assert created["stock_status"] == "in_stock"
+    assert created["backorder_available"] is False
 
     # Validation error on update
     resp = await client.put(
@@ -59,12 +63,60 @@ async def test_product_crud_flow(client):
     updated = resp.json()
     assert updated["price"] == pytest.approx(21.5)
     assert updated["stock"] == pytest.approx(8)
+    assert updated["stock_status"] == "in_stock"
+    assert updated["backorder_available"] is False
+
+    # Set stock to zero to enable backorders
+    resp = await client.put(
+        f"/products/{product_id}",
+        json={"stock": 0},
+        headers=headers,
+    )
+    assert resp.status_code == 200
+    zeroed = resp.json()
+    assert zeroed["stock_status"] == "out_of_stock"
+    assert zeroed["backorder_available"] is True
+
+    # Create backorder request
+    resp = await client.post(
+        f"/products/{product_id}/backorder",
+        json={"email": "reserve@example.com", "name": "Reserve", "quantity": 2},
+    )
+    assert resp.status_code == 201
+    backorder = resp.json()
+    assert backorder["product_id"] == product_id
+    assert backorder["status"] == "pending"
+
+    # Duplicate request within window should be rejected
+    resp = await client.post(
+        f"/products/{product_id}/backorder",
+        json={"email": "reserve@example.com"},
+    )
+    assert resp.status_code == 400
+
+    # Restock and ensure backorder endpoint is disabled
+    resp = await client.put(
+        f"/products/{product_id}",
+        json={"stock": 3},
+        headers=headers,
+    )
+    assert resp.status_code == 200
+    restocked = resp.json()
+    assert restocked["stock_status"] == "low_stock"
+    assert restocked["backorder_available"] is False
+
+    resp = await client.post(
+        f"/products/{product_id}/backorder",
+        json={"email": "another@example.com"},
+    )
+    assert resp.status_code == 400
 
     # Fetch by id
     resp = await client.get(f"/products/{product_id}")
     assert resp.status_code == 200
     fetched = resp.json()
     assert fetched["id"] == product_id
+    assert fetched["stock_status"] in {"in_stock", "low_stock", "out_of_stock"}
 
     # Delete and verify removal
     resp = await client.delete(f"/products/{product_id}", headers=headers)

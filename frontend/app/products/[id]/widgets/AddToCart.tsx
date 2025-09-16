@@ -2,11 +2,23 @@
 import { useState } from "react";
 import type { Product } from "@/lib/api";
 import { useCart } from "@/context/CartContext";
+import BackorderForm from "./BackorderForm";
 
 export default function AddToCart({ product }: { product: Product }) {
   const { add } = useCart();
   const [qty, setQty] = useState<string>(product.is_weight_based ? "0.5" : "1");
   const [message, setMessage] = useState<string | null>(null);
+
+  if (product.backorder_available) {
+    return (
+      <div className="grid gap-3">
+        <div className="text-sm text-amber-700">
+          This item is on backorder. Reserve it now and we'll email you when it's ready.
+        </div>
+        <BackorderForm product={product} />
+      </div>
+    );
+  }
 
   function onAdd() {
     const q = parseFloat(qty);

@@ -1,4 +1,5 @@
 import { fetchProducts } from "@/lib/api";
+import type { Product } from "@/lib/api";
 import Link from "next/link";
 
 type Props = { searchParams?: { q?: string } };
@@ -19,6 +20,12 @@ export default async function ProductsPage({ searchParams }: Props) {
     : products;
   const site = process.env.NEXT_PUBLIC_SITE_URL || "";
   const bp = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  const badgeBase = "inline-flex items-center px-2 py-0.5 rounded-full font-medium";
+  const badgeStyles: Record<Product["stock_status"], string> = {
+    in_stock: "bg-emerald-100 text-emerald-800 border border-emerald-200",
+    low_stock: "bg-amber-100 text-amber-800 border border-amber-200",
+    out_of_stock: "bg-red-100 text-red-800 border border-red-200",
+  };
 
   return (
     <section>
@@ -53,6 +60,11 @@ export default async function ProductsPage({ searchParams }: Props) {
           {filtered.map((p) => {
             const desc = (p as any).description || "";
             const short = desc.length > 80 ? desc.slice(0, 77) + "..." : desc;
+            const stockAmount = Number((p as any).stock ?? 0);
+            const stockDisplay = `${stockAmount.toLocaleString(undefined, {
+              maximumFractionDigits: p.is_weight_based ? 2 : 0,
+            })} ${(p as any).unit || ""}`.trim();
+            const badgeClass = `${badgeBase} ${badgeStyles[p.stock_status]}`;
             return (
               <li key={p.id} className="border rounded overflow-hidden hover:shadow">
                 <Link href={`/products/${p.id}`} className="block">
@@ -69,6 +81,19 @@ export default async function ProductsPage({ searchParams }: Props) {
                       </div>
                       <div className="font-semibold text-right">${p.price.toFixed(2)}<div className="text-xs text-slate-500">{(p as any).unit || "unit"}</div></div>
                     </div>
+                    <div className="mt-3 flex items-center justify-between text-xs">
+                      <span className={badgeClass}>
+                        {p.stock_status_label}
+                      </span>
+                      <span className="text-slate-500">
+                        {p.backorder_available ? "Backorder" : stockDisplay || ""}
+                      </span>
+                    </div>
+                    {p.backorder_available && (
+                      <div className="text-xs text-amber-700 mt-2">
+                        Reserve now—leave your email on the product page.
+                      </div>
+                    )}
                     {short && (
                       <div className="text-xs text-slate-600 mt-2">{short}</div>
                     )}

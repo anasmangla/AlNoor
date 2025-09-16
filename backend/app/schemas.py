@@ -29,6 +29,33 @@ class ProductUpdate(BaseModel):
 
 class ProductOut(ProductBase):
     id: int
+    stock_status: str = Field(
+        ..., description="Inventory indicator: in_stock|low_stock|out_of_stock"
+    )
+    stock_status_label: str = Field(
+        ..., description="Human-readable stock status label"
+    )
+    backorder_available: bool = Field(
+        False, description="True when the product can be reserved because it is out of stock"
+    )
+
+
+class BackorderRequestCreate(BaseModel):
+    email: EmailStr
+    name: Optional[str] = Field(default="", max_length=100)
+    quantity: Optional[float] = Field(default=None, ge=0)
+    note: Optional[str] = Field(default="", max_length=2000)
+
+
+class BackorderRequestOut(BaseModel):
+    id: int
+    product_id: int
+    email: EmailStr
+    name: Optional[str] = None
+    quantity: Optional[float] = None
+    note: Optional[str] = None
+    status: str
+    created_at: datetime
 
 
 class OrderItemIn(BaseModel):
