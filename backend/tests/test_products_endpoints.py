@@ -1,7 +1,5 @@
 import uuid
 
-import uuid
-
 import pytest
 
 
@@ -50,6 +48,9 @@ async def test_product_crud_flow(client):
     assert created["cut_type"] == payload["cut_type"]
     assert created["price_per_unit"] == pytest.approx(payload["price_per_unit"])
     assert created["origin"] == payload["origin"]
+    assert created["stock_status"] == "in_stock"
+    assert created["stock_status_label"] == "In stock"
+    assert created["backorder_available"] is False
 
 
     # Validation error on update
@@ -81,6 +82,8 @@ async def test_product_crud_flow(client):
     assert updated["cut_type"] == "Halved"
     assert updated["price_per_unit"] == pytest.approx(3.58)
     assert updated["origin"] == "Updated Farm"
+    assert updated["stock_status"] == "in_stock"
+    assert updated["backorder_available"] is False
 
     # Fetch by id
     resp = await client.get(f"/products/{product_id}")
@@ -88,6 +91,14 @@ async def test_product_crud_flow(client):
     fetched = resp.json()
     assert fetched["id"] == product_id
     assert fetched["stock_status"] in {"in_stock", "low_stock", "out_of_stock"}
+    assert isinstance(fetched["stock_status_label"], str) and fetched["stock_status_label"]
+
+    resp = await client.get("/products")
+    assert resp.status_code == 200
+    listing = resp.json()
+    entry = next(p for p in listing if p["id"] == product_id)
+    assert entry["stock_status"] == fetched["stock_status"]
+    assert entry["stock_status_label"]
 
     # Delete and verify removal
     resp = await client.delete(f"/products/{product_id}", headers=headers)
@@ -106,3 +117,45 @@ async def test_get_missing_product(client):
     assert resp.status_code == 404
     body = resp.json()
     assert body["detail"] == "Product not found"
+
+
+@pytest.mark.asyncio
+async def test_product_stock_status_transitions(client):
+    token = await login_admin(client)
+    headers = {"Authorization": f"Bearer {token}"}
+
+    payload = {
+        "name": f"Low Stock Product {uuid.uuid4().hex[:6]}",
+        "price": 5.0,
+        "stock": 4,
+        "unit": "each",
+        "is_weight_based": False,
+        "image_url": "",
+        "description": "Created for stock status test",
+    }
+
+    resp = await client.post("/products", json=payload, headers=headers)
+    assert resp.status_code == 201
+    product = resp.json()
+    product_id = product["id"]
+    assert product["stock_status"] == "low_stock"
+    assert product["backorder_available"] is False
+
+    resp = await client.put(
+        f"/products/{product_id}",
+        json={"stock": 0},
+        headers=headers,
+    )
+    assert resp.status_code == 200
+    updated = resp.json()
+    assert updated["stock_status"] == "out_of_stock"
+    assert updated["backorder_available"] is True
+
+    resp = await client.get(f"/products/{product_id}")
+    assert resp.status_code == 200
+    fetched = resp.json()
+    assert fetched["stock_status_label"] == "Out of stock"
+    assert fetched["backorder_available"] is True
+
+    resp = await client.delete(f"/products/{product_id}", headers=headers)
+    assert resp.status_code == 204

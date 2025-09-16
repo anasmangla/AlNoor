@@ -40,14 +40,18 @@ def _compute_stock_meta(stock: float) -> Tuple[str, str, bool]:
 def _serialize_product(product: ProductModel) -> ProductOut:
     status, label, backorder = _compute_stock_meta(product.stock)
     return ProductOut(
-        id=product.id,
+        id=int(product.id),
         name=product.name,
-        price=product.price,
-        stock=product.stock,
-        unit=product.unit,
-        is_weight_based=product.is_weight_based,
-        image_url=getattr(product, "image_url", ""),
-        description=getattr(product, "description", ""),
+        price=float(product.price),
+        stock=float(getattr(product, "stock", 0)),
+        unit=getattr(product, "unit", ""),
+        is_weight_based=bool(getattr(product, "is_weight_based", False)),
+        image_url=getattr(product, "image_url", "") or "",
+        description=getattr(product, "description", "") or "",
+        weight=float(getattr(product, "weight", 0.0) or 0.0),
+        cut_type=getattr(product, "cut_type", "") or "",
+        price_per_unit=float(getattr(product, "price_per_unit", 0.0) or 0.0),
+        origin=getattr(product, "origin", "") or "",
         stock_status=status,
         stock_status_label=label,
         backorder_available=backorder,
@@ -59,23 +63,7 @@ async def list_products(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(ProductModel))
     rows = result.scalars().all()
 
-    return [
-        ProductOut(
-            id=p.id,
-            name=p.name,
-            price=p.price,
-            stock=p.stock,
-            unit=p.unit,
-            is_weight_based=p.is_weight_based,
-            image_url=getattr(p, "image_url", ""),
-            description=getattr(p, "description", ""),
-            weight=getattr(p, "weight", 0.0),
-            cut_type=getattr(p, "cut_type", ""),
-            price_per_unit=getattr(p, "price_per_unit", 0.0),
-            origin=getattr(p, "origin", ""),
-        )
-        for p in rows
-    ]
+    return [_serialize_product(p) for p in rows]
 
 
 @router.get("/products/{product_id}", response_model=ProductOut)
@@ -84,20 +72,7 @@ async def get_product(product_id: int, session: AsyncSession = Depends(get_sessi
     p = result.scalars().first()
     if not p:
         raise HTTPException(status_code=404, detail="Product not found")
-    return ProductOut(
-        id=p.id,
-        name=p.name,
-        price=p.price,
-        stock=p.stock,
-        unit=p.unit,
-        is_weight_based=p.is_weight_based,
-        image_url=getattr(p, "image_url", ""),
-        description=getattr(p, "description", ""),
-        weight=getattr(p, "weight", 0.0),
-        cut_type=getattr(p, "cut_type", ""),
-        price_per_unit=getattr(p, "price_per_unit", 0.0),
-        origin=getattr(p, "origin", ""),
-    )
+    return _serialize_product(p)
 
 @router.post("/products", response_model=ProductOut, status_code=status.HTTP_201_CREATED)
 async def create_product(
@@ -121,20 +96,7 @@ async def create_product(
     session.add(p)
     await session.commit()
     await session.refresh(p)
-    return ProductOut(
-        id=p.id,
-        name=p.name,
-        price=p.price,
-        stock=p.stock,
-        unit=p.unit,
-        is_weight_based=p.is_weight_based,
-        image_url=getattr(p, "image_url", ""),
-        description=getattr(p, "description", ""),
-        weight=getattr(p, "weight", 0.0),
-        cut_type=getattr(p, "cut_type", ""),
-        price_per_unit=getattr(p, "price_per_unit", 0.0),
-        origin=getattr(p, "origin", ""),
-    )
+    return _serialize_product(p)
 
 
 @router.put("/products/{product_id}", response_model=ProductOut)
@@ -173,20 +135,7 @@ async def update_product(
     await session.commit()
     await session.refresh(p)
 
-    return ProductOut(
-        id=p.id,
-        name=p.name,
-        price=p.price,
-        stock=p.stock,
-        unit=p.unit,
-        is_weight_based=p.is_weight_based,
-        image_url=getattr(p, "image_url", ""),
-        description=getattr(p, "description", ""),
-        weight=getattr(p, "weight", 0.0),
-        cut_type=getattr(p, "cut_type", ""),
-        price_per_unit=getattr(p, "price_per_unit", 0.0),
-        origin=getattr(p, "origin", ""),
-    )
+    return _serialize_product(p)
 
 
 @router.delete("/products/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
