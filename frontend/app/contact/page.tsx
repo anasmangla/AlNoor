@@ -58,6 +58,8 @@ export default function ContactPage() {
         </div>
       </div>
 
+      <FAQSection />
+
       <div className="border rounded p-4 max-w-xl">
         <h2 className="font-heading text-brand text-xl mb-3">Send a message</h2>
         <ContactForm />
@@ -65,6 +67,7 @@ export default function ContactPage() {
     </section>
   );
 }
+
             <div className="grid gap-4 lg:grid-cols-[2fr,1fr]">
                 <ReviewsSection />
                 <CommunityHighlights />
