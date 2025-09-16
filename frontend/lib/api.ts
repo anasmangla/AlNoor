@@ -208,6 +208,29 @@ export type ContactMessage = {
   created_at: string;
 };
 
+export type VisitorFeedback = {
+  id: number;
+  name: string;
+  email?: string | null;
+  rating: number;
+  interest?: string | null;
+  comments?: string | null;
+  created_at: string;
+};
+
+export type FeedbackInterestBreakdown = {
+  interest: string;
+  count: number;
+};
+
+export type FeedbackSummary = {
+  total_submissions: number;
+  average_rating: number | null;
+  interest_breakdown: FeedbackInterestBreakdown[];
+  last_submission: string | null;
+  next_quarterly_review: string;
+};
+
 export async function listMessages(): Promise<ContactMessage[]> {
   const res = await fetch(`${API_BASE}/admin/messages`, {
     cache: "no-store",
@@ -224,6 +247,7 @@ export async function deleteMessage(id: number): Promise<void> {
   });
   if (!res.ok) throw await buildError(res, "Failed to delete message");
 }
+
 
 export type Review = {
     id: number;

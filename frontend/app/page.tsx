@@ -52,6 +52,8 @@ const cleaningProtocols = [
   "Air and water quality sensors trigger immediate alerts for any variance outside our safety thresholds.",
 ];
 
+import FeedbackForm from "@/components/feedback/FeedbackForm";
+
 export default function Home() {
 
   return (

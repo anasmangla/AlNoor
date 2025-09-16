@@ -31,6 +31,7 @@ app.include_router(pos.router, prefix="")
 app.include_router(contact.router, prefix="")
 app.include_router(reviews.router, prefix="")
 app.include_router(admin.router, prefix="")
+app.include_router(feedback.router, prefix="")
 
 
 @app.get("/")

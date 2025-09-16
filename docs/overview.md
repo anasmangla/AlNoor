@@ -23,6 +23,11 @@ Where feasible, we will integrate with Square’s APIs/SDKs so you can keep usin
 - Unified inventory → fewer errors and no double entry (see: https://litextension.com/, https://makewebbetter.com/)
 - Simple management and unified reporting → one source of truth for products, stock, and sales
 
+## Visitor Feedback & Analytics
+- A short, optional survey on the home page captures first impressions from new visitors.
+- Admins can review submissions and see quarterly trends in the dashboard to prioritize updates.
+- Schedule a quarterly analytics review to align merchandising, promotions, and content with what visitors are asking for most.
+
 ## Conclusion
 The integrated storefront and POS deliver fast checkout, accurate inventory, and simple daily operations. With Square integration where possible, the transition will be smooth and familiar while adding the flexibility of a custom system.
 
