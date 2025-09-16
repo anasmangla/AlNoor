@@ -236,62 +236,111 @@ export default function AdminProductsPage() {
         </div>
       )}
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded flex items-center justify-between" role="alert">
+        <div className="mb-3 flex flex-col gap-2 rounded border border-red-200 bg-red-50 p-2 text-red-700 sm:flex-row sm:items-center sm:justify-between" role="alert">
           <span>{error}</span>
           <button onClick={load} className="text-red-800 underline text-sm">Retry</button>
         </div>
       )}
 
-      <form onSubmit={onCreate} className="mb-6 flex gap-2 items-end flex-wrap">
-        <div>
+      <form onSubmit={onCreate} className="mb-6 grid gap-3 sm:flex sm:flex-wrap sm:items-end">
+        <div className="w-full sm:min-w-[200px]">
           <label className="block text-sm text-slate-600" htmlFor="prodName">Name</label>
-          <input id="prodName" className="border rounded px-2 py-1" value={name} onChange={(e)=> setName(e.target.value)} placeholder="Product name" aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? 'errName' : undefined} />
-          {fieldErrors.name && <div className="text-xs text-red-700 mt-1">{fieldErrors.name}</div>}
+          <input
+            id="prodName"
+            className="w-full rounded border px-2 py-1"
+            value={name}
+            onChange={(e)=> setName(e.target.value)}
+            placeholder="Product name"
+            aria-invalid={!!fieldErrors.name}
+            aria-describedby={fieldErrors.name ? 'errName' : undefined}
+          />
+          {fieldErrors.name && (
+            <div id="errName" className="mt-1 text-xs text-red-700">{fieldErrors.name}</div>
+          )}
         </div>
-        <div>
+        <div className="w-full sm:min-w-[140px] sm:w-auto">
           <label className="block text-sm text-slate-600" htmlFor="prodPrice">Price (USD)</label>
-          <input id="prodPrice" type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={price} onChange={(e)=> setPrice(e.target.value)} aria-invalid={!!fieldErrors.price} aria-describedby={fieldErrors.price ? 'errPrice' : undefined} />
-          {fieldErrors.price && <div className="text-xs text-red-700 mt-1">{fieldErrors.price}</div>}
+          <input
+            id="prodPrice"
+            type="number"
+            step="0.01"
+            min="0"
+            className="w-full rounded border px-2 py-1 sm:w-32"
+            value={price}
+            onChange={(e)=> setPrice(e.target.value)}
+            aria-invalid={!!fieldErrors.price}
+            aria-describedby={fieldErrors.price ? 'errPrice' : undefined}
+          />
+          {fieldErrors.price && (
+            <div id="errPrice" className="mt-1 text-xs text-red-700">{fieldErrors.price}</div>
+          )}
         </div>
-        <div>
+        <div className="w-full sm:min-w-[140px] sm:w-auto">
           <label className="block text-sm text-slate-600" htmlFor="prodStock">Stock</label>
-          <input id="prodStock" type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={stock} onChange={(e)=> setStock(e.target.value)} aria-invalid={!!fieldErrors.stock} aria-describedby={fieldErrors.stock ? 'errStock' : undefined} />
-          {fieldErrors.stock && <div className="text-xs text-red-700 mt-1">{fieldErrors.stock}</div>}
+          <input
+            id="prodStock"
+            type="number"
+            step="0.01"
+            min="0"
+            className="w-full rounded border px-2 py-1 sm:w-32"
+            value={stock}
+            onChange={(e)=> setStock(e.target.value)}
+            aria-invalid={!!fieldErrors.stock}
+            aria-describedby={fieldErrors.stock ? 'errStock' : undefined}
+          />
+          {fieldErrors.stock && (
+            <div id="errStock" className="mt-1 text-xs text-red-700">{fieldErrors.stock}</div>
+          )}
         </div>
-        <div>
+        <div className="w-full sm:min-w-[160px] sm:w-auto">
           <label className="block text-sm text-slate-600" htmlFor="prodUnit">Unit</label>
-          <input id="prodUnit" className="border rounded px-2 py-1" value={unit} onChange={(e)=> setUnit(e.target.value)} placeholder="each, lb, dozen, ..." aria-invalid={!!fieldErrors.unit} aria-describedby={fieldErrors.unit ? 'errUnit' : undefined} />
-          {fieldErrors.unit && <div className="text-xs text-red-700 mt-1">{fieldErrors.unit}</div>}
+          <input
+            id="prodUnit"
+            className="w-full rounded border px-2 py-1"
+            value={unit}
+            onChange={(e)=> setUnit(e.target.value)}
+            placeholder="each, lb, dozen, ..."
+            aria-invalid={!!fieldErrors.unit}
+            aria-describedby={fieldErrors.unit ? 'errUnit' : undefined}
+          />
+          {fieldErrors.unit && (
+            <div id="errUnit" className="mt-1 text-xs text-red-700">{fieldErrors.unit}</div>
+          )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex w-full items-center gap-2 sm:w-auto">
           <input id="isWeightBased" type="checkbox" checked={isWeightBased} onChange={(e)=> setIsWeightBased(e.target.checked)} />
           <label htmlFor="isWeightBased" className="text-sm text-slate-600">Weight-based</label>
         </div>
-        <div>
+        <div className="w-full sm:min-w-[260px]">
           <label className="block text-sm text-slate-600">Image URL</label>
-          <input className="border rounded px-2 py-1 min-w-[280px]" value={imageUrl} onChange={(e)=> setImageUrl(e.target.value)} placeholder="https://..." />
+          <input
+            className="w-full rounded border px-2 py-1"
+            value={imageUrl}
+            onChange={(e)=> setImageUrl(e.target.value)}
+            placeholder="https://..."
+          />
         </div>
-        <div className="w-full max-w-xl">
+        <div className="w-full sm:max-w-xl">
           <label className="block text-sm text-slate-600">Description</label>
           <textarea className="border rounded px-2 py-1 w-full" rows={3} value={desc} onChange={(e)=> setDesc(e.target.value)} placeholder="Short description..." />
         </div>
-        <button type="submit" className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700">Add</button>
+        <button type="submit" className="w-full rounded bg-emerald-600 px-3 py-1 text-white hover:bg-emerald-700 sm:w-auto">Add</button>
       </form>
 
-      <div className="mb-4 flex items-center gap-3 flex-wrap">
+      <div className="mb-4 grid gap-2 sm:flex sm:flex-wrap sm:items-center">
         <input
-          className="border rounded px-2 py-1"
+          className="w-full rounded border px-2 py-1 sm:flex-1 sm:w-auto"
           placeholder="Filter by name, unit, or description..."
           value={query}
           onChange={(e)=> setQuery(e.target.value)}
         />
         <label className="text-sm text-slate-600">Sort</label>
-        <select className="border rounded px-2 py-1 text-sm" value={sortBy} onChange={(e)=> setSortBy(e.target.value as any)}>
+        <select className="w-full rounded border px-2 py-1 text-sm sm:w-auto" value={sortBy} onChange={(e)=> setSortBy(e.target.value as any)}>
           <option value="name">Name</option>
           <option value="price">Price</option>
           <option value="stock">Stock</option>
         </select>
-        <select className="border rounded px-2 py-1 text-sm" value={sortDir} onChange={(e)=> setSortDir(e.target.value as any)}>
+        <select className="w-full rounded border px-2 py-1 text-sm sm:w-auto" value={sortDir} onChange={(e)=> setSortDir(e.target.value as any)}>
           <option value="asc">Asc</option>
           <option value="desc">Desc</option>
         </select>
@@ -300,7 +349,7 @@ export default function AdminProductsPage() {
           type="number"
           step="0.1"
           min="0"
-          className="border rounded px-2 py-1 w-24 text-sm"
+          className="w-full rounded border px-2 py-1 text-sm sm:w-24"
           value={lowThreshold}
           onChange={(e)=> setLowThreshold(parseFloat(e.target.value)||0)}
         />
@@ -332,6 +381,7 @@ export default function AdminProductsPage() {
           type="file"
           accept=".csv,text/csv"
           aria-label="Import products from CSV"
+          className="w-full sm:w-auto"
           onChange={async (e)=>{
             const file = e.target.files?.[0]; if(!file) return;
             try{
@@ -368,34 +418,37 @@ export default function AdminProductsPage() {
       ) : (
         <ul className="grid gap-2">
           {sorted.map((p) => (
-            <li key={p.id} className={`border rounded p-3 flex items-center justify-between gap-4 ${((p as any).stock||0) <= lowThreshold ? 'border-red-300 bg-red-50' : ''}`}>
+            <li
+              key={p.id}
+              className={`border rounded p-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between ${((p as any).stock||0) <= lowThreshold ? 'border-red-300 bg-red-50' : ''}`}
+            >
               {editingId === p.id ? (
-                <div className="flex-1 flex items-end gap-2 flex-wrap">
-                  <div>
+                <div className="flex-1 grid gap-2 sm:flex sm:flex-wrap sm:items-end">
+                  <div className="w-full sm:w-auto">
                     <label className="block text-xs text-slate-600">Name</label>
-                    <input className="border rounded px-2 py-1" value={editName} onChange={(e)=> setEditName(e.target.value)} />
+                    <input className="w-full rounded border px-2 py-1" value={editName} onChange={(e)=> setEditName(e.target.value)} />
                   </div>
-                  <div>
+                  <div className="w-full sm:w-auto">
                     <label className="block text-xs text-slate-600">Price</label>
-                    <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={editPrice} onChange={(e)=> setEditPrice(e.target.value)} />
+                    <input type="number" step="0.01" min="0" className="w-full rounded border px-2 py-1 sm:w-32" value={editPrice} onChange={(e)=> setEditPrice(e.target.value)} />
                   </div>
-                  <div>
+                  <div className="w-full sm:w-auto">
                     <label className="block text-xs text-slate-600">Stock</label>
-                    <input type="number" step="0.01" min="0" className="border rounded px-2 py-1" value={editStock} onChange={(e)=> setEditStock(e.target.value)} />
+                    <input type="number" step="0.01" min="0" className="w-full rounded border px-2 py-1 sm:w-32" value={editStock} onChange={(e)=> setEditStock(e.target.value)} />
                   </div>
-                  <div>
+                  <div className="w-full sm:w-auto">
                     <label className="block text-xs text-slate-600">Unit</label>
-                    <input className="border rounded px-2 py-1" value={editUnit} onChange={(e)=> setEditUnit(e.target.value)} />
+                    <input className="w-full rounded border px-2 py-1" value={editUnit} onChange={(e)=> setEditUnit(e.target.value)} />
                   </div>
-                  <div className="flex items-center gap-2 pt-5">
+                  <div className="flex items-center gap-2 pt-2 sm:pt-5">
                     <input id="editIsWeightBased" type="checkbox" checked={editIsWeightBased} onChange={(e)=> setEditIsWeightBased(e.target.checked)} />
                     <label htmlFor="editIsWeightBased" className="text-xs text-slate-600">Weight-based</label>
                   </div>
-                  <div>
+                  <div className="w-full sm:w-auto">
                     <label className="block text-xs text-slate-600">Image URL</label>
-                    <input className="border rounded px-2 py-1 min-w-[260px]" value={editImageUrl} onChange={(e)=> setEditImageUrl(e.target.value)} />
+                    <input className="w-full rounded border px-2 py-1 sm:min-w-[260px]" value={editImageUrl} onChange={(e)=> setEditImageUrl(e.target.value)} />
                   </div>
-                  <div className="w-full max-w-xl">
+                  <div className="w-full sm:max-w-xl">
                     <label className="block text-xs text-slate-600">Description</label>
                     <textarea className="border rounded px-2 py-1 w-full" rows={2} value={editDesc} onChange={(e)=> setEditDesc(e.target.value)} />
                   </div>
@@ -408,8 +461,10 @@ export default function AdminProductsPage() {
                   </div>
                 </div>
               )}
-              <div className="flex items-center gap-3">
-                {(p as any).image_url ? (<img src={(p as any).image_url} alt={p.name} className="h-10 w-10 object-cover rounded border" />) : null}
+              <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-3">
+                {(p as any).image_url ? (
+                  <img src={(p as any).image_url} alt={p.name} className="h-12 w-12 rounded border object-cover" />
+                ) : null}
                 {editingId === p.id ? (
                   <>
                     <button onClick={onSaveEdit} className="text-emerald-700 hover:underline">Save</button>

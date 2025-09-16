@@ -88,6 +88,7 @@ export default function PosPage() {
       const order = await createOrder({
         items: sale.map((s) => ({ product_id: s.product.id, quantity: s.quantity })),
         source: "pos",
+        fulfillment_method: "pickup",
       });
       setMessage(`Payment successful. Order #${order.id}`);
       setSale([]);
@@ -125,6 +126,7 @@ export default function PosPage() {
       const order = await createOrder({
         items: sale.map((s) => ({ product_id: s.product.id, quantity: s.quantity })),
         source: "pos",
+        fulfillment_method: "pickup",
       });
       setMessage(`Terminal payment complete. Order #${order.id}`);
       setSale([]);
@@ -156,10 +158,10 @@ export default function PosPage() {
         </div>
       )}
       <div className="flex gap-2 items-end mb-4 flex-wrap">
-        <div>
+        <div className="w-full sm:w-auto">
           <label className="block text-sm text-slate-600">Product</label>
           <select
-            className="border rounded px-2 py-1 min-w-[200px]"
+            className="w-full rounded border px-2 py-1 sm:min-w-[200px]"
             value={selectedId}
             onChange={(e) => setSelectedId(e.target.value)}
           >
@@ -171,7 +173,7 @@ export default function PosPage() {
             ))}
           </select>
         </div>
-        <div>
+        <div className="w-full sm:w-auto">
           {(() => {
             const sel = products.find((p) => String(p.id) === selectedId) as any;
             const isWeight = sel?.is_weight_based;
@@ -182,7 +184,7 @@ export default function PosPage() {
                   {isWeight ? `Weight (${unit})` : "Quantity"}
                 </label>
                 <input
-                  className="border rounded px-2 py-1 w-28"
+                  className="w-full rounded border px-2 py-1 sm:w-28"
                   value={qty}
                   onChange={(e) => setQty(e.target.value)}
                   type="number"
@@ -195,7 +197,7 @@ export default function PosPage() {
         </div>
         <button
           onClick={addItem}
-          className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+          className="w-full rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700 sm:w-auto"
         >
           Add to Sale
         </button>
@@ -203,25 +205,28 @@ export default function PosPage() {
 
       <ul className="grid gap-2 mb-4">
         {sale.map((s) => (
-          <li key={s.product.id} className="border rounded p-2 flex items-center justify-between">
-            <div>
+          <li
+            key={s.product.id}
+            className="border rounded p-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div className="w-full sm:flex-1">
               <div className="font-medium">{s.product.name}</div>
               <div className="text-sm text-slate-600">
                 {s.quantity} {(s.product as any).unit || "unit"} x ${s.product.price.toFixed(2)}
               </div>
             </div>
-            <div className="font-semibold">
+            <div className="font-semibold sm:text-right">
               ${(s.product.price * s.quantity).toFixed(2)}
             </div>
           </li>
         ))}
       </ul>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-lg font-semibold">Total: ${total.toFixed(2)}</div>
-        <div className="flex items-center gap-2">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
           <input
-            className="border rounded px-2 py-1"
+            className="w-full rounded border px-2 py-1 sm:w-auto"
             placeholder="Terminal Device ID (optional)"
             value={deviceId}
             onChange={(e) => setDeviceId(e.target.value)}
@@ -229,14 +234,14 @@ export default function PosPage() {
           <button
             onClick={checkout}
             disabled={loading || sale.length === 0}
-            className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 disabled:opacity-60"
+            className="w-full rounded bg-emerald-600 px-3 py-1 text-white hover:bg-emerald-700 disabled:opacity-60 sm:w-auto"
           >
             {loading ? "Processing..." : "Checkout (simulate)"}
           </button>
           <button
             onClick={checkoutWithTerminal}
             disabled={loading || sale.length === 0}
-            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 disabled:opacity-60"
+            className="w-full rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700 disabled:opacity-60 sm:w-auto"
           >
             {loading ? "Processing..." : "Use Square Terminal"}
           </button>
@@ -249,7 +254,7 @@ export default function PosPage() {
               }catch(e:any){ setError(e.message||'Cash checkout failed'); } finally { setLoading(false); }
             }}
             disabled={loading || sale.length === 0}
-            className="bg-slate-700 text-white px-3 py-1 rounded hover:bg-slate-800 disabled:opacity-60"
+            className="w-full rounded bg-slate-700 px-3 py-1 text-white hover:bg-slate-800 disabled:opacity-60 sm:w-auto"
           >
             {loading ? 'Processing...' : 'Cash'}
           </button>
