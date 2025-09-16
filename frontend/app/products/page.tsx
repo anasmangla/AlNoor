@@ -1,5 +1,6 @@
 import { fetchProducts } from "@/lib/api";
 import { getWeightPricing } from "@/lib/weight";
+import LocalizedText from "@/components/LocalizedText";
 import Link from "next/link";
 
 type Props = { searchParams?: { q?: string } };
@@ -72,6 +73,9 @@ export default async function ProductsPage({ searchParams }: Props) {
             const desc = (p as any).description || "";
             const short = desc.length > 80 ? desc.slice(0, 77) + "..." : desc;
             const weight = getWeightPricing(p);
+            const thumb = (p as any).image_url;
+            const isVideo = false;
+            const mediaUrl = thumb;
             return (
               <li key={p.id} className="border rounded overflow-hidden hover:shadow">
                 <Link href={`/products/${p.id}`} className="block">
