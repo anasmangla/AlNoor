@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { API_BASE } from "@/lib/api";
+import { trackContactSubmission } from "@/lib/analytics";
 
 export default function ContactForm() {
   const [name, setName] = useState("");
@@ -22,6 +23,7 @@ export default function ContactForm() {
       });
       if (!res.ok) throw new Error(String(res.status));
       setStatus("Thanks! We will get back to you soon.");
+      trackContactSubmission("contact-page");
       setName(""); setEmail(""); setPhone(""); setMessage("");
     } catch (err) {
       setStatus("Could not send. Please try again later.");

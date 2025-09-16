@@ -9,6 +9,7 @@ import {
   fetchSession,
   logout as logoutSession,
 } from "@/lib/api";
+import { trackPurchase } from "@/lib/analytics";
 
 type SaleItem = { product: Product; quantity: number };
 
@@ -89,6 +90,7 @@ export default function PosPage() {
         items: sale.map((s) => ({ product_id: s.product.id, quantity: s.quantity })),
         source: "pos",
       });
+      trackPurchase(order);
       setMessage(`Payment successful. Order #${order.id}`);
       setSale([]);
     } catch (e: any) {
@@ -126,6 +128,7 @@ export default function PosPage() {
         items: sale.map((s) => ({ product_id: s.product.id, quantity: s.quantity })),
         source: "pos",
       });
+      trackPurchase(order);
       setMessage(`Terminal payment complete. Order #${order.id}`);
       setSale([]);
     } catch (e: any) {
@@ -245,6 +248,7 @@ export default function PosPage() {
               setLoading(true); setError(null); setMessage(null);
               try{
                 const order = await createOrder({ items: sale.map((s)=>({product_id: s.product.id, quantity: s.quantity})), source: 'pos' });
+                trackPurchase(order);
                 setMessage(`Cash received. Order #${order.id}`); setSale([]);
               }catch(e:any){ setError(e.message||'Cash checkout failed'); } finally { setLoading(false); }
             }}

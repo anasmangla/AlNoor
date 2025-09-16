@@ -18,6 +18,7 @@ This guide walks through preparing and launching the Al Noor Farm frontend (Next
 - `NEXT_PUBLIC_BASE_PATH=/alnoor` – Required when the storefront is mounted under `/alnoor`.
 - `NEXT_PUBLIC_API_BASE_URL` – Must match the public path to the backend (e.g., `https://example.com/api`).
 - Optional Square integration: `NEXT_PUBLIC_SQUARE_APP_ID`, `NEXT_PUBLIC_SQUARE_LOCATION_ID`, `NEXT_PUBLIC_SQUARE_ENV`.
+- Optional analytics/Search Console: `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (GA4 measurement ID) and `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`. The static landing page pulls these from `/alnoor/api/public/config`.
 - Optional server config: `PORT` (defaults to `3000`), `HOST` (defaults to `0.0.0.0`).
 
 ### Backend (FastAPI)
@@ -59,3 +60,12 @@ This guide walks through preparing and launching the Al Noor Farm frontend (Next
 - Static links on the landing page redirect `/store`, `/admin`, and `/pos` into the `/alnoor` Next.js app.
 
 Keep the deployment scripts and environment variable definitions in sync with any future backend database or authentication changes.
+
+## Analytics & Goals
+- Set `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` to load Google Analytics 4 (gtag.js) across both the Next.js application and the static landing page.
+- Provide `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` to emit the Search Console verification meta tag automatically in both surfaces.
+- Mark these GA4 events as conversions in the Analytics UI:
+  - `purchase` – fired after a checkout succeeds with order metadata.
+  - `generate_lead` – fired when the storefront or landing-page contact forms submit successfully.
+  - `page_view` – emitted on every route transition; you can create additional conversions for specific URLs such as `/confirmation`.
+- If you change the base path from `/alnoor`, update the `data-app-base` attribute on `public/index.html` so the landing page fetches `/api/public/config` from the right location.

@@ -4,6 +4,7 @@ import { createOrder } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import SquareCard from "@/components/payments/SquareCard";
+import { trackPurchase } from "@/lib/analytics";
 
 export default function CheckoutPage() {
   const { lines, clear, total } = useCart();
@@ -25,6 +26,7 @@ export default function CheckoutPage() {
         items: lines.map((l) => ({ product_id: l.product.id, quantity: l.quantity })),
         source: "web",
       });
+      trackPurchase(order);
       clear();
       router.push(`/confirmation?orderId=${order.id}`);
     } catch (e: any) {
@@ -81,6 +83,7 @@ export default function CheckoutPage() {
                   source: "web",
                   payment_token: token,
                 });
+                trackPurchase(order);
                 clear();
                 router.push(`/confirmation?orderId=${order.id}`);
               } catch (e: any) {

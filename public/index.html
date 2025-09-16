@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app-base="/alnoor">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -139,6 +139,55 @@
     <script>
       (function(){
         document.getElementById('year').textContent = new Date().getFullYear();
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+        window.__alnoorAnalyticsReady = window.__alnoorAnalyticsReady || false;
+        var baseAttr = document.documentElement.getAttribute('data-app-base') || '/alnoor';
+        var trimmedBase = baseAttr.replace(/\/$/, '');
+        var analyticsEndpoint = (trimmedBase === '' || trimmedBase === '/') ? '/api/public/config' : trimmedBase + '/api/public/config';
+
+        async function loadMarketingConfig(){
+          try{
+            var response = await fetch(analyticsEndpoint, { credentials: 'omit' });
+            if(!response.ok){ return; }
+            var config = await response.json();
+            if(config && config.googleSiteVerification){
+              var verification = document.querySelector('meta[name="google-site-verification"]');
+              if(!verification){
+                verification = document.createElement('meta');
+                verification.name = 'google-site-verification';
+                document.head.appendChild(verification);
+              }
+              verification.content = config.googleSiteVerification;
+            }
+            if(config && config.googleAnalyticsId){
+              var gaId = config.googleAnalyticsId;
+              var loader = document.createElement('script');
+              loader.async = true;
+              loader.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+              document.head.appendChild(loader);
+
+              var inline = document.createElement('script');
+              inline.innerHTML = [
+                "window.dataLayer = window.dataLayer || [];",
+                "function gtag(){dataLayer.push(arguments);}",
+                "gtag('js', new Date());",
+                "gtag('config', '" + gaId + "', { send_page_view: false });",
+                "window.__alnoorAnalyticsReady = true;"
+              ].join('\n');
+              document.head.appendChild(inline);
+
+              window.gtag('event', 'page_view', {
+                page_path: window.location.pathname + window.location.search
+              });
+            }
+          }catch(err){
+            console.error('Failed to load analytics configuration', err);
+          }
+        }
+
+        loadMarketingConfig();
+
         var form = document.getElementById('contactForm');
         if (form) {
           form.addEventListener('submit', async function(e){
@@ -158,6 +207,9 @@
               (document.getElementById('cEmail')||{}).value='';
               (document.getElementById('cMsg')||{}).value='';
               (document.getElementById('cPhone')||{}).value='';
+              if(typeof window.gtag === 'function'){
+                window.gtag('event', 'generate_lead', { form_id: 'landing-contact' });
+              }
             }catch(err){ statusEl.textContent='Could not send. Please try again later.'; }
           });
         }
