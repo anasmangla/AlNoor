@@ -36,7 +36,9 @@ export default async function ProductsPage({ searchParams }: Props) {
 
   return (
     <section>
-      <h1 className="text-2xl font-semibold mb-4">Products</h1>
+      <h1 className="text-2xl font-semibold mb-4">
+        <LocalizedText id="products.title" />
+      </h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

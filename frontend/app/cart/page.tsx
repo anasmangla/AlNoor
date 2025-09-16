@@ -2,14 +2,16 @@
 import { useCart } from "@/context/CartContext";
 import { getWeightPricing } from "@/lib/weight";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CartPage() {
   const { lines, update, remove, total } = useCart();
+  const { t } = useLanguage();
   return (
     <section>
-      <h1 className="text-2xl font-semibold mb-4">Cart</h1>
+      <h1 className="text-2xl font-semibold mb-4">{t("cart.title")}</h1>
       {lines.length === 0 ? (
-        <p className="text-slate-600">Your cart is empty.</p>
+        <p className="text-slate-600">{t("cart.empty")}</p>
       ) : (
         <>
           <ul className="grid gap-2 mb-4">
@@ -22,7 +24,7 @@ export default function CartPage() {
                 <div className="w-full sm:flex-1">
                   <div className="font-medium">{l.product.name}</div>
                   <div className="text-sm text-slate-600">
-                    ${l.product.price.toFixed(2)} / {(l.product as any).unit || "unit"}
+                    ${l.product.price.toFixed(2)} / {(l.product as any).unit || t("products.unitName")}
                   </div>
                 </div>
                 <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">

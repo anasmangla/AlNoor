@@ -33,13 +33,17 @@ export default function CheckoutPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (lines.length === 0) {
+      setError(t("checkout.errors.emptyCart"));
+      return;
+    }
     setLoading(true);
     try {
       const order = await placeOrder();
       clear();
       router.push(`/confirmation?orderId=${order.id}`);
     } catch (e: any) {
-      setError(e.message || "Order failed");
+      setError(e?.message || t("checkout.errors.orderFailed"));
     } finally {
       setLoading(false);
     }
@@ -67,25 +71,25 @@ export default function CheckoutPage() {
 
       <form onSubmit={onSubmit} className="grid gap-3 max-w-md">
         <div>
-          <label className="block text-sm text-slate-600">Name</label>
+          <label className="block text-sm text-slate-600">{t("checkout.nameLabel")}</label>
           <input
             className="border rounded px-2 py-1 w-full"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
+            placeholder={t("checkout.namePlaceholder")}
           />
         </div>
         <div>
-          <label className="block text-sm text-slate-600">Email</label>
+          <label className="block text-sm text-slate-600">{t("checkout.emailLabel")}</label>
           <input
             type="email"
             className="border rounded px-2 py-1 w-full"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder={t("checkout.emailPlaceholder")}
           />
         </div>
-        <div className="text-sm text-slate-600">Pay with Square (sandbox) or place a simulated order.</div>
+        <div className="text-sm text-slate-600">{t("checkout.instructions")}</div>
         {typeof window !== "undefined" && process.env.NEXT_PUBLIC_SQUARE_APP_ID ? (
           <SquareCard
             amountCents={Math.round(total * 100)}
@@ -104,7 +108,7 @@ export default function CheckoutPage() {
                 clear();
                 router.push(`/confirmation?orderId=${order.id}`);
               } catch (e: any) {
-                setError(e.message || "Payment failed");
+                setError(e?.message || t("checkout.errors.paymentFailed"));
               } finally {
                 setLoading(false);
               }
@@ -116,7 +120,7 @@ export default function CheckoutPage() {
           className="w-full rounded bg-slate-700 px-3 py-1 text-white hover:bg-slate-800 sm:w-auto"
           disabled={loading}
         >
-          {loading ? "Placing order..." : "Place Order (simulate)"}
+          {loading ? t("checkout.submitLoading") : t("checkout.submit")}
         </button>
       </form>
       <p className="text-xs text-slate-500 mt-2">If Square is configured (sandbox), payment will be processed; otherwise, the order is simulated.</p>

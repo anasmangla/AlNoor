@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ApiStatus() {
   const [down, setDown] = useState(false);
   const [msg, setMsg] = useState<string>("");
+  const { t } = useLanguage();
   useEffect(() => {
     let cancelled = false;
     async function ping() {
