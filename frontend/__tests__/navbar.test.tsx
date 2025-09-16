@@ -23,17 +23,20 @@ describe('Navbar', () => {
     );
     expect(screen.getByText('Al Noor')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /al noor/i })).toHaveAttribute('src', '/alnoorlogo.png');
-    const expectLink = (name: string | RegExp, href?: string) => {
-      const links = screen.getAllByRole('link', { name });
-      expect(links.length).toBeGreaterThan(0);
-      if (href) {
-        expect(links.some((link) => link.getAttribute('href') === href)).toBe(true);
-      }
-    };
-    expectLink('Products', '/products');
-    expectLink('Contact', '/contact');
-    expectLink('Checkout', '/checkout');
-    expectLink(/Cart/);
-    expectLink('Admin', '/admin/login');
+
+    const primaryLinks = [
+      { name: 'Home', href: '/' },
+      { name: 'Shop', href: '/products' },
+      { name: 'About', href: '/about' },
+      { name: 'Halal Process', href: '/halal-process' },
+      { name: 'FAQ', href: '/faq' },
+      { name: 'Contact', href: '/contact' },
+    ];
+    primaryLinks.forEach((link) => {
+      expect(screen.getByRole('link', { name: link.name })).toHaveAttribute('href', link.href);
+    });
+    expect(screen.getByRole('link', { name: 'Checkout' })).toHaveAttribute('href', '/checkout');
+    expect(screen.getByRole('link', { name: /Cart/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Admin' })).toHaveAttribute('href', '/admin/login');
   });
 });

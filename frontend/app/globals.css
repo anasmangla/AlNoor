@@ -1,11 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html, body { height: 100%; }
-
 @layer base {
+  html, body {
+    height: 100%;
+    @apply font-sans text-slate-800 bg-white;
+  }
+
   a, button { @apply transition-colors duration-150; }
-  input, select, textarea { @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1; }
-  a:focus-visible, button:focus-visible { @apply outline-none ring-2 ring-emerald-500 ring-offset-2; }
+  input, select, textarea { @apply focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-1; }
+  a:focus-visible, button:focus-visible { @apply outline-none ring-2 ring-brand ring-offset-2; }
+}
+
+@layer components {
+  .heading {
+    @apply font-heading text-brand tracking-tight;
+  }
+
+  .subheading {
+    @apply font-heading text-brand/80 uppercase tracking-wide text-xs;
+  }
 }
