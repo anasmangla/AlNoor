@@ -101,10 +101,10 @@ export default async function ProductsPage({ searchParams }: Props) {
                           <div className="text-slate-600 text-xs">ID: {p.id}</div>
                         </div>
                         <div className="text-right">
-                          <div className="font-semibold">${p.price.toFixed(2)}</div>
+                          <div className="font-semibold">{`$${p.price.toFixed(2)}`}</div>
                           {weight ? (
                             <div className="text-xs text-slate-500">
-                              ${weight.perLb.toFixed(2)}/lb · ${weight.perKg.toFixed(2)}/kg
+                              {`${weight.perLb.toFixed(2)}/lb · ${weight.perKg.toFixed(2)}/kg`}
                             </div>
                           ) : (
                             <div className="text-xs text-slate-500">{(p as any).unit || "unit"}</div>
