@@ -1,3 +1,5 @@
+export type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
+
 export type Product = {
   id: number;
   name: string;
@@ -7,6 +9,11 @@ export type Product = {
   is_weight_based: boolean;
   image_url?: string;
   description?: string;
+
+  weight?: number;
+  cut_type?: string;
+  price_per_unit?: number;
+  origin?: string;
 };
 
 export const API_BASE =
@@ -60,7 +67,7 @@ export async function fetchProduct(id: number): Promise<Product> {
   return res.json();
 }
 
-export async function createProduct(input: Omit<Product, "id">): Promise<Product> {
+export async function createProduct(input: ProductInput): Promise<Product> {
   const res = await fetch(`${API_BASE}/products`, {
     method: "POST",
     headers: {
@@ -115,6 +122,7 @@ export type Order = {
   customer_name?: string | null;
   customer_email?: string | null;
   created_at?: string | null;
+  fulfillment_method?: string | null;
   items: Array<{
     product_id: number;
     name: string;
@@ -131,6 +139,7 @@ export async function createOrder(input: {
   items: OrderItemInput[];
   source?: string;
   payment_token?: string;
+  fulfillment_method?: string;
 }): Promise<Order> {
   const res = await fetch(`${API_BASE}/orders`, {
     method: "POST",
@@ -216,6 +225,56 @@ export async function deleteMessage(id: number): Promise<void> {
   if (!res.ok) throw await buildError(res, "Failed to delete message");
 }
 
+export type Review = {
+    id: number;
+    name: string;
+    location?: string | null;
+    rating?: number | null;
+    message: string;
+    photo_url?: string | null;
+    created_at: string;
+};
+
+export type ReviewInput = {
+    name?: string;
+    location?: string;
+    rating?: number;
+    message: string;
+    photoUrl?: string;
+};
+
+export async function fetchReviews(): Promise<Review[]> {
+    const res = await fetch(`${API_BASE}/reviews`, { cache: "no-store" });
+    if (!res.ok) throw await buildError(res, "Failed to load reviews");
+    return res.json();
+}
+
+export async function submitReview(input: ReviewInput): Promise<Review> {
+    const payload: Record<string, unknown> = {
+        message: input.message,
+    };
+    if (input.name && input.name.trim()) {
+        payload.name = input.name.trim();
+    }
+    if (input.location && input.location.trim()) {
+        payload.location = input.location.trim();
+    }
+    if (typeof input.rating === "number") {
+        payload.rating = input.rating;
+    }
+    if (input.photoUrl && input.photoUrl.trim()) {
+        payload.photo_url = input.photoUrl.trim();
+    }
+
+    const res = await fetch(`${API_BASE}/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw await buildError(res, "Failed to submit review");
+    return res.json();
+}
+
 export async function pollTerminalCheckout(id: string): Promise<TerminalCheckout> {
   const res = await fetch(`${API_BASE}/pos/terminal/checkout/${id}`, {
     cache: "no-store",
@@ -244,7 +303,7 @@ export async function deleteProduct(id: number): Promise<void> {
 
 export async function updateProduct(
   id: number,
-  input: Partial<Omit<Product, "id">>
+  input: Partial<ProductInput>
 ): Promise<Product> {
   const res = await fetch(`${API_BASE}/products/${id}`, {
     method: "PUT",
@@ -255,5 +314,23 @@ export async function updateProduct(
     body: JSON.stringify(input),
   });
   if (!res.ok) throw await buildError(res, "Failed to update product");
+  return res.json();
+}
+
+export async function createBackorderRequest(
+  productId: number,
+  input: {
+    email: string;
+    name?: string;
+    quantity?: number;
+    note?: string;
+  }
+): Promise<BackorderRequest> {
+  const res = await fetch(`${API_BASE}/products/${productId}/backorder`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) throw await buildError(res, "Failed to create backorder request");
   return res.json();
 }

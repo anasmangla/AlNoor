@@ -36,7 +36,9 @@ export default async function AdminOrderDetail({ params }: Props) {
         <Link className="text-blue-600 hover:underline" href="/admin/orders">Back to Orders</Link>
       </div>
       <div className="text-slate-700">Total: ${order.total_amount.toFixed(2)}</div>
-      <div className="text-sm text-slate-600">Status: {order.status} • Source: {order.source.toUpperCase()}</div>
+      <div className="text-sm text-slate-600">
+        Status: {order.status} • Source: {order.source.toUpperCase()} • Fulfillment: {((order.fulfillment_method || "pickup").toLowerCase() === "delivery" ? "Delivery" : "Pickup")}
+      </div>
       <div className="text-sm text-slate-600">
         {order.created_at && <span>Created: {new Date(order.created_at).toLocaleString()} • </span>}
         {order.customer_name && <span>Name: {order.customer_name} • </span>}

@@ -1,21 +1,67 @@
-from typing import List
-from fastapi import APIRouter, HTTPException, status, Depends
+import os
+import smtplib
+from datetime import datetime, timedelta
+from email.message import EmailMessage
+from typing import List, Tuple
+
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import select
-from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.deps import get_current_user
+
 from app.database import get_session
-from app.models import Product as ProductModel
-from app.schemas import ProductCreate, ProductUpdate, ProductOut
+from app.deps import get_current_user
+from app.models import (
+    BackorderRequest as BackorderRequestModel,
+    Product as ProductModel,
+)
+from app.schemas import (
+    BackorderRequestCreate,
+    BackorderRequestOut,
+    ProductCreate,
+    ProductOut,
+    ProductUpdate,
+)
 
 
 router = APIRouter()
+
+try:
+    LOW_STOCK_THRESHOLD = float(os.getenv("LOW_STOCK_THRESHOLD", "5"))
+except (TypeError, ValueError):
+    LOW_STOCK_THRESHOLD = 5.0
+
+
+def _compute_stock_meta(stock: float) -> Tuple[str, str, bool]:
+    amount = float(stock or 0)
+    if amount <= 0:
+        return "out_of_stock", "Out of stock", True
+    if amount <= LOW_STOCK_THRESHOLD:
+        return "low_stock", "Low stock", False
+    return "in_stock", "In stock", False
+
+
+def _serialize_product(product: ProductModel) -> ProductOut:
+    status, label, backorder = _compute_stock_meta(product.stock)
+    return ProductOut(
+        id=product.id,
+        name=product.name,
+        price=product.price,
+        stock=product.stock,
+        unit=product.unit,
+        is_weight_based=product.is_weight_based,
+        image_url=getattr(product, "image_url", ""),
+        description=getattr(product, "description", ""),
+        stock_status=status,
+        stock_status_label=label,
+        backorder_available=backorder,
+    )
 
 
 @router.get("/products", response_model=List[ProductOut])
 async def list_products(session: AsyncSession = Depends(get_session)):
     result = await session.execute(select(ProductModel))
     rows = result.scalars().all()
+
     return [
         ProductOut(
             id=p.id,
@@ -26,6 +72,10 @@ async def list_products(session: AsyncSession = Depends(get_session)):
             is_weight_based=p.is_weight_based,
             image_url=getattr(p, "image_url", ""),
             description=getattr(p, "description", ""),
+            weight=getattr(p, "weight", 0.0),
+            cut_type=getattr(p, "cut_type", ""),
+            price_per_unit=getattr(p, "price_per_unit", 0.0),
+            origin=getattr(p, "origin", ""),
         )
         for p in rows
     ]
@@ -46,8 +96,11 @@ async def get_product(product_id: int, session: AsyncSession = Depends(get_sessi
         is_weight_based=p.is_weight_based,
         image_url=getattr(p, "image_url", ""),
         description=getattr(p, "description", ""),
+        weight=getattr(p, "weight", 0.0),
+        cut_type=getattr(p, "cut_type", ""),
+        price_per_unit=getattr(p, "price_per_unit", 0.0),
+        origin=getattr(p, "origin", ""),
     )
-
 
 @router.post("/products", response_model=ProductOut, status_code=status.HTTP_201_CREATED)
 async def create_product(
@@ -63,6 +116,10 @@ async def create_product(
         is_weight_based=bool(payload.is_weight_based),
         image_url=payload.image_url or "",
         description=payload.description or "",
+        weight=payload.weight or 0.0,
+        cut_type=payload.cut_type or "",
+        price_per_unit=payload.price_per_unit or 0.0,
+        origin=payload.origin or "",
     )
     session.add(p)
     await session.commit()
@@ -76,6 +133,10 @@ async def create_product(
         is_weight_based=p.is_weight_based,
         image_url=getattr(p, "image_url", ""),
         description=getattr(p, "description", ""),
+        weight=getattr(p, "weight", 0.0),
+        cut_type=getattr(p, "cut_type", ""),
+        price_per_unit=getattr(p, "price_per_unit", 0.0),
+        origin=getattr(p, "origin", ""),
     )
 
 
@@ -104,8 +165,17 @@ async def update_product(
         p.image_url = payload.image_url or ""
     if getattr(payload, "description", None) is not None:
         p.description = payload.description or ""
+    if getattr(payload, "weight", None) is not None:
+        p.weight = payload.weight or 0.0
+    if getattr(payload, "cut_type", None) is not None:
+        p.cut_type = payload.cut_type or ""
+    if getattr(payload, "price_per_unit", None) is not None:
+        p.price_per_unit = payload.price_per_unit or 0.0
+    if getattr(payload, "origin", None) is not None:
+        p.origin = payload.origin or ""
     await session.commit()
     await session.refresh(p)
+
     return ProductOut(
         id=p.id,
         name=p.name,
@@ -115,6 +185,10 @@ async def update_product(
         is_weight_based=p.is_weight_based,
         image_url=getattr(p, "image_url", ""),
         description=getattr(p, "description", ""),
+        weight=getattr(p, "weight", 0.0),
+        cut_type=getattr(p, "cut_type", ""),
+        price_per_unit=getattr(p, "price_per_unit", 0.0),
+        origin=getattr(p, "origin", ""),
     )
 
 

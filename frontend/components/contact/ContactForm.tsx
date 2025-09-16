@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { API_BASE } from "@/lib/api";
-import { trackContactSubmission } from "@/lib/analytics";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ContactForm() {
   const [name, setName] = useState("");
@@ -9,11 +9,12 @@ export default function ContactForm() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
+  const [statusKey, setStatusKey] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus(null);
+    setStatusKey(null);
     setLoading(true);
     try {
       const res = await fetch(`${API_BASE}/contact`, {
@@ -22,11 +23,10 @@ export default function ContactForm() {
         body: JSON.stringify({ name, email, phone, message }),
       });
       if (!res.ok) throw new Error(String(res.status));
-      setStatus("Thanks! We will get back to you soon.");
-      trackContactSubmission("contact-page");
+      setStatusKey("contactForm.success");
       setName(""); setEmail(""); setPhone(""); setMessage("");
     } catch (err) {
-      setStatus("Could not send. Please try again later.");
+      setStatusKey("contactForm.error");
     } finally {
       setLoading(false);
     }
@@ -35,27 +35,29 @@ export default function ContactForm() {
   return (
     <form onSubmit={onSubmit} className="grid gap-3" aria-live="polite">
       <div>
-        <label className="block text-sm text-slate-600" htmlFor="cname">Name</label>
+
+        <label className="block text-sm font-heading text-brand" htmlFor="cname">Name</label>
         <input id="cname" className="border rounded px-2 py-1 w-full" value={name} onChange={(e)=> setName(e.target.value)} placeholder="Your name" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm text-slate-600" htmlFor="cemail">Email</label>
+          <label className="block text-sm font-heading text-brand" htmlFor="cemail">Email</label>
           <input id="cemail" type="email" className="border rounded px-2 py-1 w-full" value={email} onChange={(e)=> setEmail(e.target.value)} placeholder="you@example.com" />
         </div>
         <div>
-          <label className="block text-sm text-slate-600" htmlFor="cphone">Phone</label>
+          <label className="block text-sm font-heading text-brand" htmlFor="cphone">Phone</label>
           <input id="cphone" className="border rounded px-2 py-1 w-full" value={phone} onChange={(e)=> setPhone(e.target.value)} placeholder="(optional)" />
         </div>
       </div>
       <div>
-        <label className="block text-sm text-slate-600" htmlFor="cmsg">Message</label>
+        <label className="block text-sm font-heading text-brand" htmlFor="cmsg">Message</label>
         <textarea id="cmsg" className="border rounded px-2 py-1 w-full" rows={4} value={message} onChange={(e)=> setMessage(e.target.value)} placeholder="How can we help?" required />
       </div>
-      <button type="submit" className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 disabled:opacity-60" disabled={loading} aria-busy={loading}>
+      <button type="submit" className="bg-brand text-white px-3 py-1 rounded hover:bg-brand-dark disabled:opacity-60" disabled={loading} aria-busy={loading}>
+
         {loading ? "Sending..." : "Send"}
       </button>
-      {status && (<div className="text-sm text-slate-700">{status}</div>)}
+      {status && (<div className="text-sm text-brand">{status}</div>)}
     </form>
   );
 }

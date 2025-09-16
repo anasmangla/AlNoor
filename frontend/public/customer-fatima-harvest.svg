@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Customer Fatima with Harvest Basket</title>
+  <desc id="desc">Illustration of a smiling woman holding a basket of vegetables on a farm.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cde7ff" />
+      <stop offset="100%" stop-color="#f6fbff" />
+    </linearGradient>
+    <linearGradient id="field" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8bc34a" />
+      <stop offset="100%" stop-color="#5a9d2a" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="256" fill="url(#sky)" />
+  <rect y="256" width="512" height="256" fill="url(#field)" />
+  <g transform="translate(0,40)">
+    <ellipse cx="256" cy="360" rx="120" ry="24" fill="rgba(0,0,0,0.08)" />
+    <circle cx="248" cy="144" r="68" fill="#f7c59f" />
+    <circle cx="224" cy="130" r="12" fill="#fff" opacity="0.8" />
+    <path d="M196 246h120v140c0 22-18 40-40 40h-40c-22 0-40-18-40-40V246z" fill="#f8e9d9" />
+    <path d="M172 240h168c8 0 14 6 14 14v14c0 8-6 14-14 14H172c-8 0-14-6-14-14v-14c0-8 6-14 14-14z" fill="#c77d4c" />
+    <path d="M160 296h192v32c0 10-8 18-18 18H178c-10 0-18-8-18-18v-32z" fill="#995a2e" />
+    <g transform="translate(160,236)">
+      <rect x="-36" y="12" width="248" height="28" rx="14" fill="#ffddb1" />
+      <rect x="-30" y="18" width="236" height="16" rx="8" fill="#e6b97c" />
+    </g>
+    <g transform="translate(256 264)">
+      <ellipse cx="0" cy="72" rx="96" ry="54" fill="#5a3d26" />
+      <ellipse cx="0" cy="70" rx="90" ry="48" fill="#f4ede2" />
+      <g transform="translate(-58,30)">
+        <circle cx="0" cy="0" r="20" fill="#e4514a" />
+        <ellipse cx="38" cy="-12" rx="22" ry="18" fill="#7ec850" />
+        <ellipse cx="74" cy="12" rx="20" ry="16" fill="#f8c74c" />
+        <ellipse cx="110" cy="-14" rx="18" ry="14" fill="#6fbf73" />
+        <circle cx="140" cy="10" r="16" fill="#e4514a" />
+      </g>
+    </g>
+    <path d="M200 122c18-38 60-54 94-38 24 10 32 34 24 52-20-14-74-28-118-14z" fill="#3e5a2d" />
+    <path d="M314 128c-2 32-20 54-44 54-14 0-22-8-34-18 18-8 42-12 78-36z" fill="#4f6e3d" />
+    <path d="M166 360c0-34 28-62 62-62h56c34 0 62 28 62 62" fill="#4c84c4" />
+    <path d="M186 354c0-18 14-32 32-32h76c18 0 32 14 32 32" fill="#3b6cab" />
+  </g>
+</svg>
