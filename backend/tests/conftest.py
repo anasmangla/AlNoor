@@ -17,7 +17,6 @@ from app.models import (
     VisitorFeedback,
 )
 
-
 @pytest.fixture
 async def client() -> AsyncClient:
     await init_db()
