@@ -4,27 +4,38 @@ import { createOrder } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import SquareCard from "@/components/payments/SquareCard";
+import { getWeightPricing } from "@/lib/weight";
+
+type FulfillmentMethod = "pickup" | "delivery";
 
 export default function CheckoutPage() {
   const { lines, clear, total } = useCart();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [fulfillmentMethod, setFulfillmentMethod] = useState<FulfillmentMethod>("pickup");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const hasItems = lines.length > 0;
+
+  async function placeOrder(extra?: { payment_token?: string }) {
+    if (lines.length === 0) throw new Error("Cart is empty");
+    return await createOrder({
+      customer_name: name || undefined,
+      customer_email: email || undefined,
+      items: lines.map((l) => ({ product_id: l.product.id, quantity: l.quantity })),
+      source: "web",
+      fulfillment_method: fulfillmentMethod,
+      ...extra,
+    });
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      if (lines.length === 0) throw new Error("Cart is empty");
-      const order = await createOrder({
-        customer_name: name || undefined,
-        customer_email: email || undefined,
-        items: lines.map((l) => ({ product_id: l.product.id, quantity: l.quantity })),
-        source: "web",
-      });
+      const order = await placeOrder();
       clear();
       router.push(`/confirmation?orderId=${order.id}`);
     } catch (e: any) {
@@ -34,17 +45,26 @@ export default function CheckoutPage() {
     }
   }
 
+  const showSquare =
+    typeof window !== "undefined" && Boolean(process.env.NEXT_PUBLIC_SQUARE_APP_ID);
+
   return (
-    <section>
-      <h1 className="text-2xl font-semibold mb-4">Checkout</h1>
-      {lines.length > 0 && (
-        <div className="mb-3 text-sm text-slate-700">Items: {lines.length} • Total ${total.toFixed(2)}</div>
-      )}
+    <section className="grid gap-4">
+      <div>
+        <h1 className="text-2xl font-semibold mb-2">Checkout</h1>
+        <p className="text-sm text-slate-600">
+          Complete your purchase as a guest—no account or password required.
+        </p>
+      </div>
       {error && (
-        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-2 rounded">
+        <div
+          className="text-red-700 bg-red-50 border border-red-200 p-2 rounded"
+          role="alert"
+        >
           {error}
         </div>
       )}
+
       <form onSubmit={onSubmit} className="grid gap-3 max-w-md">
         <div>
           <label className="block text-sm text-slate-600">Name</label>

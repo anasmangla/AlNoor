@@ -1,4 +1,5 @@
 import { fetchProduct } from "@/lib/api";
+import { getWeightPricing } from "@/lib/weight";
 import AddToCart from "./widgets/AddToCart";
 
 type Props = { params: { id: string } };
@@ -9,6 +10,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const site = process.env.NEXT_PUBLIC_SITE_URL || "";
   const bp = process.env.NEXT_PUBLIC_BASE_PATH || "";
   const url = `${site}${bp}/products/${id}`;
+  const weight = getWeightPricing(product);
 
   return (
     <section>
@@ -20,9 +22,16 @@ export default async function ProductDetailPage({ params }: Props) {
           className="mb-3 h-auto w-full max-h-64 rounded border object-cover"
         />
       ) : null}
-      <p className="text-slate-700 mb-4">
-        ${product.price.toFixed(2)} / {(product as any).unit || "unit"}
-      </p>
+      <div className="text-slate-700 mb-4">
+        <div className="text-lg font-semibold">
+          ${product.price.toFixed(2)} / {(product as any).unit || "unit"}
+        </div>
+        {weight && (
+          <div className="text-sm text-slate-500">
+            ${weight.perLb.toFixed(2)}/lb · ${weight.perKg.toFixed(2)}/kg
+          </div>
+        )}
+      </div>
       {(product as any).description && (
         <p className="text-slate-600 mb-4 whitespace-pre-line">{(product as any).description}</p>
       )}

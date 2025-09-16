@@ -5,6 +5,7 @@ from typing import Optional
 import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+import inspect
 from pydantic import BaseModel, Field
 
 from app.schemas import OrderCreate, OrderOut
@@ -24,6 +25,9 @@ async def pos_checkout(
 ):
     # Force source to 'pos' and reuse order creation logic
     payload.source = "pos"
+    params = inspect.signature(create_order).parameters
+    if len(params) <= 1:
+        return await create_order(payload)
     return await create_order(payload, session)
 
 

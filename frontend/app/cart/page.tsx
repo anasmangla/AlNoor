@@ -1,5 +1,6 @@
 "use client";
 import { useCart } from "@/context/CartContext";
+import { getWeightPricing } from "@/lib/weight";
 import Link from "next/link";
 
 export default function CartPage() {
@@ -12,6 +13,7 @@ export default function CartPage() {
       ) : (
         <>
           <ul className="grid gap-2 mb-4">
+
             {lines.map((l) => (
               <li
                 key={l.product.id}
@@ -38,9 +40,10 @@ export default function CartPage() {
                   >
                     Remove
                   </button>
-                </div>
-              </li>
-            ))}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-lg font-semibold">Total: ${total.toFixed(2)}</div>
