@@ -115,6 +115,7 @@ export type Order = {
   customer_name?: string | null;
   customer_email?: string | null;
   created_at?: string | null;
+  fulfillment_method?: string | null;
   items: Array<{
     product_id: number;
     name: string;
@@ -131,6 +132,7 @@ export async function createOrder(input: {
   items: OrderItemInput[];
   source?: string;
   payment_token?: string;
+  fulfillment_method?: string;
 }): Promise<Order> {
   const res = await fetch(`${API_BASE}/orders`, {
     method: "POST",

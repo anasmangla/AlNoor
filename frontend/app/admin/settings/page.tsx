@@ -56,7 +56,7 @@ export default function AdminSettingsPage() {
       <div className="border rounded p-4">
         <h2 className="font-medium mb-2">Low Stock Threshold</h2>
         <div className="text-sm text-slate-600 mb-2">Used to highlight products with low inventory.</div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <input
             className="border rounded px-2 py-1 w-24"
             type="number"
