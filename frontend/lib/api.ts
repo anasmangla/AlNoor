@@ -1,3 +1,5 @@
+import { toAppPath } from "./routing";
+
 export type StockStatus = "in_stock" | "low_stock" | "out_of_stock";
 
 export type Product = {
@@ -85,7 +87,7 @@ export async function login(
   username: string,
   password: string
 ): Promise<void> {
-  const res = await fetch(`/api/auth/login`, {
+  const res = await fetch(toAppPath("/api/auth/login"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -95,7 +97,7 @@ export async function login(
 }
 
 export async function logout(): Promise<void> {
-  const res = await fetch(`/api/auth/logout`, {
+  const res = await fetch(toAppPath("/api/auth/logout"), {
     method: "POST",
     credentials: "include",
   });
@@ -103,7 +105,7 @@ export async function logout(): Promise<void> {
 }
 
 export async function fetchSession(): Promise<{ authenticated: boolean }> {
-  const res = await fetch(`/api/auth/session`, {
+  const res = await fetch(toAppPath("/api/auth/session"), {
     method: "GET",
     cache: "no-store",
     credentials: "include",

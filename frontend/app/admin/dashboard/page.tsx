@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { API_BASE } from "@/lib/api";
+import { toAppPath } from "@/lib/routing";
 
 type Metrics = {
   orders_total: number;
@@ -22,14 +23,14 @@ export const metadata = {
 export default async function AdminDashboardPage() {
   const token = cookies().get("alnoor_token")?.value;
   if (!token) {
-    redirect(`/admin/login?next=/admin/dashboard`);
+    redirect(`${toAppPath("/admin/login")}?next=${encodeURIComponent("/admin/dashboard")}`);
   }
   const res = await fetch(`${API_BASE}/admin/metrics`, {
     cache: "no-store",
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
   });
   if (res.status === 401) {
-    redirect(`/admin/login?next=/admin/dashboard`);
+    redirect(`${toAppPath("/admin/login")}?next=${encodeURIComponent("/admin/dashboard")}`);
   }
   const metrics: Metrics | null = res.ok ? await res.json() : null;
 
@@ -43,7 +44,7 @@ export default async function AdminDashboardPage() {
     apiHealth = "unreachable";
   }
   try {
-    const r2 = await fetch(`/api/health`, { cache: "no-store" });
+    const r2 = await fetch(toAppPath("/api/health"), { cache: "no-store" });
     appHealth = r2.ok ? "ok" : String(r2.status);
   } catch {
     appHealth = "unreachable";

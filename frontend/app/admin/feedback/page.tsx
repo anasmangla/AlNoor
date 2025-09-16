@@ -11,6 +11,7 @@ import {
 } from "@/lib/api";
 import Spinner from "@/components/Spinner";
 import { useToast } from "@/components/Toast";
+import { toAppPath } from "@/lib/routing";
 
 function formatDate(value: string | null | undefined): string {
     if (!value) return "—";
@@ -44,7 +45,8 @@ export default function AdminFeedbackPage(): JSX.Element {
             console.error("Failed to clear session", err);
         } finally {
             if (typeof window !== "undefined") {
-                window.location.href = `/admin/login?next=${encodeURIComponent(nextPath)}`;
+                const loginUrl = `${toAppPath("/admin/login")}?next=${encodeURIComponent(nextPath)}`;
+                window.location.href = loginUrl;
             }
         }
     }
