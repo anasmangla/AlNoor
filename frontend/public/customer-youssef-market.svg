@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Customer Youssef at Market Stall</title>
+  <desc id="desc">Illustration of a smiling vendor arranging jars of honey at a farmers market stall.</desc>
+  <defs>
+    <linearGradient id="awning" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffb347" />
+      <stop offset="100%" stop-color="#ffcc33" />
+    </linearGradient>
+    <linearGradient id="background" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0f4ff" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#background)" />
+  <g transform="translate(0,36)">
+    <ellipse cx="256" cy="420" rx="150" ry="28" fill="rgba(0,0,0,0.08)" />
+    <rect x="96" y="84" width="320" height="40" fill="#3f51b5" rx="8" />
+    <rect x="86" y="120" width="340" height="28" fill="url(#awning)" />
+    <rect x="96" y="148" width="320" height="200" fill="#fff6e5" rx="18" />
+    <rect x="126" y="178" width="260" height="140" fill="#ffe9c5" rx="12" />
+    <rect x="190" y="206" width="40" height="104" rx="20" fill="#f7c59f" />
+    <rect x="282" y="206" width="40" height="104" rx="20" fill="#f7c59f" />
+    <rect x="210" y="180" width="92" height="60" rx="46" fill="#3d5168" />
+    <circle cx="256" cy="156" r="54" fill="#f7c59f" />
+    <path d="M216 140c8-28 40-46 76-32 18 8 26 28 20 42-24-12-62-20-96-10z" fill="#2f3f57" />
+    <path d="M318 180c0 24-18 42-42 42h-40c-24 0-42-18-42-42z" fill="#ff7043" />
+    <rect x="154" y="318" width="204" height="88" rx="18" fill="#f9b04c" />
+    <rect x="172" y="334" width="168" height="56" rx="14" fill="#fdd17b" />
+    <g transform="translate(170,260)">
+      <rect x="0" y="0" width="54" height="68" rx="12" fill="#ffd54f" />
+      <rect x="8" y="10" width="38" height="24" rx="10" fill="#ffecb3" />
+      <rect x="64" y="8" width="54" height="72" rx="12" fill="#ffd54f" />
+      <rect x="72" y="18" width="38" height="24" rx="10" fill="#ffecb3" />
+      <rect x="128" y="4" width="54" height="76" rx="12" fill="#ffd54f" />
+      <rect x="136" y="16" width="38" height="24" rx="10" fill="#ffecb3" />
+    </g>
+    <text x="256" y="394" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#5d4037">
+      Market favorites, bottled with care
+    </text>
+  </g>
+</svg>
