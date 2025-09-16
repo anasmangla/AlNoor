@@ -84,7 +84,7 @@ export default function SquareCard({ amountCents, onToken, disabled }: Props) {
         type="button"
         onClick={onPay}
         disabled={!ready || disabled}
-        className="bg-emerald-600 text-white px-3 py-1 rounded hover:bg-emerald-700 disabled:opacity-60"
+        className="w-full rounded bg-emerald-600 px-3 py-1 text-white hover:bg-emerald-700 disabled:opacity-60 sm:w-auto"
       >
         Pay ${amount}
       </button>

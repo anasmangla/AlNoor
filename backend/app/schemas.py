@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Literal
 from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr
 
@@ -11,6 +11,10 @@ class ProductBase(BaseModel):
     is_weight_based: bool = False
     image_url: Optional[str] = Field(default="", max_length=500)
     description: Optional[str] = Field(default="", max_length=2000)
+    weight: float = Field(0, ge=0)
+    cut_type: Optional[str] = Field(default="", max_length=100)
+    price_per_unit: float = Field(0, ge=0)
+    origin: Optional[str] = Field(default="", max_length=100)
 
 
 class ProductCreate(ProductBase):
@@ -25,6 +29,10 @@ class ProductUpdate(BaseModel):
     is_weight_based: Optional[bool] = None
     image_url: Optional[str] = Field(default=None, max_length=500)
     description: Optional[str] = Field(default=None, max_length=2000)
+    weight: Optional[float] = Field(default=None, ge=0)
+    cut_type: Optional[str] = Field(default=None, max_length=100)
+    price_per_unit: Optional[float] = Field(default=None, ge=0)
+    origin: Optional[str] = Field(default=None, max_length=100)
 
 
 class ProductOut(ProductBase):
@@ -71,6 +79,10 @@ class OrderCreate(BaseModel):
     payment_token: Optional[str] = Field(
         default=None, description="Square payment token (nonce) if using sandbox"
     )
+    fulfillment_method: Optional[Literal["pickup", "delivery"]] = Field(
+        default="pickup",
+        description="Order fulfillment preference",
+    )
 
 
 class OrderItemOut(BaseModel):
@@ -91,6 +103,7 @@ class OrderOut(BaseModel):
     customer_name: Optional[str] = None
     customer_email: Optional[EmailStr] = None
     created_at: Optional[datetime] = None
+    fulfillment_method: Optional[str] = None
 
 
 class ContactCreate(BaseModel):
@@ -111,3 +124,21 @@ class ContactOut(BaseModel):
 
 class OrderUpdate(BaseModel):
     status: str = Field(..., description="Order status, e.g., pending|paid|processing|completed|cancelled")
+
+
+class ReviewCreate(BaseModel):
+    name: Optional[str] = Field(default=None, max_length=100)
+    location: Optional[str] = Field(default=None, max_length=100)
+    rating: Optional[int] = Field(default=None, ge=1, le=5)
+    message: str = Field(..., max_length=2000, min_length=10)
+    photo_url: Optional[str] = Field(default=None, max_length=500)
+
+
+class ReviewOut(BaseModel):
+    id: int
+    name: str
+    location: Optional[str] = None
+    rating: Optional[int] = None
+    message: str
+    photo_url: Optional[str] = None
+    created_at: datetime

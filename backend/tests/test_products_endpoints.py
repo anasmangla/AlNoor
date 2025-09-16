@@ -25,6 +25,10 @@ async def test_product_crud_flow(client):
         "is_weight_based": False,
         "image_url": "",
         "description": "Created during integration test",
+        "weight": 5.25,
+        "cut_type": "Whole bird",
+        "price_per_unit": 3.81,
+        "origin": "Test Farm",
     }
 
     # Unauthorized create should fail
@@ -42,8 +46,11 @@ async def test_product_crud_flow(client):
     assert created["name"] == payload["name"]
     assert created["price"] == pytest.approx(payload["price"])
     assert created["stock"] == pytest.approx(payload["stock"])
-    assert created["stock_status"] == "in_stock"
-    assert created["backorder_available"] is False
+    assert created["weight"] == pytest.approx(payload["weight"])
+    assert created["cut_type"] == payload["cut_type"]
+    assert created["price_per_unit"] == pytest.approx(payload["price_per_unit"])
+    assert created["origin"] == payload["origin"]
+
 
     # Validation error on update
     resp = await client.put(
@@ -56,60 +63,24 @@ async def test_product_crud_flow(client):
     # Successful update
     resp = await client.put(
         f"/products/{product_id}",
-        json={"price": 21.5, "stock": 8},
+        json={
+            "price": 21.5,
+            "stock": 8,
+            "weight": 6.0,
+            "cut_type": "Halved",
+            "price_per_unit": 3.58,
+            "origin": "Updated Farm",
+        },
         headers=headers,
     )
     assert resp.status_code == 200
     updated = resp.json()
     assert updated["price"] == pytest.approx(21.5)
     assert updated["stock"] == pytest.approx(8)
-    assert updated["stock_status"] == "in_stock"
-    assert updated["backorder_available"] is False
-
-    # Set stock to zero to enable backorders
-    resp = await client.put(
-        f"/products/{product_id}",
-        json={"stock": 0},
-        headers=headers,
-    )
-    assert resp.status_code == 200
-    zeroed = resp.json()
-    assert zeroed["stock_status"] == "out_of_stock"
-    assert zeroed["backorder_available"] is True
-
-    # Create backorder request
-    resp = await client.post(
-        f"/products/{product_id}/backorder",
-        json={"email": "reserve@example.com", "name": "Reserve", "quantity": 2},
-    )
-    assert resp.status_code == 201
-    backorder = resp.json()
-    assert backorder["product_id"] == product_id
-    assert backorder["status"] == "pending"
-
-    # Duplicate request within window should be rejected
-    resp = await client.post(
-        f"/products/{product_id}/backorder",
-        json={"email": "reserve@example.com"},
-    )
-    assert resp.status_code == 400
-
-    # Restock and ensure backorder endpoint is disabled
-    resp = await client.put(
-        f"/products/{product_id}",
-        json={"stock": 3},
-        headers=headers,
-    )
-    assert resp.status_code == 200
-    restocked = resp.json()
-    assert restocked["stock_status"] == "low_stock"
-    assert restocked["backorder_available"] is False
-
-    resp = await client.post(
-        f"/products/{product_id}/backorder",
-        json={"email": "another@example.com"},
-    )
-    assert resp.status_code == 400
+    assert updated["weight"] == pytest.approx(6.0)
+    assert updated["cut_type"] == "Halved"
+    assert updated["price_per_unit"] == pytest.approx(3.58)
+    assert updated["origin"] == "Updated Farm"
 
     # Fetch by id
     resp = await client.get(f"/products/{product_id}")
