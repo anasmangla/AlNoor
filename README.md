@@ -67,14 +67,16 @@ Copy `.env.example` to `.env` and adjust:
   - `.htaccess` in document root points `/` to `public/index.html` and falls back unknown paths to that file
   - Paths `/alnoor` (Next.js app) and `/api` (FastAPI) are excluded from the fallback
   - In production, set `NEXT_PUBLIC_API_BASE_URL=https://<your-api-host-or-path>`
-  - Static homepage links point into the Next app at `/alnoor` (Store/Admin/POS)
-  - Short paths `/store`, `/admin`, `/pos` and `/` redirect to `/alnoor` equivalents
+- Static homepage links point into the Next app at `/alnoor` (Store/Admin/POS)
+- Short paths `/store`, `/admin`, `/pos` and `/` redirect to `/alnoor` equivalents
+- The static landing page includes `data-app-base="/alnoor"` so analytics/search console config can be fetched; adjust if you change the base path.
 
 #### Example environment variables (Node app)
 - `NEXT_PUBLIC_BASE_PATH=/alnoor`
 - `NEXT_PUBLIC_API_BASE_URL=https://alnoorfarm716.com/api` (or your API location)
 - Optional:
   - `NEXT_PUBLIC_SQUARE_APP_ID`, `NEXT_PUBLIC_SQUARE_LOCATION_ID`, `NEXT_PUBLIC_SQUARE_ENV`
+  - `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID`, `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`
   - `HOSTING_MONITOR_PING_URL` (optional URL that receives a GET when `/__health` is hit)
 
 #### Example environment variables (Python app)

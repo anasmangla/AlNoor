@@ -105,6 +105,7 @@ export default function CheckoutPage() {
                   source: "web",
                   payment_token: token,
                 });
+                trackPurchase(order);
                 clear();
                 router.push(`/confirmation?orderId=${order.id}`);
               } catch (e: any) {

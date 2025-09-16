@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Analytics from "@/components/Analytics";
 
 export async function generateMetadata(): Promise<Metadata> {
   const bp = process.env.NEXT_PUBLIC_BASE_PATH || "";
@@ -20,6 +21,11 @@ export async function generateMetadata(): Promise<Metadata> {
       shortcut: icon,
       apple: icon,
     },
+    verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? {
+          google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+        }
+      : undefined,
     openGraph: {
       type: "website",
       url: site,
@@ -45,6 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen antialiased text-slate-800">
+        <Analytics />
         <Providers>
           <Navbar />
           <main className="max-w-5xl mx-auto px-4 py-6 sm:px-6">{children}</main>
