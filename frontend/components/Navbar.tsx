@@ -48,6 +48,8 @@ export default function Navbar() {
           </Link>
           <Link href="/products" className="text-slate-700 hover:underline">Products</Link>
           <Link href="/contact" className="text-slate-700 hover:underline">Contact</Link>
+          <Link href="/blog" className="text-slate-700 hover:underline">Blog</Link>
+          <Link href="/faq" className="text-slate-700 hover:underline">FAQ</Link>
           <Link href="/checkout" className="text-slate-700 hover:underline">Checkout</Link>
           {hasToken ? (
             <>
