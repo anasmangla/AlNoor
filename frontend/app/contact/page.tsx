@@ -54,6 +54,8 @@ export default function ContactPage() {
         </div>
       </div>
 
+      <FAQSection />
+
       <div className="border rounded p-4 max-w-xl">
         <h2 className="font-medium mb-3">Send a message</h2>
         <ContactForm />
@@ -62,5 +64,6 @@ export default function ContactPage() {
   );
 }
 
-// Client form component
+// Client components
 import ContactForm from "@/components/contact/ContactForm";
+import FAQSection from "@/components/faq/FAQSection";
